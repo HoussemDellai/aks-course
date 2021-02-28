@@ -7,6 +7,7 @@ We'll learn how to:
 1. Stop a container
 1. Remove a container
 1. Remove an image
+1. Working with Docker Compose
 
 ## Introduction to containers
 
@@ -114,4 +115,5 @@ $ docker ps
 ## 5) Stop a container
 ## 6) Remove a container
 ## 7) Remove an image
+## 8) Working with Docker Compose
 
