@@ -4,7 +4,6 @@ We'll learn how to:
 1. Create a Dockerfile
 1. Build docker image
 1. Run a docker image
-1. List docker images
 1. Stop a container
 1. Remove a container
 1. Remove an image
@@ -97,14 +96,22 @@ $ docker images
 
 ## 3) Run a docker image
 
+Let's run a container based on the image created earlier:
+
+```bash
+$ docker run --rm -d -p 5000:80/tcp webapp:1.0
+```
+
+Open web browser on *localhost:5000* to see the application running.
+
+List the running docker containers:
 
 
-## 4) List docker images
+```bash
+$ docker ps
+```
+
 ## 5) Stop a container
 ## 6) Remove a container
 ## 7) Remove an image
-
-
-// From within the folder cd app-dotnet
-docker build .
 
