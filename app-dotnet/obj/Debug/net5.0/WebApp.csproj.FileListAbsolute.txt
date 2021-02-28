@@ -205,3 +205,8 @@ C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\bin\Debug\net5.0\ru
 C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\obj\Debug\net5.0\Razor\Views\Products\Create.cshtml.g.cs
+C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\obj\Debug\net5.0\Razor\Views\Products\Delete.cshtml.g.cs
+C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\obj\Debug\net5.0\Razor\Views\Products\Details.cshtml.g.cs
+C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\obj\Debug\net5.0\Razor\Views\Products\Edit.cshtml.g.cs
+C:\Users\houssem\Desktop\docker-kubernetes-course\app-dotnet\obj\Debug\net5.0\Razor\Views\Products\Index.cshtml.g.cs
