@@ -12,6 +12,7 @@ namespace WebApp.Data
         public WebAppContext (DbContextOptions<WebAppContext> options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<WebApp.Models.Product> Product { get; set; }

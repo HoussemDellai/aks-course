@@ -113,7 +113,20 @@ $ docker ps
 ```
 
 ## 5) Stop a container
+
+Explore the command docker stop.
+
 ## 6) Remove a container
+
+Explore the command docker remove.
+
 ## 7) Remove an image
 ## 8) Working with Docker Compose
+
+
+```bash
+$ docker-compose build
+$ docker-compose up
+```
+
 

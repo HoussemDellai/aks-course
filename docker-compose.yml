@@ -1,0 +1,25 @@
+version: "3"
+services:
+  web:
+    container_name: webapp
+    build: 
+      dockerfile: Dockerfile
+      context: app-dotnet
+    ports:
+      - "8008:80"
+    environment:
+      ConnectionStrings__WebAppContext: "Server=db;Database=ProductsDB;User=sa;Password=@Aa123456;"
+    depends_on:
+      - db
+
+  db:
+    container_name: mssql-db
+    # image: "mcr.microsoft.com/mssql/server:2019-CU4-ubuntu-16.04"
+    image: "microsoft/mssql-server-linux"
+    expose:
+      - "1433"
+    environment:
+      SA_PASSWORD: "@Aa123456"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
