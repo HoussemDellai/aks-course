@@ -118,15 +118,53 @@ Explore the command docker stop.
 
 ## 6) Remove a container
 
-Explore the command docker remove.
+Explore the command docker rm.
 
 ## 7) Remove an image
+
+Explore the command docker rmi.
+
 ## 8) Working with Docker Compose
 
+When we want to run multiple applications together (for micro/multi services for example), working with the commands to build and run each image independently is time consuming. To solve this issue, Dcoker invented the Compose file. It can compose and configure multiple services in one single YAML file. Using docker compose, we can build and run multiple images, configure applications to connect to each other, configure docker networking, configure environment variables, etc.
+
+Let's see the following *docker-compose.yml* file:
+
+```yml
+# docker-compose.yml
+version: "3"
+services:
+  web:
+    container_name: webapp
+    build: 
+      dockerfile: Dockerfile
+      context: app-dotnet
+    ports:
+      - "8008:80"
+    environment:
+      ConnectionStrings__WebAppContext: "Server=db;Database=ProductsDB;User=sa;Password=@Aa123456;"
+    depends_on:
+      - db
+
+  db:
+    container_name: mssql-db
+    image: "microsoft/mssql-server-linux"
+    expose:
+      - "1433"
+    environment:
+      SA_PASSWORD: "@Aa123456"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+```
+
+Let's build and run the compose file:
 
 ```bash
 $ docker-compose build
 $ docker-compose up
 ```
 
+## 9) Working with Container Registry (Docker Hub)
 
+## 10) Working with Container Registry (Azure Container Registry)
