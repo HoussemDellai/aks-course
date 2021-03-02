@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mssql-connection-configmap
+  labels:
+    app: webapp
+data:
+  # db-connection-string: Server=tcp:mssql-paas.database.windows.net,1433;Initial Catalog=ProductsDB;Persist Security Info=False;User ID=houssem;Password=@Aa123456;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+  db-connection-string: Server=mssql-service;Database=ProdcutsDB;User ID=SA;Password=@Aa123456;
