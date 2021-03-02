@@ -189,8 +189,11 @@ $ docker push <houssemdocker>/webapp:1.0
 ## 10) Working with Container Registry (Azure Container Registry)
 
 Make sure yiur have an Azure subscription and you have installed Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli.
+
 Create a new Azure Container Registry (ACR) in Azure portal.
+
 Enable *Admin* credentials from ACR.
+
 Login to ACR:
 
 ```bash
