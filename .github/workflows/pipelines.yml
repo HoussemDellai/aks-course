@@ -43,7 +43,7 @@ jobs:
         resource-group: refinitiv-rg 
         # AKS Cluster Name
         cluster-name: refinitiv-aks
-        
+
     - name: Deploy to Kubernetes cluster
       uses: Azure/k8s-deploy@v1.3
       with:
@@ -55,6 +55,7 @@ jobs:
           02_kubernetes_aks/configmap.yaml
           02_kubernetes_aks/db-deploy.yaml
           02_kubernetes_aks/disk-pvc.yaml
+          02_kubernetes_aks/namespace.yaml
         
         
   
