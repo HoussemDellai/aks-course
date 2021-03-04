@@ -7,7 +7,9 @@ on:
     branches: [ main ]
     
 env:
+  DOCKER_REPOSITORY: houssemdocker
   IMAGE_TAG: ${{ github.run_number }}
+  $IMAGE_NAME: webapp
 
 jobs:
 
@@ -22,4 +24,12 @@ jobs:
       run: docker build ./app-dotnet --file ./app-dotnet/Dockerfile --tag webapp:$IMAGE_TAG
       
     - name: Tag the Docker image
-      run: docker tag webapp:$IMAGE_TAG houssemdocker/webapp:$IMAGE_TAG
+      run: docker tag webapp:$IMAGE_TAG $DOCKER_REPOSITORY/$IMAGE_NAME:$IMAGE_TAG
+      
+    - name: Login to Docker Hub
+      run: |
+        echo "${{ secrets.DOCKER_REPOSITORY_PASSWORD }}" | docker login -u $DOCKER_REPOSITORY --password-stdin
+        
+    - name: Push Image to Docker Hub
+      run:
+        docker push $DOCKER_REPOSITORY/$IMAGE_NAME:$IMAGE_TAG
