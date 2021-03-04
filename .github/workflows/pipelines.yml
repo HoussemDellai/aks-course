@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    
+env:
+  IMAGE_TAG: ${{ github.run_number }}
 
 jobs:
 
@@ -14,5 +17,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Build the Docker image
-      run: docker build ./app-dotnet --file ./app-dotnet/Dockerfile --tag webapp:$(date +%s)
+      run: docker build ./app-dotnet --file ./app-dotnet/Dockerfile --tag webapp:$IMAGE_TAG
+      
+    - name: Tag the Docker image
+      run: docker tag webapp:$IMAGE_TAG houssemdocker/webapp:$IMAGE_TAG
