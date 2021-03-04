@@ -51,11 +51,12 @@ jobs:
         namespace: houssemdellai
         # Path to the manifest files which will be used for deployment.
         manifests: |
+          02_kubernetes_aks/namespace.yaml
           02_kubernetes_aks/app-deploy.yaml
           02_kubernetes_aks/configmap.yaml
           02_kubernetes_aks/db-deploy.yaml
           02_kubernetes_aks/disk-pvc.yaml
-          02_kubernetes_aks/namespace.yaml
+          
         
         
   
