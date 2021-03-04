@@ -9,7 +9,7 @@ on:
 env:
   DOCKER_REPOSITORY: houssemdocker
   IMAGE_TAG: ${{ github.run_number }}
-  $IMAGE_NAME: webapp
+  IMAGE_NAME: webapp
 
 jobs:
 
