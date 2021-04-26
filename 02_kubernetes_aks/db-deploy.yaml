@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: mssql
-  replicas: 4
+  replicas: 1
   template:
     metadata:
       labels:
