@@ -17,14 +17,23 @@ helm install --set image.tag="1.19.0" my-app firstchart
 # Install Helm chart and override values.yaml
 helm install -f values.yaml my-app firstchart
 
+# # deploy to dev cluster
+# helm install -f values.dev.yaml my-app firstchart
+# # deploy to prod cluster
+# helm install -f values.prod.yaml my-app firstchart
+
 # Install Helm chart and override values and values.yaml
 helm install -f values.yaml --set image.tag="1.19.0" my-app firstchart
 
 # List installed charts
 helm list
 
+kubectl get pods
+
 # Upgrade a chart
 helm upgrade --install --set service.type=LoadBalancer my-app firstchart
+
+kubectl get svc -w
 
 # Delete a Helm chart
 helm uninstall my-app
