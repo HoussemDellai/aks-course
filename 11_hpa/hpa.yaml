@@ -2,7 +2,7 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: deployment-hpa
+  name: webapp-hpa
 spec:
   minReplicas: 3
   maxReplicas: 50 
