@@ -107,7 +107,6 @@ Open web browser on *localhost:5000* to see the application running.
 
 List the running docker containers:
 
-
 ```bash
 $ docker ps
 ```
