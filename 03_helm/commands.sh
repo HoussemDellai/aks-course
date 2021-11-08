@@ -12,7 +12,7 @@ helm lint firstchart
 helm install my-app firstchart
 
 # Install Helm chart and override values
-helm install --set image.tag="1.19.0" my-app firstchart
+helm install --set image.tag="1.21.0" my-app firstchart
 
 # Install Helm chart and override values.yaml
 helm install -f values.yaml my-app firstchart

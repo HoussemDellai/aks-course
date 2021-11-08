@@ -112,17 +112,32 @@ List the running docker containers:
 $ docker ps
 ```
 
+## 3) Run a command inside a docker container
+Explore the command docker exec.
+```bash
+$ docker exec <CONTAINER_ID> -- ls
+```
+
 ## 5) Stop a container
 
 Explore the command docker stop.
+```bash
+$ docker stop <CONTAINER_ID>
+```
 
 ## 6) Remove a container
 
 Explore the command docker rm.
+```bash
+$ docker rm <CONTAINER_ID>
+```
 
 ## 7) Remove an image
 
 Explore the command docker rmi.
+```bash
+$ docker rmi <IMAGE_ID_OR_NAME>
+```
 
 ## 8) Working with Docker Compose
 
@@ -171,7 +186,7 @@ Create a Docker Hub account at: https://hub.docker.com/.
 Login to Docker Hub registry:
 
 ```bash
-docker login
+$ docker login
 ```
 
 Tag the image with your Docker Hub ID (for me it is *houssemdocker*):
