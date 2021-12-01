@@ -1,5 +1,5 @@
 {
-  "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
+  "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "5.0",
@@ -15619,63 +15619,63 @@
   "RootNamespace": "WebApp",
   "Documents": [
     {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Delete.cshtml",
-      "TargetPath": "Views\\Products\\Delete.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\_ViewImports.cshtml",
-      "TargetPath": "Views\\_ViewImports.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
-      "TargetPath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Shared\\_Layout.cshtml",
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Shared\\_Layout.cshtml",
       "TargetPath": "Views\\Shared\\_Layout.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Edit.cshtml",
-      "TargetPath": "Views\\Products\\Edit.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Index.cshtml",
-      "TargetPath": "Views\\Products\\Index.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\_ViewStart.cshtml",
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\_ViewStart.cshtml",
       "TargetPath": "Views\\_ViewStart.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Home\\Privacy.cshtml",
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Home\\Privacy.cshtml",
       "TargetPath": "Views\\Home\\Privacy.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Shared\\Error.cshtml",
-      "TargetPath": "Views\\Shared\\Error.cshtml",
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\_ViewImports.cshtml",
+      "TargetPath": "Views\\_ViewImports.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Home\\Index.cshtml",
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Details.cshtml",
+      "TargetPath": "Views\\Products\\Details.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Edit.cshtml",
+      "TargetPath": "Views\\Products\\Edit.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Home\\Index.cshtml",
       "TargetPath": "Views\\Home\\Index.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Create.cshtml",
-      "TargetPath": "Views\\Products\\Create.cshtml",
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "d:\\AKS\\tmp\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Details.cshtml",
-      "TargetPath": "Views\\Products\\Details.cshtml",
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Shared\\Error.cshtml",
+      "TargetPath": "Views\\Shared\\Error.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Delete.cshtml",
+      "TargetPath": "Views\\Products\\Delete.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Index.cshtml",
+      "TargetPath": "Views\\Products\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\docker-kubernetes-course\\app-dotnet\\Views\\Products\\Create.cshtml",
+      "TargetPath": "Views\\Products\\Create.cshtml",
       "FileKind": "mvc"
     }
   ],
