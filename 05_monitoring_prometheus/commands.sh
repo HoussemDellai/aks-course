@@ -18,8 +18,8 @@ docker push houssemdocker/webappmonitoring:prometheus
 kubectl apply -f web-deploy-svc.yaml
 
 # Install Prometheus using Helm charts
-helm repo add "stable" "https://charts.helm.sh/stable" --force-update
-helm install my-prometheus stable/prometheus --set server.service.type=LoadBalancer --set rbac.create=false
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-prom bitnami/kube-prometheus
 
 # Prometheus dashboard IP address
 kubectl get services
@@ -44,3 +44,6 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install my-release bitnami/grafana
 helm upgrade my-release bitnami/grafana --set service.type=LoadBalancer
 
+
+# Follow this repo to install full Prometheus & Grafana:
+https://github.com/prometheus-operator/kube-prometheus
