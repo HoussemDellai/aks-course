@@ -327,8 +327,8 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
-
           kubectl cluster-info
+
           # Deploy job.yaml to scan Kubernetes config and job-aks.yaml to scan specific AKS config
           kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
           sleep 10s # Waits 10 seconds.
@@ -336,10 +336,12 @@ stages:
           POD=$(kubectl get pods --selector app=kube-bench -o name)
           kubectl logs $POD
           kubectl delete -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
+          
           sleep 10s
+          
           kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-aks.yaml
           sleep 10s
-          JOB=(kubectl get jobs --selector job-name=kube-bench -o name)
+          JOB=$(kubectl get jobs --selector job-name=kube-bench -o name)
           kubectl logs $JOB
           # TODO upload the scan results
           kubectl delete -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-aks.yaml
