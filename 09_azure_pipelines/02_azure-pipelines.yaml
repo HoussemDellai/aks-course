@@ -336,7 +336,7 @@ stages:
           POD=$(kubectl get pods --selector app=kube-bench -o name)
           kubectl logs $POD
           kubectl delete -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
-          
+          sleep 10s
           kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-aks.yaml
           sleep 10s
           JOB=(kubectl get jobs --selector job-name=kube-bench -o name)
