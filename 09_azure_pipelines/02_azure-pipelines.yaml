@@ -1,5 +1,5 @@
-trigger:
-- main
+trigger: none
+# - main
 
 pool:
   vmImage: ubuntu-latest
@@ -331,13 +331,14 @@ stages:
           kubectl cluster-info
           # Deploy job.yaml to scan Kubernetes config and job-aks.yaml to scan specific AKS config
           kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
+          sleep 10s # Waits 10 seconds.
           # Pod logs outputs Kubernetes scan results and Job outputs AKS specific results
           POD=$(kubectl get pods --selector app=kube-bench -o name)
           kubectl logs $POD
           kubectl delete -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
-
-          kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-aks.yaml
           
+          kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-aks.yaml
+          sleep 10s
           JOB=(kubectl get jobs --selector job-name=kube-bench -o name)
           kubectl logs $JOB
           # TODO upload the scan results
