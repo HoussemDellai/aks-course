@@ -1,4 +1,5 @@
 # Demo for scaling Pods in AKS based on number of messages in a Queue (Azure Service Bus) using Keda.
+# https://keda.sh/
 
 # install KEDA in Kubernetes using Helm Charts
 helm repo add kedacore https://kedacore.github.io/charts
