@@ -32,10 +32,9 @@ az servicebus queue authorization-rule keys list --resource-group $RG --namespac
 
 # deploy the app
 kubectl apply -f nginx-deploy.yaml
-
 kubectl apply -f scaledObject.yaml
-
-# add messages into the queue
 
 # watch the deployment number of pods
 kubectl get deploy -w
+
+# add and remove messages in the queue and watch the number of pods
