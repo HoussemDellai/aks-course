@@ -1,3 +1,28 @@
+# Kubernetes releases a new version each 4 months.
+# AKS maintains only 3 versions under Azure support.
+# So cluster administrators should upgrade their clusters regularly.
+# There are many options for upgrading the cluster:
+# 1) Upgrade both the control plane and the nodepools at the same time
+#    Easy option but could be risky for production clusters if there is no rollback plan.
+# 2) Upgrade the AKS control plane only then upgrade the nodepools:
+#    Still risky when upgrading the node pool.
+# 3) Perform Blue/Green upgrade for the cluster: create new cluster with new version and route traffic to that cluster using Traffic Manager.
+#    Less risky as the blue cluster will serve as a backup and requires automation for recreating the cluster and deploying the applications.
+# 4) Perform Blue/Green upgrade for the node pool: Upgrade the AKS control plane only then add a new node pool with the new version.
+#    This is the least risk option and easiest as it doesn't require cluster recreation.
+
+# In this tutorial, we will explore the Blue/Green upgrade for the node pool.
+# We will perform the following steps:
+# 1) Upgrade the cluster control plane only to the new version
+#
+# 2) Add new node pool (green) with new version
+#
+# 3) Cordon and drain the old node pool (blue)
+#
+# 4) Check the application is up and running
+#
+# 5) Remove the old node pool (blue)
+
 # 1. setup demo environment
 # variables
 $AKS_NAME="aks-dev-02"
