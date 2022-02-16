@@ -80,7 +80,7 @@ az acr build -t "$acrName.azurecr.io/dotnet-app:1.0.0" -r $acrName .
  
 Deploy the created image in ACR into the AKS cluster and replace image and registry names:
 ```bash 
- $ kubectl run dotnet-app --image=<houssemdellaiacr>.azurecr.io/dotnet-app:1.0.0
+ $ kubectl run dotnet-app --image=<myacr>.azurecr.io/dotnet-app:1.0.0
 pod/dotnet-app created
 ```
  
