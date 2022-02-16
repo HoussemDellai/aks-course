@@ -44,18 +44,21 @@ List the existing pods:
 NAME    READY   STATUS    RESTARTS   AGE  
 nginx   1/1     Running   0          10s  
 ```
- 
+
+View the private IP adress of the Pod and its host node.
 ```bash 
  $ kubectl get pods -o wide  
 NAME    READY   STATUS    RESTARTS   AGE   IP             NODE                                NOMINATED NODE   READINESS GATES  
 nginx   1/1     Running   0          49s   10.244.2.3   aks-agentpool-18451317-vmss000001   <none>           <none>
 ```
- 
+
+Create a Service object to expose the Pod through public IP and Load Balancer.
 ```bash 
  $ kubectl expose pod nginx --type=LoadBalancer --port=80
 service/nginx exposed
 ```
  
+ View the Service public IP.
 ```bash 
  $ kubectl get svc
 NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
@@ -71,7 +74,7 @@ Or this link to create it through the command line: https://docs.microsoft.com/e
 ### Create an image in ACR
 Navigate into the \app-dotnet folder and run the following command to package the source code, upload it into ACR and build the docker image inside ACR:
 ```bash 
-$acrName="houssemdellaiacr"
+$acrName="<myacr>"
 az acr build -t "$acrName.azurecr.io/dotnet-app:1.0.0" -r $acrName .
 ```
  
@@ -116,16 +119,16 @@ dotnet-app   LoadBalancer   10.0.202.46   52.142.237.17   80:31774/TCP   30s
 kubernetes   ClusterIP      10.0.0.1      <none>          443/TCP        26m
 nginx        LoadBalancer   10.0.147.78   20.61.145.135   80:32640/TCP   12m
 ```
- 
+Use the Kubectl command line to generate a YAML manifest for a Pod.
 ```bash 
  $ kubectl run nginx-yaml --restart=Never --image=nginx -o yaml --dry-run=client > nginx-pod.yaml
 ```
- 
+Deploy the YAML manifest to AKS:
 ```bash 
  $ kubectl apply -f .\nginx-pod.yaml
 pod/nginx-yaml created
 ```
- 
+View the Pods created by YAML manifest.
 ```bash 
  $ kubectl get pods
 NAME         READY   STATUS    RESTARTS   AGE

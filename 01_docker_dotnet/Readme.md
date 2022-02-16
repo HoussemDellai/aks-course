@@ -1,4 +1,4 @@
-We have a .NET application and we want to dockerize it ? This module will walk through that process.
+In this tutorial, we have a .NET application and we want to dockerize it. This module will walk through that process.
 
 We'll learn how to:
 1. Create a Dockerfile

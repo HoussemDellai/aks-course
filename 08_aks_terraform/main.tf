@@ -26,7 +26,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = var.cluster_name
 
   default_node_pool {
-    name                = "system"
+    name                = "systempool"
     node_count          = var.system_node_count
     vm_size             = "Standard_DS2_v2"
     type                = "VirtualMachineScaleSets"
