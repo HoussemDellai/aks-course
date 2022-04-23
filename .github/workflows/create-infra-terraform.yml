@@ -9,9 +9,11 @@ name: 'Create Infrastructure'
 
 on:
   push:
-    branches:
-    - main
+    branches: none
+    # - main
   pull_request:
+    branches: none
+    # - main
 
 jobs:
   terraform:
@@ -43,6 +45,11 @@ jobs:
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: terraform fmt -check
+      working-directory: $WORKING_DIRECTORY
+      
+    # Validate all Terraform configuration files
+    - name: Terraform Validate
+      run: terraform validate
       working-directory: $WORKING_DIRECTORY
 
     # Generates an execution plan for Terraform
