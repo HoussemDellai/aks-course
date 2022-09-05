@@ -1,4 +1,5 @@
 ## Introduction
+Video here: https://www.youtube.com/watch?v=MFcuIQaGbHw  
 Kubernetes releases a new version each 4 months.
 AKS maintains only 3 versions under Azure support.
 So cluster administrators should upgrade their clusters regularly.
