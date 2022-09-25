@@ -110,3 +110,5 @@ kubectl get pods -o wide
 ```
 
 Note that now the DaemonSet is deployed into the tainted System Nodepool.
+
+Note alse the commented tolerations for deploying the DaemonSet into the Control Plane Nodes.
