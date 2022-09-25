@@ -6,6 +6,26 @@ A DaemonSet is a Kubernetes object, just like the Deployment. But its objective 
 
 Lets deploy a sample DaemonSet that runs Nginx container:
 
+```yaml
+# daemonset.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+```
+
 ```bash
 kubectl apply daemonset.yaml
 kubectl get daemonset
@@ -44,7 +64,44 @@ Or add this one that will tolerate all Taints with effect: NoSchedule.
         effect: NoSchedule
 ```
 
-The redeploy the Daemonset:
+The DaemonSet should look like this:
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
+      - key: CriticalAddonsOnly
+        operator: Exists
+        effect: NoSchedule
+      # - key: node-role.kubernetes.io/control-plane
+      #   operator: Exists
+      #   effect: NoSchedule
+      # - key: node-role.kubernetes.io/master
+      #   operator: Exists
+      #   effect: NoSchedule
+      # - key: CriticalAddonsOnly
+      #   operator: Exists
+      # - operator: Exists
+      #   effect: NoExecute
+```
+
+Then redeploy the Daemonset:
 
 ```bash
 kubectl apply daemonset.yaml
