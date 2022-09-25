@@ -52,8 +52,7 @@ Add Tolerations to the DaemonSet to be 'tolerated' to be deployed into the taint
       tolerations:
       - key: CriticalAddonsOnly
         operator: Exists
-      - operator: Exists
-        effect: NoExecute
+        effect: NoSchedule
 ```
 
 Or add this one that will tolerate all Taints with effect: NoSchedule.
