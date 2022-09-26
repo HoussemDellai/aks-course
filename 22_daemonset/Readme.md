@@ -27,6 +27,7 @@ spec:
 ```
 
 ```bash
+kubectl get nodes
 kubectl apply daemonset.yaml
 kubectl get daemonset
 kubectl get pods -o wide
@@ -39,7 +40,26 @@ But if we have System Nodepool with Taints, then the daemonSet won't be deployed
 
 A System Nodepool have (optionally) the following Taint:
 
+```shell
+kubectl get nodes
+kubectl get node <aks-poolsystem-31734499-vmss000003> -o yaml # change with your node system name
+```
+
 ```yaml
+apiVersion: v1
+kind: Node
+metadata:
+  name: aks-poolsystem-31734499-vmss000003
+  uid: d3aa0585-33b2-42a0-95fe-5f5bede4eb4a
+  resourceVersion: '1359886'
+  creationTimestamp: '2022-09-25T11:21:43Z'
+  labels:
+    agentpool: poolsystem
+    beta.kubernetes.io/arch: amd64
+    beta.kubernetes.io/instance-type: Standard_D2ds_v5
+    beta.kubernetes.io/os: linux
+...
+spec:
   taints:
     - key: CriticalAddonsOnly
       value: 'true'
@@ -83,11 +103,11 @@ spec:
       - name: nginx
         image: nginx
       tolerations:
-      - operator: Exists
-        effect: NoSchedule
       - key: CriticalAddonsOnly
         operator: Exists
         effect: NoSchedule
+      # - operator: Exists
+      #   effect: NoSchedule
       # - key: node-role.kubernetes.io/control-plane
       #   operator: Exists
       #   effect: NoSchedule
