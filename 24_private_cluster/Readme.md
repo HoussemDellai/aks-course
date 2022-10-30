@@ -1,5 +1,8 @@
 ## Introduction
 For security reasons, the Control PLane in AKS cluster could be either public or private.
+
+<img src="AKS_access_modes.png">
+
 ## 1. Public cluster
 ```bash
 # create public cluster
