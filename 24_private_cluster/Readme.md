@@ -201,4 +201,4 @@ Following is print screen for created resources.
 
 Conclusion
 
-<img src="images\recap.png" width="60%">
+<img src="images\recap.png" width="80%">
