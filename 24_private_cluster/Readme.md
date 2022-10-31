@@ -18,7 +18,7 @@ AKS supports 4 access options:
 This article will explain these 4 options showing the architectural implementation for each one.
 This is not covering scenarios where a user access an application through public Load Balancer or Ingress Controller.
 
-<img src="AKS_access_modes.png" width="60%">
+<img src="images\aks_access_modes.png" width="60%">
 
 ## 1. Public cluster
 ```bash
@@ -53,9 +53,12 @@ kubectl get endpoints
 # NAME         ENDPOINTS            AGE
 # kubernetes   20.103.218.175:443   114m
 ```
-# print screen for created resources
 
-<img src="Public_AKS.png" width="60%">
+<img src="images\architecture_public_cluster.png" width="60%">
+
+Following is print screen for created resources.
+
+<img src="images\resources_public_cluster.png" width="60%">
 
 ## 2. Private cluster using Private Endpoint
 ```bash
@@ -104,7 +107,13 @@ az aks show -n aks-cluster -g rg-aks-private --query fqdn
 # output: null (no public fqdn)
 ```
 
-<img src="Private_AKS.png" width="60%">
+<img src="images\architecture_private_cluster.png" width="60%">
+
+Following is print screen for created resources.
+
+<img src="images\resources_private_cluster.png" width="60%">
+
+<img src="images\resources_private_cluster_dns.png" width="60%">
 
 ## 3. Public cluster using API Integration
 ```bash
@@ -145,7 +154,15 @@ kubectl get endpoints
 # kubernetes   10.226.0.4:443   178m
 ```
 
-<img src="AKS-VNET_Integration_public_cluster.png" width="60%">
+<img src="images\architecture_public_cluster_vnet_integration.png" width="60%">
+
+Following is print screen for created resources.
+
+<img src="images\resources_public_cluster_vnet_integration.png" width="60%">
+
+<img src="images\resources_public_cluster_vnet_integration_ild.png" width="60%">
+
+<img src="images\resources_public_cluster_vnet_integration_subnet.png" width="60%">
 
 ## 4. Private cluster using API Integration
 ```bash
@@ -175,4 +192,14 @@ nslookup aks-cluste-rg-aks-private-v-17b128-38360d0d.2788811a-873a-450d-811f-b7c
 # Address:  not found
 ```
 
-<img src="AKS-VNET_Integration_private_cluster.png" width="60%">
+<img src="images\architecture_private_cluster_vnet_integration.png" width="60%">
+
+Following is print screen for created resources.
+
+<img src="images\resources_private_cluster_vnet_integration.png" width="60%">
+
+<img src="images\resources_private_cluster_vnet_integration_dns.png" width="60%">
+
+Conclusion
+
+<img src="images\recap.png" width="60%">
