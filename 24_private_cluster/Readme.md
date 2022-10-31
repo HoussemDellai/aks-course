@@ -160,7 +160,7 @@ Following is print screen for created resources.
 
 <img src="images\resources_public_cluster_vnet_integration.png" width="60%">
 
-<img src="images\resources_public_cluster_vnet_integration_ild.png" width="60%">
+<img src="images\resources_public_cluster_vnet_integration_ilb.png" width="60%">
 
 <img src="images\resources_public_cluster_vnet_integration_subnet.png" width="60%">
 
