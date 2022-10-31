@@ -1,9 +1,24 @@
 # Public and private AKS clusters demystified
 
 ## Introduction
-For security reasons, the Control PLane in AKS cluster could be either public or private.
+Azure Kubernetes Service (AKS) is the managed kubernetes service in Azure. It have two main components: worker nodes and control plane.
+The worker nodes are the VMs where customer applications will be deployed into. 
+The control plane is the component that manages the applications and the worker nodes.
+A Kubernetes operator like a user, devops team or a release pipeline who wants to deploy applications, will do so using the control plane.
+Worker nodes and operators will need to access the control plane.
+The control plane is very critical and is fully managed by Azure. 
+By default, it is exposed on a public endpoint accessible over the internet.
+It could be secured using authentication and authorisation using Azure AD for example. It does also support whitelisting only secific IP ranges to connect to it.
+But for organisations who wants to disable this public endpoint, they can leverage the private cluster feature.
+AKS supports 4 access options:
+1) public cluster
+2) private cluster
+3) public cluster with API Integration enabled
+4) private cluster with API Integration enabled
+This article will explain these 4 options showing the architectural implementation for each one.
+This is not covering scenarios where a user access an application through public Load Balancer or Ingress Controller.
 
-<img src="AKS_access_modes.png">
+<img src="AKS_access_modes.png" width="60%">
 
 ## 1. Public cluster
 ```bash
@@ -39,6 +54,8 @@ kubectl get endpoints
 # kubernetes   20.103.218.175:443   114m
 ```
 # print screen for created resources
+
+<img src="Public_AKS.png" width="60%">
 
 ## 2. Private cluster using Private Endpoint
 ```bash
@@ -87,6 +104,8 @@ az aks show -n aks-cluster -g rg-aks-private --query fqdn
 # output: null (no public fqdn)
 ```
 
+<img src="Private_AKS.png" width="60%">
+
 ## 3. Public cluster using API Integration
 ```bash
 # create public cluster with VNET Integration
@@ -126,6 +145,8 @@ kubectl get endpoints
 # kubernetes   10.226.0.4:443   178m
 ```
 
+<img src="AKS-VNET_Integration_public_cluster.png" width="60%">
+
 ## 4. Private cluster using API Integration
 ```bash
 # create private cluster with VNET Integration
@@ -153,3 +174,5 @@ nslookup aks-cluste-rg-aks-private-v-17b128-38360d0d.2788811a-873a-450d-811f-b7c
 # output:
 # Address:  not found
 ```
+
+<img src="AKS-VNET_Integration_private_cluster.png" width="60%">
