@@ -1,22 +1,24 @@
 # Public and private AKS clusters demystified
 
 ## Introduction
-Azure Kubernetes Service (AKS) is the managed kubernetes service in Azure. It have two main components: worker nodes and control plane.
-The worker nodes are the VMs where customer applications will be deployed into. 
-The control plane is the component that manages the applications and the worker nodes.
-A Kubernetes operator like a user, devops team or a release pipeline who wants to deploy applications, will do so using the control plane.
-Worker nodes and operators will need to access the control plane.
-The control plane is very critical and is fully managed by Azure. 
-By default, it is exposed on a public endpoint accessible over the internet.
-It could be secured using authentication and authorisation using Azure AD for example. It does also support whitelisting only secific IP ranges to connect to it.
-But for organisations who wants to disable this public endpoint, they can leverage the private cluster feature.
+Azure Kubernetes Service (AKS) is the managed kubernetes service in Azure. It have two main components: worker nodes and control plane.  
+The worker nodes are the VMs where customer applications will be deployed into.  
+The control plane is the component that manages the applications and the worker nodes.  
+A Kubernetes operator like a user, devops team or a release pipeline who wants to deploy applications, will do so using the control plane.  
+Worker nodes and operators will need to access the control plane.  
+The control plane is very critical and is fully managed by Azure.  
+By default, it is exposed on a public endpoint accessible over the internet.  
+It could be secured using authentication and authorisation using Azure AD for example. It does also support whitelisting only secific IP ranges to connect to it.  
+But for organisations who wants to disable this public endpoint, they can leverage the private cluster feature.  
+
 AKS supports 4 access options:
 1) public cluster
 2) private cluster
 3) public cluster with API Integration enabled
-4) private cluster with API Integration enabled
-This article will explain these 4 options showing the architectural implementation for each one.
-This is not covering scenarios where a user access an application through public Load Balancer or Ingress Controller.
+4) private cluster with API Integration enabled  
+
+This article will explain these 4 options showing the architectural implementation for each one.  
+This is not covering scenarios where a user access an application through public Load Balancer or Ingress Controller.  
 
 <img src="images\aks_access_modes.png" width="60%">
 
@@ -66,7 +68,6 @@ Following is print screen for created resources.
 az group create -n rg-aks-private -l westeurope
 az aks create -n aks-cluster -g rg-aks-private --enable-private-cluster
 ```
-# print screen for created resources
 
 ```bash
 # get the public FQDN
@@ -121,7 +122,6 @@ Following is print screen for created resources.
 az group create -n rg-aks-public-vnet-integration -l eastus2
 az aks create -n aks-cluster -g rg-aks-public-vnet-integration --enable-apiserver-vnet-integration
 ```
-# print screen for created resources
 
 ```bash
 # get the public FQDN
@@ -170,7 +170,6 @@ Following is print screen for created resources.
 az group create -n rg-aks-private-vnet-integration -l eastus2
 az aks create -n aks-cluster -g rg-aks-private-vnet-integration --enable-apiserver-vnet-integration --enable-private-cluster
 ```
-# print screen for created resources
 
 ```bash
 # get the public FQDN
