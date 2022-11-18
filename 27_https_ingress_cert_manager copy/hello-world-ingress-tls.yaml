@@ -5,17 +5,18 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt"
-    # cert-manager.io/issuer: letsencrypt
-    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # cert-manager.io/cluster-issuer: "letsencrypt"
+    cert-manager.io/issuer: letsencrypt
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
+    # - frontend.20.73.235.13.nip.io
     - aks-app-01.westeurope.cloudapp.azure.com
     secretName: tls-secret
   rules:
   - host: aks-app-01.westeurope.cloudapp.azure.com
+  # - host: frontend.20.73.235.13.nip.io
     http:
       paths:
       - path: /hello-world-one(/|$)(.*)
