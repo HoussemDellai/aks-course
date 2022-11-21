@@ -142,14 +142,14 @@ DNS_NAME="aks-app-03"
 
 # Get the resource-id of the public IP
 AZURE_PUBLIC_IP_ID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$INGRESS_PUPLIC_IP')].[id]" --output tsv)
+# /subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/mc_rg-aks-we_aks-cluster_westeurope/providers/Microsoft.Network/publicIPAddresses/kubernetes-ac66be6d522074f829e69bcf36c6e986
 
 # Update public IP address with DNS name
 az network public-ip update --ids $AZURE_PUBLIC_IP_ID --dns-name $DNS_NAME
 # az network public-ip update -g MC_rg-aks-we_aks-cluster_westeurope -n kubernetes-af54fcf50c6b24d7fbb9ed6aa62bdc77 --dns-name $DNS_NAME
-DOMAIN_NAME_FQDN=$(az network public-ip show --ids $AZURE_PUBLIC_IP_ID --query='dnsSettings.fqdn')
-# DOMAIN_NAME_FQDN=$(az network public-ip show -g MC_rg-aks-we_aks-cluster_westeurope -n kubernetes-af54fcf50c6b24d7fbb9ed6aa62bdc77 --query='dnsSettings.fqdn')
+DOMAIN_NAME_FQDN=$(az network public-ip show --ids $AZURE_PUBLIC_IP_ID --query='dnsSettings.fqdn' -o tsv)
 echo $DOMAIN_NAME_FQDN
-# "aks-app-02.westeurope.cloudapp.azure.com"
+# aks-app-02.westeurope.cloudapp.azure.com
 
 ###########################################################
 # Option 2: Name to associate with Azure DNS Zone
@@ -181,9 +181,9 @@ helm install cert-manager jetstack/cert-manager \
      --namespace $NAMESPACE_INGRESS \
      --create-namespace --set installCRDs=true
 
-cat <<EOF >issuer.yaml
+cat <<EOF >cluster-issuer.yaml
 apiVersion: cert-manager.io/v1
-kind: Issuer # ClusterIssuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt
 spec:
@@ -198,10 +198,10 @@ spec:
           class: nginx
 EOF
 
-kubectl apply -f issuer.yaml -n $NAMESPACE_APP_03
+kubectl apply -f cluster-issuer.yaml
 # issuer.cert-manager.io/letsencrypt created
 
-kubectl get issuer -n $NAMESPACE_APP_03
+kubectl get clusterissuer
 # NAME          READY   AGE
 # letsencrypt   True    56s
 
@@ -213,8 +213,8 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /\$2
     nginx.ingress.kubernetes.io/use-regex: "true"
-    cert-manager.io/issuer: letsencrypt
-    # cert-manager.io/cluster-issuer: "letsencrypt"
+    # cert-manager.io/issuer: letsencrypt
+    cert-manager.io/cluster-issuer: "letsencrypt"
 spec:
   ingressClassName: $INGRESS_CLASS_NAME # nginx
   tls:
@@ -258,6 +258,8 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /static/\$2
+    # cert-manager.io/issuer: letsencrypt
+    cert-manager.io/cluster-issuer: "letsencrypt"
 spec:
   ingressClassName: $INGRESS_CLASS_NAME # nginx
   tls:
@@ -291,3 +293,87 @@ curl https://$DOMAIN_NAME_FQDN/hello-world-two
 
 # check the tls/ssl certificate
 curl -v -k --resolve $DOMAIN_NAME_FQDN:443:$INGRESS_PUPLIC_IP https://$DOMAIN_NAME_FQDN
+# * Added aks-app-03.westeurope.cloudapp.azure.com:443:20.103.76.255 to DNS cache
+# * Hostname aks-app-03.westeurope.cloudapp.azure.com was found in DNS cache
+# *   Trying 20.103.76.255:443...
+# * Connected to aks-app-03.westeurope.cloudapp.azure.com (20.103.76.255) port 443 (#0)
+# * ALPN, offering h2
+# * ALPN, offering http/1.1
+# * TLSv1.0 (OUT), TLS header, Certificate Status (22):
+# * TLSv1.3 (OUT), TLS handshake, Client hello (1):
+# * TLSv1.2 (IN), TLS header, Certificate Status (22):
+# * TLSv1.3 (IN), TLS handshake, Server hello (2):
+# * TLSv1.2 (IN), TLS header, Finished (20):
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * TLSv1.3 (IN), TLS handshake, Certificate (11):
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * TLSv1.3 (IN), TLS handshake, CERT verify (15):
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * TLSv1.3 (IN), TLS handshake, Finished (20):
+# * TLSv1.2 (OUT), TLS header, Finished (20):
+# * TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+# * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+# * TLSv1.3 (OUT), TLS handshake, Finished (20):
+# * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+# * ALPN, server accepted to use h2
+# * Server certificate:
+# *  subject: CN=aks-app-03.westeurope.cloudapp.azure.com
+# *  start date: Nov 21 18:43:38 2022 GMT
+# *  expire date: Feb 19 18:43:37 2023 GMT
+# *  issuer: C=US; O=Let's Encrypt; CN=R3
+# *  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+# * Using HTTP2, server supports multiplexing
+# * Connection state changed (HTTP/2 confirmed)
+# * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+# * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+# * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+# * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+# * Using Stream ID: 1 (easy handle 0x555642a78e80)
+# * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+# > GET / HTTP/2
+# > Host: aks-app-03.westeurope.cloudapp.azure.com
+# > user-agent: curl/7.81.0
+# > accept: */*
+# >
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+# * old SSL session ID is stale, removing
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+# * TLSv1.2 (OUT), TLS header, Supplemental data (23):
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# < HTTP/2 200
+# < date: Mon, 21 Nov 2022 19:44:50 GMT
+# < content-type: text/html; charset=utf-8
+# < content-length: 629
+# < strict-transport-security: max-age=15724800; includeSubDomains
+# <
+# <!DOCTYPE html>
+# <html xmlns="http://www.w3.org/1999/xhtml">
+# <head>
+#     <link rel="stylesheet" type="text/css" href="/static/default.css">
+#     <title>Welcome to Azure Kubernetes Service (AKS)</title>
+
+#     <script language="JavaScript">
+#         function send(form){
+#         }
+#     </script>
+
+# </head>
+# <body>
+#     <div id="container">
+#         <form id="form" name="form" action="/"" method="post"><center>
+#         <div id="logo">Welcome to Azure Kubernetes Service (AKS)</div>
+#         <div id="space"></div>
+#         <img src="/static/acs.png" als="acs logo">
+#         <div id="form">
+#         </div>
+#     </div>
+# </body>
+# * TLSv1.2 (IN), TLS header, Supplemental data (23):
+# * Connection #0 to host aks-app-03.westeurope.cloudapp.azure.com left intact
+# </html>

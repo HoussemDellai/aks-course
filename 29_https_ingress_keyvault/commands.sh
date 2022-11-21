@@ -11,7 +11,6 @@ az aks get-credentials --name $AKS -g $RG --overwrite-existing
 # verify connection to the cluster
 kubectl get nodes
 
-
 NAMESPACE_APP_04="app-04"
 kubectl create namespace $NAMESPACE_APP_04
 # namespace/app-04 created
@@ -96,7 +95,6 @@ kubectl apply -f aks-helloworld-two.yaml --namespace $NAMESPACE_APP_04
 # deployment.apps/aks-helloworld-two created
 # service/aks-helloworld-two created
 
-
 # enable keyvault-secrets-provider
 az aks enable-addons --addons azure-keyvault-secrets-provider -n $AKS -g $RG
 
@@ -111,11 +109,16 @@ kubectl get pods -n kube-system -l 'app in (secrets-store-csi-driver, secrets-st
 
 az aks show -n $AKS -g $RG --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId -o tsv
 # 47744279-8b5e-4c77-9102-7c6c1874587a
-
+# we won't use this managed identity
 
 # configure keyvault
 
+# create tls certificate
+# later on, we'll set a domain name for the load balancer public IP
+# aks-app-04.westeurope.cloudapp.azure.com
+
 CERT_NAME="aks-ingress-cert"
+
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -out aks-ingress-tls.crt \
     -keyout aks-ingress-tls.key \
@@ -127,7 +130,7 @@ openssl pkcs12 -export -in aks-ingress-tls.crt -inkey aks-ingress-tls.key -out "
 # Enter Export Password:
 # Verifying - Enter Export Password:
 
-AKV_NAME="kvaksingressapp04"
+AKV_NAME="kvaksingressapp004"
 az keyvault create -n $AKV_NAME -g $RG
 az keyvault certificate import --vault-name $AKV_NAME -n $CERT_NAME -f "${CERT_NAME}.pfx"
 
@@ -145,7 +148,7 @@ echo $NODE_RG
 VMSS_NAME=$(az vmss list -g $NODE_RG --query [0].name -o tsv)
 echo $VMSS_NAME
 # aks-nodepool1-24351564-vmss
-az vmss identity assign -g NODE_RG -n $VMSS_NAME --identities $IDENTITY_ID
+az vmss identity assign -g $NODE_RG -n $VMSS_NAME --identities $IDENTITY_ID
 # {
 #   "systemAssignedIdentity": "",
 #   "userAssignedIdentities": {
@@ -164,18 +167,22 @@ az vmss identity assign -g NODE_RG -n $VMSS_NAME --identities $IDENTITY_ID
 #   }
 # }
 
-identity_client_id=$(az identity show -g $RG -n $IDENTITY_NAME --query "clientId" -o tsv)
-echo $identity_client_id
+IDENTITY_CLIENT_ID=$(az identity show -g $RG -n $IDENTITY_NAME --query "clientId" -o tsv)
+echo $IDENTITY_CLIENT_ID
 # a908d131-d1f3-4f44-8b9e-c5d21110eb84
 
 # set policy to access keys in your key vault
-az keyvault set-policy -n $AKV_NAME --key-permissions get --spn $identity_client_id
+az keyvault set-policy -n $AKV_NAME --key-permissions get --spn $IDENTITY_CLIENT_ID
 # set policy to access secrets in your key vault
-az keyvault set-policy -n $AKV_NAME --secret-permissions get --spn $identity_client_id
+az keyvault set-policy -n $AKV_NAME --secret-permissions get --spn $IDENTITY_CLIENT_ID
 # set policy to access certs in your key vault
-az keyvault set-policy -n $AKV_NAME --certificate-permissions get --spn $identity_client_id
+az keyvault set-policy -n $AKV_NAME --certificate-permissions get --spn $IDENTITY_CLIENT_ID
 
 TLS_SECRET="tls-secret-csi-dev"
+# 16b3c013-d300-468d-ac64-7eda0820b6d3
+TENANT_ID=$(az account list --query "[?isDefault].tenantId" -o tsv)
+echo $TENANT_ID
+# 16b3c013-d300-468d-ac64-7eda0820b6d3
 
 cat <<EOF >secretProviderClass.yaml
 apiVersion: secrets-store.csi.x-k8s.io/v1
@@ -195,14 +202,14 @@ spec:
   parameters:
     usePodIdentity: "false"
     useVMManagedIdentity: "true"
-    userAssignedIdentityID: $identity_client_id
+    userAssignedIdentityID: $IDENTITY_CLIENT_ID
     keyvaultName: $AKV_NAME # the name of the AKV instance
     objects: |
       array:
         - |
           objectName: $CERT_NAME
           objectType: secret
-    tenantId: "16b3c013-d300-468d-ac64-7eda0820b6d3" # $TENANT_ID # the tenant ID for KV
+    tenantId: $TENANT_ID # the tenant ID for KV
 EOF
 
 kubectl apply -f secretProviderClass.yaml -n $NAMESPACE_INGRESS
@@ -299,8 +306,9 @@ kind: Ingress
 metadata:
   name: hello-world-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /\$2
     nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: $INGRESS_CLASS_NAME # nginx
   tls:
@@ -343,7 +351,7 @@ metadata:
   name: hello-world-ingress-static
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+    nginx.ingress.kubernetes.io/rewrite-target: /static/\$2
 spec:
   ingressClassName: $INGRESS_CLASS_NAME # nginx
   tls:
@@ -385,7 +393,7 @@ kubectl get secret tls-secret-csi-dev --namespace=ingress-nginx-app-04 -o yaml \
 | sed '7,9d' \
 | sed '8d' > tls-secret-csi-dev.yaml
 
-kubectl apply -f tls-secret-csi-dev.yaml
+kubectl apply -f tls-secret-csi-dev.yaml -n $NAMESPACE_APP_04
 
 # check app is working with HTTPS
 curl https://$DOMAIN_NAME_FQDN
