@@ -17,16 +17,23 @@ helm repo update
 
 NAMESPACE_INGRESS="ingress-nginx"
 
-helm install ingress-nginx ingress-nginx/ingress-nginx --create-namespace --namespace $NAMESPACE_INGRESS
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+     --create-namespace \
+     --namespace $NAMESPACE_INGRESS \
+     --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
 
-kubectl get services ingress-nginx-controller --namespace $NAMESPACE_INGRESS -o wide
+kubectl get services ingress-nginx-controller --namespace $NAMESPACE_INGRESS
+# NAME                       TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                      AGE
+# ingress-nginx-controller   LoadBalancer   10.0.63.166   20.103.25.154   80:30080/TCP,443:31656/TCP   35s
 
 INGRESS_PUPLIC_IP=$(kubectl get services ingress-nginx-controller -n $NAMESPACE_INGRESS -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo $INGRESS_PUPLIC_IP
+# 20.103.25.154
 
 NAMESPACE_APP_01="app-01"
 kubectl create namespace $NAMESPACE_APP_01
+# namespace/app-01 created
 
-# cat <<EOF | kubectl apply -f -
 cat <<EOF >aks-helloworld-one.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -54,7 +61,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: aks-helloworld-one  
+  name: aks-helloworld-one
 spec:
   type: ClusterIP
   ports:
@@ -115,7 +122,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /\$2
 spec:
   ingressClassName: nginx
   rules:
@@ -149,7 +156,7 @@ metadata:
   name: hello-world-ingress-static
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+    nginx.ingress.kubernetes.io/rewrite-target: /static/\$2
 spec:
   ingressClassName: nginx
   rules:
@@ -169,16 +176,14 @@ kubectl apply -f hello-world-ingress.yaml --namespace $NAMESPACE_APP_01
 # ingress.networking.k8s.io/hello-world-ingress-static created
 
 kubectl get pods --namespace $NAMESPACE_APP_01
-NAME                                  READY   STATUS    RESTARTS   AGE
-aks-helloworld-one-749789b6c5-8wktc   1/1     Running   0          13m
-aks-helloworld-two-5b8d45b8bf-pg4wh   1/1     Running   0          12m
+# NAME                                  READY   STATUS    RESTARTS   AGE
+# aks-helloworld-one-749789b6c5-8f9bj   1/1     Running   0          2m34s
+# aks-helloworld-two-5b8d45b8bf-sgvmr   1/1     Running   0          2m33s
 
 kubectl get svc --namespace $NAMESPACE_APP_01
-# NAME                                 TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)                      AGE
-# aks-helloworld-one                   ClusterIP      10.0.165.18   <none>         80/TCP                       19s
-# aks-helloworld-two                   ClusterIP      10.0.236.83   <none>         80/TCP                       18s
-# ingress-nginx-controller             LoadBalancer   10.0.44.194   20.73.235.13   80:31750/TCP,443:31529/TCP   92s
-# ingress-nginx-controller-admission   ClusterIP      10.0.94.172   <none>         443/TCP                      92s
+# NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+# aks-helloworld-one   ClusterIP   10.0.233.150   <none>        80/TCP    2m38s
+# aks-helloworld-two   ClusterIP   10.0.193.96    <none>        80/TCP    2m37s
 
 kubectl get ingress --namespace $NAMESPACE_APP_01
 # NAME                         CLASS   HOSTS   ADDRESS          PORTS   AGE

@@ -3,22 +3,13 @@ kind: Ingress
 metadata:
   name: hello-world-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx-app-02 # nginx
-  tls:
-  - hosts:
-    - aks-app-02.westeurope.cloudapp.azure.com
-    # - frontend.20.73.235.13.nip.io
-    # - aks-app-01.westeurope.cloudapp.azure.com
-    secretName: tls-ingress-app-02-secret
+  ingressClassName: nginx
   rules:
-  - host: aks-app-02.westeurope.cloudapp.azure.com
-  # - host: aks-app-01.westeurope.cloudapp.azure.com
-  # - host: frontend.20.73.235.13.nip.io
-    http:
+  - http:
       paths:
       - path: /hello-world-one(/|$)(.*)
         pathType: Prefix
@@ -47,17 +38,12 @@ kind: Ingress
 metadata:
   name: hello-world-ingress-static
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /static/
 spec:
-  ingressClassName: nginx-app-02 # nginx
-  tls:
-  - hosts:
-    - aks-app-02.westeurope.cloudapp.azure.com
-    secretName: tls-ingress-app-02-secret
+  ingressClassName: nginx
   rules:
-  - host: aks-app-02.westeurope.cloudapp.azure.com
-    http:
+  - http:
       paths:
       - path: /static(/|$)(.*)
         pathType: Prefix

@@ -64,7 +64,7 @@ helm repo update
 helm install cert-manager jetstack/cert-manager --namespace $NAMESPACE --create-namespace --set installCRDs=true
 
 kubectl apply -f issuer.yaml -n $NAMESPACE
-issuer.cert-manager.io/letsencrypt created
+# issuer.cert-manager.io/letsencrypt created
 
 kubectl get issuer -n $NAMESPACE
 # NAME          READY   AGE
@@ -145,7 +145,7 @@ $identity_id=$(az identity show -g rg-aks-cluster-we -n keyvault-identity --quer
 echo $identity_id
 # "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourcegroups/rg-aks-cluster-we/providers/Microsoft.ManagedIdentity/userAssignedIdentities/keyvault-identity"
 
-az vmss identity assign -g MC_rg-aks-cluster-we_aks-cluster_westeurope -n aks-nodepool1-85587565-vmss --identities $identity_id
+az vmss identity assign -g MC_rg-aks-we_aks-cluster_westeurope -n aks-nodepool1-13388890-vmss --identities $identity_id
 #   {
 #     "systemAssignedIdentity": "",
 #     "userAssignedIdentities": {
@@ -164,9 +164,9 @@ az vmss identity assign -g MC_rg-aks-cluster-we_aks-cluster_westeurope -n aks-no
 #     }
 #   }
 
-$identity_client_id=$(az identity show -g rg-aks-cluster-we -n keyvault-identity --query "clientId")
+identity_client_id=$(az identity show -g $RG -n keyvault-identity --query "clientId" -o tsv)
 echo $identity_client_id
-"8e660c8d-7f99-44c9-8bf1-f72b62179be7"
+a908d131-d1f3-4f44-8b9e-c5d21110eb84
 
 # set policy to access keys in your key vault
 az keyvault set-policy -n $AKV_NAME --key-permissions get --spn $identity_client_id

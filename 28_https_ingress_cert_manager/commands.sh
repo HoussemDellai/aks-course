@@ -15,12 +15,15 @@ kubectl get nodes
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
-NAMESPACE_INGRESS="ingress-nginx-app-02"
-INGRESS_CLASS_NAME="nginx-app-02"
+NAMESPACE_INGRESS="ingress-nginx-app-03"
+INGRESS_CLASS_NAME="nginx-app-03"
 
-helm upgrade --install ingress-nginx-app-02 ingress-nginx/ingress-nginx --create-namespace --namespace $NAMESPACE_INGRESS \
---set controller.replicaCount=2 \
---set controller.nodeSelector."kubernetes\.io/os"=linux \
+helm upgrade --install ingress-nginx-app-03 ingress-nginx/ingress-nginx \
+     --create-namespace \
+     --namespace $NAMESPACE_INGRESS \
+     --set controller.replicaCount=2 \
+     --set controller.nodeSelector."kubernetes\.io/os"=linux \
+     --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
 -f - <<EOF
 controller:
   ingressClassResource:
@@ -31,23 +34,24 @@ controller:
 EOF
 
 kubectl get services --namespace $NAMESPACE_INGRESS
-# NAME                                        TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)                      AGE
-# ingress-nginx-app-02-controller             LoadBalancer   10.0.233.36   20.101.30.39   80:31691/TCP,443:31211/TCP   11s
-# ingress-nginx-app-02-controller-admission   ClusterIP      10.0.210.58   <none>         443/TCP                      11s
+# NAME                                        TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                      AGE
+# ingress-nginx-app-03-controller             LoadBalancer   10.0.148.15   20.76.206.157   80:31276/TCP,443:32227/TCP   31s
+# ingress-nginx-app-03-controller-admission   ClusterIP      10.0.41.91    <none>          443/TCP                      31s
 
 # capture ingress, public IP (Azure Public IP created)
 INGRESS_PUPLIC_IP=$(kubectl get services ingress-$INGRESS_CLASS_NAME-controller -n $NAMESPACE_INGRESS -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $INGRESS_PUPLIC_IP
-# 20.101.30.39
+# 20.76.206.157
 
 # get the ingress class resources, note we already have one deployed in another demo
 kubectl get ingressclass
 # NAME           CONTROLLER                    PARAMETERS   AGE
-# nginx          k8s.io/ingress-nginx          <none>       168m
-# nginx-app-02   k8s.io/ingress-nginx-app-02   <none>       69s
+# nginx          k8s.io/ingress-nginx          <none>       6h18m
+# nginx-app-02   k8s.io/ingress-nginx-app-02   <none>       3h30m
+# nginx-app-03   k8s.io/ingress-nginx-app-03   <none>       86s
 
-NAMESPACE_APP_02="app-02"
-kubectl create namespace $NAMESPACE_APP_02
+NAMESPACE_APP_03="app-03"
+kubectl create namespace $NAMESPACE_APP_03
 
 cat <<EOF >aks-helloworld-one.yaml
 apiVersion: apps/v1
@@ -85,7 +89,7 @@ spec:
     app: aks-helloworld-one
 EOF
 
-kubectl apply -f aks-helloworld-one.yaml --namespace $NAMESPACE_APP_02
+kubectl apply -f aks-helloworld-one.yaml --namespace $NAMESPACE_APP_03
 # deployment.apps/aks-helloworld-one created
 # service/aks-helloworld-one created
 
@@ -125,15 +129,16 @@ spec:
     app: aks-helloworld-two
 EOF
 
-kubectl apply -f aks-helloworld-two.yaml --namespace $NAMESPACE_APP_02
+kubectl apply -f aks-helloworld-two.yaml --namespace $NAMESPACE_APP_03
 # deployment.apps/aks-helloworld-two created
 # service/aks-helloworld-two created
 
 # configure Ingress' Public IP with DNS Name
 
+DNS_NAME="aks-app-03"
+
 ###########################################################
 # Option 1: Name to associate with Azure Public IP address
-DNS_NAME="aks-app-02"
 
 # Get the resource-id of the public IP
 AZURE_PUBLIC_IP_ID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$INGRESS_PUPLIC_IP')].[id]" --output tsv)
@@ -148,7 +153,6 @@ echo $DOMAIN_NAME_FQDN
 
 ###########################################################
 # Option 2: Name to associate with Azure DNS Zone
-DNS_NAME="aks-app-02"
 
 # Add an A record to your DNS zone
 az network dns record-set a add-record \
@@ -160,33 +164,46 @@ az network dns record-set a add-record \
 # az network public-ip update -g MC_rg-aks-we_aks-cluster_westeurope -n kubernetes-af54fcf50c6b24d7fbb9ed6aa62bdc77 --dns-name $DNS_NAME
 DOMAIN_NAME_FQDN=$DNS_NAME.houssem.cloud
 echo $DOMAIN_NAME_FQDN
-# aks-app-02.houssem.cloud
+# aks-app-03.houssem.cloud
 
-# create TLS/SSL certificate
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -out aks-ingress-tls.crt \
-    -keyout aks-ingress-tls.key \
-    -subj "/CN=$DOMAIN_NAME_FQDN/O=$DOMAIN_NAME_FQDN" \
-    -addext "subjectAltName = DNS:$DOMAIN_NAME_FQDN"
 
-ls
-# aks-helloworld-one.yaml aks-helloworld-two.yaml  aks-ingress-tls.crt  aks-ingress-tls.key  cert_issuer.yaml  commands.02.sh  hello-world-ingress-tls.yaml
+# install cert-manager
 
-TLS_SECRET="tls-ingress-app-02-secret"
+# Label the namespace to disable resource validation
+kubectl label namespace $NAMESPACE_INGRESS cert-manager.io/disable-validation=true
+# namespace/ingress-basic labeled
+# Add the Jetstack Helm repository
+helm repo add jetstack https://charts.jetstack.io
+# Update your local Helm chart repository cache
+helm repo update
+# Install the cert-manager Helm chart
+helm install cert-manager jetstack/cert-manager \
+     --namespace $NAMESPACE_INGRESS \
+     --create-namespace --set installCRDs=true
 
-kubectl create secret tls $TLS_SECRET --cert=aks-ingress-tls.crt --key=aks-ingress-tls.key --namespace $NAMESPACE_APP_02
-# secret/tls-ingress-app-02-secret created
+cat <<EOF >issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer # ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: "houssem.dellai@live.com"
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+EOF
 
-kubectl describe secret $TLS_SECRET --namespace $NAMESPACE_APP_02
-# Name:         tls-ingress-app-02-secret
-# Namespace:    app-02
-# Labels:       <none>
-# Annotations:  <none>
-# Type:  kubernetes.io/tls
-# Data
-# ====
-# tls.crt:  1273 bytes
-# tls.key:  1704 bytes
+kubectl apply -f issuer.yaml -n $NAMESPACE_APP_03
+# issuer.cert-manager.io/letsencrypt created
+
+kubectl get issuer -n $NAMESPACE_APP_03
+# NAME          READY   AGE
+# letsencrypt   True    56s
 
 cat <<EOF >hello-world-ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -194,8 +211,10 @@ kind: Ingress
 metadata:
   name: hello-world-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /\$2
     nginx.ingress.kubernetes.io/use-regex: "true"
+    cert-manager.io/issuer: letsencrypt
+    # cert-manager.io/cluster-issuer: "letsencrypt"
 spec:
   ingressClassName: $INGRESS_CLASS_NAME # nginx
   tls:
@@ -237,8 +256,8 @@ kind: Ingress
 metadata:
   name: hello-world-ingress-static
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /static/\$2
 spec:
   ingressClassName: $INGRESS_CLASS_NAME # nginx
   tls:
@@ -258,11 +277,9 @@ spec:
               number: 80
 EOF
 
-kubectl apply -f hello-world-ingress.yaml --namespace $NAMESPACE_APP_02
-# ingress.networking.k8s.io/hello-world-ingress created
-# ingress.networking.k8s.io/hello-world-ingress-static created
+kubectl apply -f hello-world-ingress.yaml --namespace $NAMESPACE_APP_03
 
-kubectl get ingress --namespace $NAMESPACE_APP_02
+kubectl get ingress --namespace $NAMESPACE_APP_03
 # NAME                         CLASS          HOSTS                                      ADDRESS   PORTS     AGE
 # hello-world-ingress          nginx-app-02   aks-app-02.westeurope.cloudapp.azure.com             80, 443   12s
 # hello-world-ingress-static   nginx-app-02   aks-app-02.westeurope.cloudapp.azure.com             80, 443   11s

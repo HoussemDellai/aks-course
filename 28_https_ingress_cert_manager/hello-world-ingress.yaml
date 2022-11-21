@@ -5,17 +5,18 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/issuer: letsencrypt
+    # cert-manager.io/cluster-issuer: "letsencrypt"
 spec:
-  ingressClassName: nginx-app-02 # nginx
+  ingressClassName: nginx-app-03 # nginx
   tls:
   - hosts:
-    - aks-app-02.westeurope.cloudapp.azure.com
+    - aks-app-03.westeurope.cloudapp.azure.com
     # - frontend.20.73.235.13.nip.io
     # - aks-app-01.westeurope.cloudapp.azure.com
-    secretName: tls-ingress-app-02-secret
+    secretName: tls-ingress-app-03-secret
   rules:
-  - host: aks-app-02.westeurope.cloudapp.azure.com
+  - host: aks-app-03.westeurope.cloudapp.azure.com
   # - host: aks-app-01.westeurope.cloudapp.azure.com
   # - host: frontend.20.73.235.13.nip.io
     http:
@@ -47,16 +48,17 @@ kind: Ingress
 metadata:
   name: hello-world-ingress-static
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+    cert-manager.io/issuer: letsencrypt
 spec:
-  ingressClassName: nginx-app-02 # nginx
+  ingressClassName: nginx-app-03 # nginx
   tls:
   - hosts:
-    - aks-app-02.westeurope.cloudapp.azure.com
-    secretName: tls-ingress-app-02-secret
+    - aks-app-03.westeurope.cloudapp.azure.com
+    secretName: tls-ingress-app-03-secret
   rules:
-  - host: aks-app-02.westeurope.cloudapp.azure.com
+  - host: aks-app-03.westeurope.cloudapp.azure.com
     http:
       paths:
       - path: /static(/|$)(.*)
