@@ -11,6 +11,41 @@ az aks get-credentials --name $AKS -g $RG --overwrite-existing
 # verify connection to the cluster
 kubectl get nodes
 
+# create tls certificate
+# later on, we'll set a domain name for the load balancer public IP
+# aks-app-04.westeurope.cloudapp.azure.com
+
+CERT_NAME="aks-ingress-cert"
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -out aks-ingress-tls.crt \
+    -keyout aks-ingress-tls.key \
+    -subj "/CN=aks-app-04.westeurope.cloudapp.azure.com/O=aks-ingress-tls" \
+    -addext "subjectAltName = DNS:aks-app-04.westeurope.cloudapp.azure.com" # added by reco
+
+openssl pkcs12 -export -in aks-ingress-tls.crt -inkey aks-ingress-tls.key -out "${CERT_NAME}.pfx"
+# skip Password prompt
+# Enter Export Password:
+# Verifying - Enter Export Password:
+
+AKV_NAME="kvaksingressapp004"
+az keyvault create -n $AKV_NAME -g $RG
+az keyvault certificate import --vault-name $AKV_NAME -n $CERT_NAME -f "${CERT_NAME}.pfx"
+
+az aks enable-addons -n $AKS -g $RG \
+   --addons azure-keyvault-secrets-provider,open-service-mesh,web_application_routing \
+   --enable-secret-rotation
+
+kubectl get pods -n kube-system -l 'app in (secrets-store-csi-driver, secrets-store-provider-azure)'
+# NAME                                     READY   STATUS    RESTARTS   AGE
+# aks-secrets-store-csi-driver-knhnr       3/3     Running   0          24m
+# aks-secrets-store-csi-driver-mpd6q       3/3     Running   0          24m
+# aks-secrets-store-csi-driver-rmlhk       3/3     Running   0          24m
+# aks-secrets-store-provider-azure-4ckgq   1/1     Running   0          24m
+# aks-secrets-store-provider-azure-88snb   1/1     Running   0          24m
+# aks-secrets-store-provider-azure-zcc2z   1/1     Running   0          24m
+
+
 NAMESPACE_APP_04="app-04"
 kubectl create namespace $NAMESPACE_APP_04
 # namespace/app-04 created
@@ -95,44 +130,11 @@ kubectl apply -f aks-helloworld-two.yaml --namespace $NAMESPACE_APP_04
 # deployment.apps/aks-helloworld-two created
 # service/aks-helloworld-two created
 
-# enable keyvault-secrets-provider
-az aks enable-addons --addons azure-keyvault-secrets-provider -n $AKS -g $RG
-
-kubectl get pods -n kube-system -l 'app in (secrets-store-csi-driver, secrets-store-provider-azure)'
-# NAME                                     READY   STATUS    RESTARTS   AGE
-# aks-secrets-store-csi-driver-knhnr       3/3     Running   0          24m
-# aks-secrets-store-csi-driver-mpd6q       3/3     Running   0          24m
-# aks-secrets-store-csi-driver-rmlhk       3/3     Running   0          24m
-# aks-secrets-store-provider-azure-4ckgq   1/1     Running   0          24m
-# aks-secrets-store-provider-azure-88snb   1/1     Running   0          24m
-# aks-secrets-store-provider-azure-zcc2z   1/1     Running   0          24m
-
 az aks show -n $AKS -g $RG --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId -o tsv
 # 47744279-8b5e-4c77-9102-7c6c1874587a
 # we won't use this managed identity
 
 # configure keyvault
-
-# create tls certificate
-# later on, we'll set a domain name for the load balancer public IP
-# aks-app-04.westeurope.cloudapp.azure.com
-
-CERT_NAME="aks-ingress-cert"
-
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -out aks-ingress-tls.crt \
-    -keyout aks-ingress-tls.key \
-    -subj "/CN=aks-app-04.westeurope.cloudapp.azure.com/O=aks-ingress-tls" \
-    -addext "subjectAltName = DNS:aks-app-04.westeurope.cloudapp.azure.com" # added by reco
-
-openssl pkcs12 -export -in aks-ingress-tls.crt -inkey aks-ingress-tls.key -out "${CERT_NAME}.pfx"
-# skip Password prompt
-# Enter Export Password:
-# Verifying - Enter Export Password:
-
-AKV_NAME="kvaksingressapp004"
-az keyvault create -n $AKV_NAME -g $RG
-az keyvault certificate import --vault-name $AKV_NAME -n $CERT_NAME -f "${CERT_NAME}.pfx"
 
 IDENTITY_NAME="keyvault-identity"
 az identity create -g $RG -n $IDENTITY_NAME
@@ -184,9 +186,6 @@ TENANT_ID=$(az account list --query "[?isDefault].tenantId" -o tsv)
 echo $TENANT_ID
 # 16b3c013-d300-468d-ac64-7eda0820b6d3
 
-NAMESPACE_INGRESS="ingress-nginx-app-04"
-kubectl create namespace $NAMESPACE_INGRESS
-
 cat <<EOF >secretProviderClass.yaml
 apiVersion: secrets-store.csi.x-k8s.io/v1
 kind: SecretProviderClass
@@ -221,6 +220,7 @@ kubectl apply -f secretProviderClass.yaml -n $NAMESPACE_INGRESS
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
+NAMESPACE_INGRESS="ingress-nginx-app-04"
 INGRESS_CLASS_NAME="nginx-app-04"
 SECRET_PROVIDER_CLASS="azure-tls"
 

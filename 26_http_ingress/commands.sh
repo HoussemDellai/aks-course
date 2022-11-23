@@ -22,9 +22,16 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
      --namespace $NAMESPACE_INGRESS \
      --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
 
-kubectl get services ingress-nginx-controller --namespace $NAMESPACE_INGRESS
-# NAME                       TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                      AGE
-# ingress-nginx-controller   LoadBalancer   10.0.63.166   20.103.25.154   80:30080/TCP,443:31656/TCP   35s
+kubectl get pods,deployments,services --namespace $NAMESPACE_INGRESS
+# NAME                                            READY   STATUS    RESTARTS   AGE
+# pod/ingress-nginx-controller-8574b6d7c9-vdst4   1/1     Running   0          80s
+
+# NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+# deployment.apps/ingress-nginx-controller   1/1     1            1           81s
+
+# NAME                                         TYPE           CLUSTER-IP   EXTERNAL-IP       PORT(S)                      AGE
+# service/ingress-nginx-controller             LoadBalancer   10.0.77.46   20.103.25.154     80:30957/TCP,443:31673/TCP   82s
+# service/ingress-nginx-controller-admission   ClusterIP      10.0.1.153   <none>            443/TCP                      82s
 
 INGRESS_PUPLIC_IP=$(kubectl get services ingress-nginx-controller -n $NAMESPACE_INGRESS -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $INGRESS_PUPLIC_IP
@@ -175,22 +182,58 @@ kubectl apply -f hello-world-ingress.yaml --namespace $NAMESPACE_APP_01
 # ingress.networking.k8s.io/hello-world-ingress created
 # ingress.networking.k8s.io/hello-world-ingress-static created
 
-kubectl get pods --namespace $NAMESPACE_APP_01
-# NAME                                  READY   STATUS    RESTARTS   AGE
-# aks-helloworld-one-749789b6c5-8f9bj   1/1     Running   0          2m34s
-# aks-helloworld-two-5b8d45b8bf-sgvmr   1/1     Running   0          2m33s
+kubectl get pods,svc,ingress --namespace $NAMESPACE_APP_01
+# NAME                                      READY   STATUS    RESTARTS   AGE
+# pod/aks-helloworld-one-749789b6c5-9989d   1/1     Running   0          4m21s
+# pod/aks-helloworld-two-5b8d45b8bf-zxlsd   1/1     Running   0          4m20s
 
-kubectl get svc --namespace $NAMESPACE_APP_01
-# NAME                 TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-# aks-helloworld-one   ClusterIP   10.0.233.150   <none>        80/TCP    2m38s
-# aks-helloworld-two   ClusterIP   10.0.193.96    <none>        80/TCP    2m37s
+# NAME                         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+# service/aks-helloworld-one   ClusterIP   10.0.65.14     <none>        80/TCP    4m21s
+# service/aks-helloworld-two   ClusterIP   10.0.136.130   <none>        80/TCP    4m20s
 
-kubectl get ingress --namespace $NAMESPACE_APP_01
-# NAME                         CLASS   HOSTS   ADDRESS          PORTS   AGE
-# hello-world-ingress          nginx   *       20.126.201.249   80      11m
-# hello-world-ingress-static   nginx   *       20.126.201.249   80      11m
+# NAME                                                   CLASS   HOSTS   ADDRESS         PORTS   AGE
+# ingress.networking.k8s.io/hello-world-ingress          nginx   *       20.103.25.154   80      59s
+# ingress.networking.k8s.io/hello-world-ingress-static   nginx   *       20.103.25.154   80      59s
 
 # check app is running behind Nginx Ingress Controller (with no HTTPS)
 curl http://$INGRESS_PUPLIC_IP
 curl http://$INGRESS_PUPLIC_IP/aks-helloworld-one
 curl http://$INGRESS_PUPLIC_IP/aks-helloworld-two
+
+# Mapping a domain name (Azure Public IP)
+
+DNS_NAME="aks-app-01"
+
+###########################################################
+# Option 1: Name to associate with Azure Public IP address
+
+# Get the resource-id of the public IP
+AZURE_PUBLIC_IP_ID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$INGRESS_PUPLIC_IP')].[id]" -o tsv)
+echo $AZURE_PUBLIC_IP_ID
+
+# Update public IP address with DNS name
+az network public-ip update --ids $AZURE_PUBLIC_IP_ID --dns-name $DNS_NAME
+DOMAIN_NAME_FQDN=$(az network public-ip show --ids $AZURE_PUBLIC_IP_ID --query='dnsSettings.fqdn' -o tsv)
+# DOMAIN_NAME_FQDN=$(az network public-ip show -g MC_rg-aks-we_aks-cluster_westeurope -n kubernetes-af54fcf50c6b24d7fbb9ed6aa62bdc77 --query='dnsSettings.fqdn')
+echo $DOMAIN_NAME_FQDN
+# aks-app-01.westeurope.cloudapp.azure.com
+
+###########################################################
+# Option 2: Name to associate with Azure DNS Zone
+
+# Add an A record to your DNS zone
+az network dns record-set a add-record \
+    --resource-group rg-houssem-cloud-dns \
+    --zone-name "houssem.cloud" \
+    --record-set-name "*" \
+    --ipv4-address $INGRESS_PUPLIC_IP
+
+# az network public-ip update -g MC_rg-aks-we_aks-cluster_westeurope -n kubernetes-af54fcf50c6b24d7fbb9ed6aa62bdc77 --dns-name $DNS_NAME
+DOMAIN_NAME_FQDN=$DNS_NAME.houssem.cloud
+echo $DOMAIN_NAME_FQDN
+# aks-app-03.houssem.cloud
+
+# check app is working with FQDN (http, not https)
+curl http://$DOMAIN_NAME_FQDN
+curl http://$DOMAIN_NAME_FQDN/hello-world-one
+curl http://$DOMAIN_NAME_FQDN/hello-world-two
