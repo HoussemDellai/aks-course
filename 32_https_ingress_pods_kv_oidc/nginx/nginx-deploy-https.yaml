@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: demo-app
+  name: nginx-conf
+data:
+  site.conf: |
+    server {
+      listen 443 ssl;
+      server_name demo-app;
+      ssl_certificate /run/secrets/nginx-cert/tls.crt;
+      ssl_certificate_key /run/secrets/nginx-cert/tls.key;
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+        try_files $uri $uri/ /index.html;
+      }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: demo-app
+  name: demo-app
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: demo-app
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: demo-app
+  name: demo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      restartPolicy: Always
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+      - name: demo-app-tls
+        secret:
+          secretName: demo-app-tls
+      containers:
+      - name: demo-app
+        image: nginx:1.19.2-alpine
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "8m"
+            memory: "16Mi"
+          limits:
+            cpu: "16m"
+            memory: "64Mi"
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: "/etc/nginx/conf.d"
+          readOnly: true
+        - name: demo-app-tls
+          mountPath: "/run/secrets/nginx-cert"
+          readOnly: true
