@@ -256,13 +256,14 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout "${INGRESS_CERT_NAME}.key" \
     -subj "/CN=$DOMAIN_NAME_FQDN/O=aks-ingress-tls" \
     -addext "subjectAltName=DNS:$DOMAIN_NAME_FQDN"
+```
 
+Save TLS certificate into secret
+
+```bash
 INGRESS_SECRET_TLS="ingress-tls-cert-secret"
 
 kubectl create secret tls $INGRESS_SECRET_TLS --cert="${INGRESS_CERT_NAME}.crt" --key="${INGRESS_CERT_NAME}.key" --namespace $NAMESPACE_APP
-# secret/app-tls-cert-secret created
-
-# kubectl create secret generic $SECRET_TLS --from-file="${INGRESS_CERT_NAME}.pfx" --namespace $NAMESPACE_APP
 # secret/app-tls-cert-secret created
 
 kubectl describe secret $INGRESS_SECRET_TLS --namespace $NAMESPACE_APP
@@ -330,4 +331,4 @@ Check tls certificate for ingress
 
 ```bash
 curl -v -k --resolve $DOMAIN_NAME_FQDN:443:$INGRESS_PUPLIC_IP https://$DOMAIN_NAME_FQDN
-```bash
+```
