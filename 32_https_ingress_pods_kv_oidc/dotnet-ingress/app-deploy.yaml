@@ -48,9 +48,7 @@ spec:
           value: ""
         - name: ASPNETCORE_Kestrel__Certificates__Default__Path
           value: /secrets/tls-cert/app-tls-cert.pfx
-      # - ASPNETCORE_ENVIRONMENT=Development
         - name: ASPNETCORE_URLS
-          value: "https://+;http://+"
-          # value: "https://+:443;http://+:80"
+          value: "https://+;http://+" # "https://+:443;http://+:80"
         - name: ASPNETCORE_HTTPS_PORT
           value: "443"

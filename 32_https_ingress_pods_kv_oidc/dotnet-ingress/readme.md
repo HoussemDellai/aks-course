@@ -1,5 +1,7 @@
 
-# create an AKS cluster
+create an AKS cluster
+
+```bash
 RG="rg-aks-demo-tls"
 AKS="aks-cluster"
 
@@ -18,13 +20,16 @@ az aks create -g $RG -n $AKS \
 
 az aks get-credentials --name $AKS -g $RG --overwrite-existing
 
-# verify connection to the cluster
 kubectl get nodes
 
 NAMESPACE_APP="dotnet-app"
 
 kubectl create namespace $NAMESPACE_APP
+```
 
+Create TLS certificate
+
+```bash
 CERT_NAME="app-tls-cert"
 
 SERVICE_NAME="app-svc"
@@ -36,11 +41,12 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -addext "subjectAltName=DNS:$SERVICE_NAME.$NAMESPACE_APP.svc.cluster.local"
 
 openssl pkcs12 -export -in "${CERT_NAME}.crt" -inkey "${CERT_NAME}.key" -out "${CERT_NAME}.pfx"
+```
 
+Save TLS certificate into Secret generic object
+
+```bash
 SECRET_TLS="app-tls-cert-secret"
-
-# kubectl create secret tls $SECRET_TLS --cert="${CERT_NAME}.crt" --key="${CERT_NAME}.key" --namespace $NAMESPACE_APP
-# secret/app-tls-cert-secret created
 
 kubectl create secret generic $SECRET_TLS --from-file="${CERT_NAME}.pfx" --namespace $NAMESPACE_APP
 # secret/app-tls-cert-secret created
@@ -57,7 +63,13 @@ kubectl describe secret $SECRET_TLS --namespace $NAMESPACE_APP
 # ====
 # tls.crt:  1326 bytes
 # tls.key:  1704 bytes
+```
 
+Create sample deployment object that uses TLS certificate from secret to cnfigure HTTPS.
+The configuration for the TLS certificate depends on the platform/app. 
+Nodejs, Java and others might define a different set of env variables to configure certificate.
+
+```bash
 cat <<EOF >app-deploy.yaml
 apiVersion: v1
 kind: Service
@@ -125,8 +137,13 @@ kubectl get pods,svc -n $NAMESPACE_APP
 
 # NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
 # service/app-svc   ClusterIP   10.0.179.173   <none>        443/TCP   2m9s
+```
 
-curl -v -k https://app-svc.dotnet-app.svc.cluster.local
+Verify HTTPS is working
+
+```bash
+kubectl run nginx --image=nginx
+kubectl exec -it nginx -- curl -v -k https://app-svc.dotnet-app.svc.cluster.local
 # * Trying 10.0.154.220:443...
 # * Connected to app-svc.dotnet-app.svc.cluster.local (10.0.154.220) port 443 (#0)
 # * ALPN, offering h2
@@ -150,130 +167,16 @@ curl -v -k https://app-svc.dotnet-app.svc.cluster.local
 # *  expire date: Nov 27 12:44:43 2023 GMT
 # *  issuer: CN=app-svc.dotnet-app.svc.cluster.local; O=aks-ingress-tls
 # *  SSL certificate verify result: self signed certificate (18), continuing anyway.
-# * Using HTTP2, server supports multi-use
-# * Connection state changed (HTTP/2 confirmed)
-# * Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
-# * Using Stream ID: 1 (easy handle 0x55e4e75262c0)
-# > GET / HTTP/2
-# > Host: app-svc.dotnet-app.svc.cluster.local
-# > user-agent: curl/7.74.0
-# > accept: */*
-# >
-# * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-# * TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-# * old SSL session ID is stale, removing
-# * Connection state changed (MAX_CONCURRENT_STREAMS == 100)!
-# < HTTP/2 200
-# < content-type: text/html; charset=utf-8
-# < date: Sun, 27 Nov 2022 14:17:00 GMT
-# < server: Kestrel
-# < strict-transport-security: max-age=2592000
-# <
-# <!DOCTYPE html>
-# <html lang="en">
-# <head>
-#     <meta charset="utf-8" />
-#     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-#     <title>Home page - aspnetapp</title>
-#     <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
-#     <link rel="stylesheet" href="/css/site.css?v=AKvNjO3dCPPS0eSU1Ez8T2wI280i08yGycV9ndytL-c" />
-#     <link rel="stylesheet" href="/aspnetapp.styles.css?v=dmaWIJMtYHjABWevZ_2Q8P4v1xrVPOBMkiL86DlKmX8" />
-# </head>
-# <body>
-#     <header>
-#         <nav b-o45o6oy0cw class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-#             <div b-o45o6oy0cw class="container-fluid">
-#                 <a class="navbar-brand" href="/">aspnetapp</a>
-#                 <button b-o45o6oy0cw class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-#                         aria-expanded="false" aria-label="Toggle navigation">
-#                     <span b-o45o6oy0cw class="navbar-toggler-icon"></span>
-#                 </button>
-#                 <div b-o45o6oy0cw class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-#                     <ul b-o45o6oy0cw class="navbar-nav flex-grow-1">
-#                         <li b-o45o6oy0cw class="nav-item">
-#                             <a class="nav-link text-dark" href="/">Home</a>
-#                         </li>
-#                         <li b-o45o6oy0cw class="nav-item">
-#                             <a class="nav-link text-dark" href="/Home/Privacy">Privacy</a>
-#                         </li>
-#                     </ul>
-#                 </div>
-#             </div>
-#         </nav>
-#     </header>
-#     <div b-o45o6oy0cw class="container">
-#         <main b-o45o6oy0cw role="main" class="pb-3">
+# ...
+```
 
-# <div class="text-center">
-#     <h1>Welcome to .NET</h1>
-# </div>
+deploy Nginx ingress controller with custom name into a dedicated namespace
 
-# <div align="center">
-#     <table class="table table-striped table-hover">
-#         <tr>
-#             <td>.NET version</td>
-#             <td>.NET 7.0.0</td>
-#         </tr>
-#         <tr>
-#             <td>Operating system</td>
-#             <td>Linux 5.15.0-1022-azure #27-Ubuntu SMP Thu Oct 13 17:09:33 UTC 2022</td>
-#         </tr>
-#         <tr>
-#             <td>Processor architecture</td>
-#             <td>X64</td>
-#         </tr>
-#         <tr>
-#             <td>CPU cores</td>
-#             <td>2</td>
-#         </tr>
-#         <tr>
-#             <td>Containerized</td>
-#             <td>true</td>
-#         </tr>
-#         <tr>
-#             <td>Memory, total available GC memory</td>
-#             <td>6.78 GiB</td>
-#         </tr>
-#         <tr>
-#             <td>Host name</td>
-#             <td>demo-app-69b8774746-m9wxv</td>
-#         </tr>
-#         <tr>
-#             <td style="vertical-align: top">Server IP address</td>
-#             <td>
-# 10.224.0.48                        <br />
-# fe80::48d6:f9ff:fefb:d5a9%29                        <br />
-
-#             </td>
-#         </tr>
-#     </table>
-# </div>
-
-
-#         </main>
-#     </div>
-
-#     <footer b-o45o6oy0cw class="border-top footer text-muted">
-#         <div b-o45o6oy0cw class="container">
-#             &copy; 2022 - aspnetapp - <a href="/Home/Privacy">Privacy</a>
-#         </div>
-#     </footer>
-#     <script src="/lib/jquery/dist/jquery.min.js"></script>
-#     <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-#     <script src="/js/site.js?v=4q1jwFhaPaZgr8WAUSrux6hAuh0XDg9kPS3xIVq36I0"></script>
-
-# </body>
-# </html>
-# * Connection #0 to host app-svc.dotnet-app.svc.cluster.local left intact
-
-# deploy ingress controller
-
-
+```bash
 NAMESPACE_INGRESS="ingress-nginx-app-07"
 kubectl create namespace $NAMESPACE_INGRESS
 # namespace/ingress-nginx-app-07 created
 
-# install Nginx ingress controller
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
@@ -308,17 +211,23 @@ kubectl get pods,svc -n $NAMESPACE_INGRESS
 # NAME                                                TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
 # service/ingress-nginx-app-07-controller             LoadBalancer   10.0.93.183    20.101.208.164   80:32033/TCP,443:32039/TCP   15m
 # service/ingress-nginx-app-07-controller-admission   ClusterIP      10.0.151.181   <none>           443/TCP                      15m
+```
 
+Nginx Ingress controller created a new Azure Public IP to receive ingress traffic.
+This Azure Public IP offer a sub-domain name in form of <unique DNS NAME>.westeurope.cloudapp.azure.com.
+It resolves to the public IP.
+We'll reuse that as our host in this demo.
+In production, we should use Azure DNS Zone to use our own custom domain name.
+
+Configure Ingress' Public IP with DNS Name
+
+```bash
 # capture ingress, public IP (Azure Public IP created)
 INGRESS_PUPLIC_IP=$(kubectl get services ingress-$INGRESS_CLASS_NAME-controller -n $NAMESPACE_INGRESS -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $INGRESS_PUPLIC_IP
 # 20.101.208.164
 
-# configure Ingress' Public IP with DNS Name
-DNS_NAME="app-07"
-
-###########################################################
-# Option 1: Name to associate with Azure Public IP address
+DNS_NAME="app-07" # this name should be unique for the subdomain: <unique DNS NAME>.westeurope.cloudapp.azure.com
 
 # Get the resource-id of the public IP
 NODE_RG=$(az aks show -g $RG -n $AKS --query nodeResourceGroup -o tsv)
@@ -335,9 +244,11 @@ DOMAIN_NAME_FQDN=$(az network public-ip show --ids $AZURE_PUBLIC_IP_ID --query='
 # DOMAIN_NAME_FQDN=$(az network public-ip show -g MC_rg-aks-we_aks-cluster_westeurope -n kubernetes-af54fcf50c6b24d7fbb9ed6aa62bdc77 --query='dnsSettings.fqdn')
 echo $DOMAIN_NAME_FQDN
 # aks-app-07.westeurope.cloudapp.azure.com
+```
 
-# creating certificate and ingress
+Creating TLS certificate for ingress
 
+```bash
 INGRESS_CERT_NAME="ingress-tls-cert"
 
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -345,8 +256,6 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout "${INGRESS_CERT_NAME}.key" \
     -subj "/CN=$DOMAIN_NAME_FQDN/O=aks-ingress-tls" \
     -addext "subjectAltName=DNS:$DOMAIN_NAME_FQDN"
-
-# openssl pkcs12 -export -in "${INGRESS_CERT_NAME}.crt" -inkey "${INGRESS_CERT_NAME}.key" -out "${INGRESS_CERT_NAME}.pfx"
 
 INGRESS_SECRET_TLS="ingress-tls-cert-secret"
 
@@ -369,7 +278,11 @@ kubectl describe secret $INGRESS_SECRET_TLS --namespace $NAMESPACE_APP
 # ====
 # tls.crt:  1326 bytes
 # tls.key:  1704 bytes
+```
 
+Create an Ingress resource that uses HTTPS
+
+```bash
 cat <<EOF >app-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -411,11 +324,10 @@ kubectl apply -f app-ingress.yaml --namespace $NAMESPACE_APP
 kubectl get ingress --namespace $NAMESPACE_APP
 # NAME                  CLASS          HOSTS                                      ADDRESS        PORTS     AGE
 # hello-world-ingress   nginx-app-07   aks-app-07.westeurope.cloudapp.azure.com   20.23.44.216   80, 443   64s
+```
 
-# check app is working with HTTPS
-curl https://$DOMAIN_NAME_FQDN
-curl https://$DOMAIN_NAME_FQDN/app
+Check tls certificate for ingress
 
-# check tls certificate
+```bash
 curl -v -k --resolve $DOMAIN_NAME_FQDN:443:$INGRESS_PUPLIC_IP https://$DOMAIN_NAME_FQDN
-
+```bash

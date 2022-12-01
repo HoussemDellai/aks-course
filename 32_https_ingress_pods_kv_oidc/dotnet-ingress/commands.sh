@@ -110,7 +110,10 @@ kubectl apply -f app-deploy.yaml -n $NAMESPACE_APP
 
 kubectl get pods,svc -n $NAMESPACE_APP
 
-curl -v -k https://app-svc.dotnet-app.svc.cluster.local
+# verify TLS certificate is working
+
+kubectl run nginx --image=nginx
+kubectl exec -it nginx -- curl -v -k https://app-svc.dotnet-app.svc.cluster.local
 
 # deploy ingress controller
 
