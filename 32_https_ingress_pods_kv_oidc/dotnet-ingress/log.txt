@@ -1,0 +1,1019 @@
+2022-11-30T07:25:14.713996Z INFO ExtHandler Initial NIC state: [{ "name": "lo", "link": "<LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00" }, { "name": "eth0", "link": "<BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP m
+ode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff" }, { "name": "eth1", "link": "<BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master eth0 state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff\    altname enP28215p0s2" }]
+2022-11-30T07:25:14.816302Z INFO ExtHandler Successfully added Azure fabric firewall rules
+2022-11-30T07:25:14.829112Z INFO ExtHandler Firewall rules:
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+       0        0 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        owner UID match 0
+       0        0 DROP       tcp  --  *      *       0.0.0.0/0            168.63.129.16        ctstate INVALID,NEW
+
+2022-11-30T07:25:14.858000Z INFO ExtHandler Set block dev timeout: sdb with timeout: 300
+2022-11-30T07:25:14.861297Z INFO ExtHandler Set block dev timeout: sda with timeout: 300
+2022-11-30T07:25:15.022737Z INFO ExtHandler Created slice for walinuxagent extensions system-walinuxagent.extensions.slice
+2022-11-30T07:25:15.027894Z INFO ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:15.032061Z INFO ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:15.131307Z INFO ExtHandler Found private key matching thumbprint 66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1
+2022-11-30T07:25:15.135687Z INFO ExtHandler Certificate with thumbprint 56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A has no matching private key.
+2022-11-30T07:25:15.320206Z INFO ExtHandler Agent WALinuxAgent-2.2.46 discovered update WALinuxAgent-2.8.0.11 -- exiting
+2022-11-30T07:25:15.439723Z INFO Daemon Agent WALinuxAgent-2.2.46 launched with command 'python3 -u /usr/sbin/waagent -run-exthandlers' is successfully running
+2022-11-30T07:25:15.446896Z INFO Daemon Determined Agent WALinuxAgent-2.8.0.11 to be the latest agent
+2022-11-30T07:25:15.867892Z INFO ExtHandler ExtHandler The agent will now check for updates and then will process extensions. Output to /dev/console will be suspended during those operations.
+2022-11-30T07:25:15.954739Z INFO ExtHandler ExtHandler Azure Linux Agent (Goal State Agent version 2.8.0.11)
+2022-11-30T07:25:15.956437Z INFO ExtHandler ExtHandler OS: ubuntu 22.04
+2022-11-30T07:25:15.956492Z INFO ExtHandler ExtHandler Python: 3.10.6
+2022-11-30T07:25:15.962380Z INFO ExtHandler ExtHandler Distro: ubuntu-22.04; OSUtil: UbuntuOSUtil; AgentService: walinuxagent; Python: 3.10.6; systemd: True; LISDrivers: Absent; logrotate: logrotate 3.19.0;
+2022-11-30T07:25:15.962574Z INFO ExtHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:15.962636Z INFO ExtHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:15.968215Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 1]
+2022-11-30T07:25:16.003607Z INFO ExtHandler ExtHandler HostGAPlugin version: 1.0.8.136
+2022-11-30T07:25:16.004157Z INFO ExtHandler
+2022-11-30T07:25:16.004239Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: 8c94da7c-88f4-41fe-ab5b-008656d9d10e eTag: 5283978567219527594 source: Fabric]
+2022-11-30T07:25:16.004288Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:25:16.004574Z INFO ExtHandler
+2022-11-30T07:25:16.004656Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 1]
+2022-11-30T07:25:16.096188Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:25:16.096450Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:25:16.096723Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:25:16.111973Z INFO ExtHandler ExtHandler WALinuxAgent-2.8.0.11 running as process 2356
+2022-11-30T07:25:16.115436Z INFO ExtHandler ExtHandler [CGI] systemd version: systemd 249 (249.11-0ubuntu3.6)
++PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY -P11KIT -QRENCODE +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified
+
+2022-11-30T07:25:16.122010Z INFO ExtHandler ExtHandler [CGI] Removed /etc/systemd/system/system-walinuxagent.extensions.slice
+2022-11-30T07:25:16.124419Z INFO ExtHandler ExtHandler [CGW] The CPU cgroup controller is not mounted
+2022-11-30T07:25:16.124822Z INFO ExtHandler ExtHandler [CGW] The memory cgroup controller is not mounted
+2022-11-30T07:25:16.126902Z INFO ExtHandler ExtHandler [CGI] cgroups v2 mounted at /sys/fs/cgroup.  Controllers: [cpuset cpu io memory hugetlb pids rdma misc
+]
+2022-11-30T07:25:16.127582Z INFO ExtHandler ExtHandler [CGW] The agent's process is not within a CPU cgroup
+2022-11-30T07:25:16.127939Z INFO ExtHandler ExtHandler [CGW] The agent's process is not within a memory cgroup
+2022-11-30T07:25:16.128275Z INFO ExtHandler ExtHandler [CGI] Agent cgroups enabled: False
+2022-11-30T07:25:16.128961Z INFO ExtHandler ExtHandler Starting setup for Persistent firewall rules
+2022-11-30T07:25:16.130823Z INFO ExtHandler ExtHandler Firewalld service not running/unavailable, trying to set up walinuxagent-network-setup.service
+2022-11-30T07:25:16.130978Z INFO ExtHandler ExtHandler Successfully updated the Binary file /var/lib/waagent/waagent-network-setup.py for firewall setup
+2022-11-30T07:25:16.136066Z INFO ExtHandler ExtHandler Unit file version matches with expected version: 1.3, not overwriting unit file
+2022-11-30T07:25:16.136162Z INFO ExtHandler ExtHandler Service: walinuxagent-network-setup.service already enabled. No change needed.
+2022-11-30T07:25:16.143368Z INFO ExtHandler ExtHandler Logs from the walinuxagent-network-setup.service since system boot:
+ Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+
+2022-11-30T07:25:16.143769Z INFO ExtHandler ExtHandler Persistent firewall rules setup successfully
+2022-11-30T07:25:16.151910Z INFO ExtHandler ExtHandler Firewall rule to allow DNS TCP request to wireserver for a non root user unavailable. Setting it now.
+2022-11-30T07:25:16.154404Z INFO ExtHandler ExtHandler Succesfully added firewall rule to allow non root users to do a DNS TCP request to wireserver
+2022-11-30T07:25:16.155800Z INFO ExtHandler ExtHandler Checking if log collection is allowed at this time [False]. All three conditions must be met: configuration enabled [True], cgroups enabled [False], python supported: [True]
+2022-11-30T07:25:16.156604Z INFO ExtHandler ExtHandler Starting env monitor service.
+2022-11-30T07:25:16.156854Z INFO MonitorHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:16.157016Z INFO MonitorHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:16.157996Z INFO ExtHandler ExtHandler Start SendTelemetryHandler service.
+2022-11-30T07:25:16.158641Z INFO EnvHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:16.158494Z INFO MonitorHandler ExtHandler Monitor.NetworkConfigurationChanges is disabled.
+2022-11-30T07:25:16.159049Z INFO ExtHandler ExtHandler Start Extension Telemetry service.
+2022-11-30T07:25:16.158827Z INFO EnvHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:16.159992Z INFO EnvHandler ExtHandler Configure routes
+2022-11-30T07:25:16.160107Z INFO MonitorHandler ExtHandler Routing table from /proc/net/route:
+Iface   Destination     Gateway         Flags   RefCnt  Use     Metric  Mask            MTU     Window  IRTT
+eth0    00000000        0100E00A        0003    0       0       100     00000000        0       0       0
+eth0    0000E00A        00000000        0001    0       0       100     0000FFFF        0       0       0
+eth0    0100E00A        00000000        0005    0       0       100     FFFFFFFF        0       0       0
+eth0    10813FA8        0100E00A        0007    0       0       100     FFFFFFFF        0       0       0
+eth0    FEA9FEA9        0100E00A        0007    0       0       100     FFFFFFFF        0       0       0
+
+2022-11-30T07:25:16.160562Z INFO EnvHandler ExtHandler Gateway:None
+2022-11-30T07:25:16.160855Z INFO TelemetryEventsCollector ExtHandler Extension Telemetry pipeline enabled: True
+2022-11-30T07:25:16.161333Z INFO TelemetryEventsCollector ExtHandler Successfully started the TelemetryEventsCollector thread
+2022-11-30T07:25:16.164130Z INFO EnvHandler ExtHandler Routes:None
+2022-11-30T07:25:16.164390Z INFO ExtHandler ExtHandler Goal State Period: 6 sec. This indicates how often the agent checks for new goal states and reports status.
+2022-11-30T07:25:16.158946Z INFO SendTelemetryHandler ExtHandler Successfully started the SendTelemetryHandler thread
+2022-11-30T07:25:16.170428Z INFO ExtHandler ExtHandler No requested version specified, checking for all versions for agent update (family: Prod)
+2022-11-30T07:25:16.171074Z WARNING EnvHandler ExtHandler Dhcp client is not running.
+2022-11-30T07:25:16.177507Z INFO MonitorHandler ExtHandler Network interfaces:
+Executing ['ip', '-a', '-o', 'link']:
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff
+3: eth1: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master eth0 state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff\    altname enP28215p0s2
+
+Executing ['ip', '-4', '-a', '-o', 'address']:
+1: lo    inet 127.0.0.1/8 scope host lo\       valid_lft forever preferred_lft forever
+2: eth0    inet 10.224.0.4/16 metric 100 brd 10.224.255.255 scope global eth0\       valid_lft forever preferred_lft forever
+
+Executing ['ip', '-6', '-a', '-o', 'address']:
+1: lo    inet6 ::1/128 scope host \       valid_lft forever preferred_lft forever
+2: eth0    inet6 fe80::6245:bdff:fe95:4a37/64 scope link \       valid_lft forever preferred_lft forever
+
+
+2022-11-30T07:25:16.189514Z INFO EnvHandler ExtHandler Current Firewall rules:
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+       0        0 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        tcp dpt:53
+      82    11904 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        owner UID match 0
+       0        0 DROP       tcp  --  *      *       0.0.0.0/0            168.63.129.16        ctstate INVALID,NEW
+
+2022-11-30T07:25:16.199802Z INFO ExtHandler ExtHandler
+2022-11-30T07:25:16.200288Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_1 channel: WireServer source: Fabric activity: 421608d8-4989-40bb-8e12-a4f7d2b9bf38 correlation b380dfe9-9b08-49a6-9b6b-733e4e179df8 created: 2022-11-30T07:24:44.421173Z]
+2022-11-30T07:25:16.227843Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_1]
+2022-11-30T07:25:16.228224Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: notinstalled
+2022-11-30T07:25:16.228571Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Downloading extension package: https://umsavzp4chz3rbvkxzqf.blob.core.windows.net/5237dd14-0aad-f051-0fad-1e33e1b63091/5237dd14-0aad-f051-0fad-1e33e1b63091_2.1.7.zip
+2022-11-30T07:25:16.389145Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Unzipping extension package: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript__2.1.7.zip
+2022-11-30T07:25:16.491814Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Initializing extension Microsoft.Azure.Extensions.CustomScript-2.1.7
+2022-11-30T07:25:16.492881Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:25:16.493216Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Install extension [bin/custom-script-shim install]
+2022-11-30T07:25:16.493518Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/wa
+agent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:18.497890Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim install
+[stdout]
++ /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension install
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=start
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 status="not reported for operation (by design)"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event="migrate to mrseq" error="Can't find out seqnum from /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status, not enough files"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event="created data dir" path=/var/lib/waagent/custom-script
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=installed
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 status="not reported for operation (by design)"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=end
+[stderr]
+2022-11-30T07:25:18.499202Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:25:18.499477Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:25:18.499785Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:20.505706Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Writing a placeholder status file indicating progress before forking: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="seqnum saved" path=mrseq
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="reading configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="read configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validating json schema"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="json schema valid"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="parsing configuration json"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="parsed configuration json"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validating configuration logically"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validated configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="creating output directory" path=/var/lib/waagent/custom-script/download/1
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="created output directory"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 files=0
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="executing command" output=/var/lib/waagent/custom-script/download/1
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="executing protected commandToExecute" output=/var/lib/waagent/custom-script/download/1
+[stderr]
+2022-11-30T07:25:20.543587Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_1]
+2022-11-30T07:25:20.543886Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: notinstalled
+2022-11-30T07:25:20.544284Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Downloading extension package: https://umsahzmhnpj1mp43lhs3.blob.core.windows.net/dba68a08-8fcc-b847-9570-04a083531b81/dba68a08-8fcc-b847-9570-04a083531b81_1.0.0.zip
+2022-11-30T07:25:20.575020Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Unzipping extension package: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing__1.0.0.zip
+2022-11-30T07:25:20.576108Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Initializing extension Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0
+2022-11-30T07:25:20.576804Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:25:20.577015Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Install extension [echo.sh install]
+2022-11-30T07:25:20.577253Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft
+.AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:22.582661Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh install
+[stdout]
+install
+[stderr]
+2022-11-30T07:25:22.583829Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:25:22.584077Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:25:22.584361Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:24.589045Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Writing a placeholder status file indicating progress before forking: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:25:24.591240Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_1 8391 ms]
+
+2022-11-30T07:25:24.616859Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'transitioning')]
+2022-11-30T07:25:24.617814Z INFO ExtHandler ExtHandler Looking for existing remote access users.
+2022-11-30T07:25:24.639181Z INFO ExtHandler ExtHandler [HEARTBEAT] Agent WALinuxAgent-2.8.0.11 is running as the goal state agent [DEBUG HeartbeatCounter: 0;HeartbeatId: B5A7DC3E-023F-46F3-8FC1-3E9B1D583D99;DroppedPackets: 0;UpdateGSErrors: 0;AutoUpdate: 1]
+2022-11-30T07:25:42.709251Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:25:42.710012Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:00.766031Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 2]
+2022-11-30T07:26:00.781423Z INFO ExtHandler
+2022-11-30T07:26:00.781585Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 2]
+2022-11-30T07:26:00.864922Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:26:00.865177Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:26:00.865446Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:26:00.865909Z INFO ExtHandler ExtHandler
+2022-11-30T07:26:00.866005Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_2 channel: WireServer source: Fabric activity: 2c45106d-85e3-4613-b330-44caa696d4a5 correlation be63fa97-e732-4468-b82c-36d584f890ec created: 2022-11-30T07:25:55.983170Z]
+2022-11-30T07:26:00.897934Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_2]
+2022-11-30T07:26:00.898425Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: enabled
+2022-11-30T07:26:00.898534Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:26:00.898797Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:26:00.899011Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:26:00.899283Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:26:02.904517Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=exit message="the script configuration has already been processed, will not run again"
+[stderr]
+2022-11-30T07:26:02.952041Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_2]
+2022-11-30T07:26:02.952531Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: enabled
+2022-11-30T07:26:02.952647Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:26:02.952847Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:26:02.953032Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:26:02.953291Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:26:04.959140Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:26:04.961505Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_2 4095 ms]
+
+2022-11-30T07:26:04.979068Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:04.979548Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:10.997781Z INFO ExtHandler
+2022-11-30T07:26:10.997927Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: 58cda46d-c469-45cd-9112-5e65eec0c2d2 eTag: 1148105675117150161 source: Fabric]
+2022-11-30T07:26:10.997986Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:28:53.556640Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 3]
+2022-11-30T07:28:53.566865Z INFO ExtHandler
+2022-11-30T07:28:53.566992Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: baf304b3-89ce-4897-b339-a3bdfc36fa6b eTag: 7554976929825801366 source: Fabric]
+2022-11-30T07:28:53.567046Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:28:53.567414Z INFO ExtHandler
+2022-11-30T07:28:53.567494Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 3]
+2022-11-30T07:28:53.658204Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:28:53.658378Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:28:53.658646Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:28:53.659114Z INFO ExtHandler ExtHandler
+2022-11-30T07:28:53.659205Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_3 channel: WireServer source: Fabric activity: 1b0ad94e-c0a4-4f72-b33e-158a1eb35758 correlation b9ea225c-0163-47c7-9b40-985528373ec2 created: 2022-11-30T07:28:46.388237Z]
+2022-11-30T07:28:53.659552Z INFO ExtHandler ExtHandler No extension/run-time settings settings found for Microsoft.AKS.Compute.AKS.Linux.AKSNode
+2022-11-30T07:28:53.702704Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:53.703184Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: enabled
+2022-11-30T07:28:53.703287Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:28:53.703524Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:28:53.703699Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:28:53.703930Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:28:55.710303Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=exit message="the script configuration has already been processed, will not run again"
+[stderr]
+2022-11-30T07:28:55.749227Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:55.749736Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: enabled
+2022-11-30T07:28:55.749863Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:28:55.750077Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:28:55.750275Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:28:55.750624Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:28:57.756515Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:28:57.789734Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:57.790038Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] [Enable] current handler state is: notinstalled
+2022-11-30T07:28:57.790318Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Downloading extension package: https://umsavcfzchn20dbjl1hn.blob.core.windows.net/6d113876-96b8-b1c2-c8dc-0d00586db055/6d113876-96b8-b1c2-c8dc-0d00586db055_1.30.zip
+2022-11-30T07:28:59.073257Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Unzipping extension package: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode__1.30.zip
+2022-11-30T07:28:59.510520Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Initializing extension Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30
+2022-11-30T07:28:59.512168Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Extension has no settings, write empty 0.settings
+2022-11-30T07:28:59.512400Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Install extension [shim.sh entrypoint.py -install]
+2022-11-30T07:28:59.512645Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30/shim.sh entrypoint.py -install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waag
+ent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.30", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "0", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022/11/30 07:28:59 Compute.AKS.Linux.AKSNode started to handle.
+2022/11/30 07:28:59 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] cwd is /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30
+2022/11/30 07:28:59 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Change log file to /var/log/azure/Microsoft.AKS.Compute.AKS.Linux.AKSNode/extension.log
+2022-11-30T07:29:02.519114Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Command: shim.sh entrypoint.py -install
+[stdout]
+2022/11/30 07:29:01 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Install,success,0,Successfully installed Compute.AKS.Linux.AKSNode extension
+[stderr]
+/var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30/waagent:2555: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+  if me.returncode is not 0 and chk_err is True and log_cmd:
+2022-11-30T07:29:02.520534Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Enable extension: [shim.sh entrypoint.py -enable]
+2022-11-30T07:29:02.520875Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30/shim.sh entrypoint.py -enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waage
+nt/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.30", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "0", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022/11/30 07:29:02 Compute.AKS.Linux.AKSNode started to handle.
+2022/11/30 07:29:02 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] cwd is /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30
+2022/11/30 07:29:02 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Change log file to /var/log/azure/Microsoft.AKS.Compute.AKS.Linux.AKSNode/extension.log
+2022-11-30T07:29:05.527574Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Command: shim.sh entrypoint.py -enable
+[stdout]
+2022/11/30 07:29:04 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Enable,success,0,Successfully enabled Compute.AKS.Linux.AKSNode extension
+[stderr]
+2022-11-30T07:29:05.529884Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_3 11870 ms]
+
+2022-11-30T07:29:05.548813Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.AKSNode', 'Ready'), ('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:29:05.549304Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.AKSNode', 'Ready'), ('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:30:16.222665Z INFO TelemetryEventsCollector ExtHandler Collected 22 events for extension: Microsoft.Azure.Extensions.CustomScript
+2022-11-30T07:40:16.403209Z INFO Daemon Agent WALinuxAgent-2.8.0.11 launched with command 'python3 -u bin/WALinuxAgent-2.8.0.11-py2.7.egg -run-exthandlers' is successfully running
+2022-11-30T07:55:29.745106Z INFO ExtHandler ExtHandler [HEARTBEAT] Agent WALinuxAgent-2.8.0.11 is running as the goal state agent [DEBUG HeartbeatCounter: 1;HeartbeatId: B5A7DC3E-023F-46F3-8FC1-3E9B1D583D99;DroppedPackets: 0;UpdateGSErrors: 0;AutoUpdate: 1]
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/# cat /var/log/waagent.log
+2022-11-30T07:25:12.882501Z INFO Daemon Azure Linux Agent Version:2.2.46
+2022-11-30T07:25:12.884868Z INFO Daemon OS: ubuntu 22.04
+2022-11-30T07:25:12.886718Z INFO Daemon Python: 3.10.6
+2022-11-30T07:25:12.890672Z INFO Daemon CGroups Status: The cgroup filesystem is ready to use
+2022-11-30T07:25:12.894492Z WARNING Daemon Failed to create a cgroup for the VM Agent; resource usage for the Agent will not be tracked. Error: [CGroupsException] Failed to get paths of agent's cgroups. Error: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+2022-11-30T07:25:12.903763Z INFO Daemon Run daemon
+2022-11-30T07:25:12.966246Z INFO Daemon cloud-init is enabled: True
+2022-11-30T07:25:12.968466Z INFO Daemon Using cloud-init for provisioning
+2022-11-30T07:25:12.971102Z INFO Daemon Clean protocol and wireserver endpoint
+2022-11-30T07:25:12.973553Z INFO Daemon Running CloudInit provisioning handler
+2022-11-30T07:25:12.979717Z INFO Daemon Detect protocol endpoints
+2022-11-30T07:25:12.983130Z INFO Daemon Clean protocol and wireserver endpoint
+2022-11-30T07:25:12.985705Z INFO Daemon WireServer endpoint is not found. Rerun dhcp handler
+2022-11-30T07:25:12.990467Z INFO Daemon Test for route to 168.63.129.16
+2022-11-30T07:25:12.994514Z INFO Daemon Route to 168.63.129.16 exists
+2022-11-30T07:25:13.000594Z INFO Daemon Wire server endpoint:168.63.129.16
+2022-11-30T07:25:13.010939Z INFO Daemon Fabric preferred wire protocol version:2015-04-05
+2022-11-30T07:25:13.014532Z INFO Daemon Wire protocol version:2012-11-30
+2022-11-30T07:25:13.022598Z INFO Daemon Server preferred version:2015-04-05
+2022-11-30T07:25:13.379942Z INFO Daemon Found private key matching thumbprint 66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1
+2022-11-30T07:25:13.384103Z INFO Daemon Certificate with thumbprint 56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A has no matching private key.
+2022-11-30T07:25:13.399284Z INFO Daemon ssh host key found at: /etc/ssh/ssh_host_rsa_key.pub
+2022-11-30T07:25:13.408375Z INFO Daemon Thumbprint obtained from : /etc/ssh/ssh_host_rsa_key.pub
+2022-11-30T07:25:13.411906Z INFO Daemon Finished provisioning
+2022-11-30T07:25:14.431234Z INFO Daemon RDMA capabilities are not enabled, skipping
+2022-11-30T07:25:14.434477Z INFO Daemon Installed Agent WALinuxAgent-2.2.46 is the most current agent
+2022-11-30T07:25:14.580718Z INFO ExtHandler Agent WALinuxAgent-2.2.46 is running as the goal state agent
+2022-11-30T07:25:14.584311Z INFO ExtHandler Distro info: ubuntu 22.04, osutil class being used: UbuntuOSUtil, agent service name: walinuxagent
+2022-11-30T07:25:14.589971Z INFO ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:14.592699Z INFO ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:14.611197Z INFO ExtHandler Start env monitor service.
+2022-11-30T07:25:14.614011Z INFO ExtHandler Configure routes
+2022-11-30T07:25:14.616032Z INFO ExtHandler Gateway:None
+2022-11-30T07:25:14.617967Z INFO ExtHandler Routes:None
+2022-11-30T07:25:14.619945Z INFO ExtHandler Hostname record does not exist, creating [/var/lib/waagent/published_hostname] with hostname [aks-nodepool1-69713762-vmss000000]
+2022-11-30T07:25:14.627140Z ERROR ExtHandler Command: [iptables -w -t security -L OUTPUT --zero OUTPUT -nxv], return code: [4], result: [iptables v1.8.7 (nf_tables):  CHAIN_ZERO failed (No such file or directory): chain OUTPUT
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+Zeroing chain `OUTPUT'
+]
+2022-11-30T07:25:14.631126Z WARNING ExtHandler Dhcp client is not running.
+2022-11-30T07:25:14.646701Z INFO ExtHandler WALinuxAgent-2.2.46 running as process 2257
+2022-11-30T07:25:14.646022Z INFO ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:14.653178Z INFO ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:14.655296Z INFO ExtHandler CGroups Status: The cgroup filesystem is ready to use
+2022-11-30T07:25:14.662113Z WARNING ExtHandler Failed to create a cgroup for the VM Agent; resource usage for the Agent will not be tracked. Error: [CGroupsException] Failed to get paths of agent's cgroups. Error: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+2022-11-30T07:25:14.683630Z INFO ExtHandler Route table: [{"Iface": "eth0", "Destination": "0.0.0.0", "Gateway": "10.224.0.1", "Mask": "0.0.0.0", "Flags": "0x0003", "Metric": "100"},{"Iface": "eth0", "Destination": "10.224.0.0", "Gateway": "0.0.0.0", "Mask": "255.255.0.0", "Flags": "0x0001", "Metric": "100"},{"Iface": "eth0", "Destinati
+on": "10.224.0.1", "Gateway": "0.0.0.0", "Mask": "255.255.255.255", "Flags": "0x0005", "Metric": "100"},{"Iface": "eth0", "Destination": "168.63.129.16", "Gateway": "10.224.0.1", "Mask": "255.255.255.255", "Flags": "0x0007", "Metric": "100"},{"Iface": "eth0", "Destination": "169.254.169.254", "Gateway": "10.224.0.1", "Mask": "255.255.25
+5.255", "Flags": "0x0007", "Metric": "100"}]
+2022-11-30T07:25:14.713996Z INFO ExtHandler Initial NIC state: [{ "name": "lo", "link": "<LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00" }, { "name": "eth0", "link": "<BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP m
+ode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff" }, { "name": "eth1", "link": "<BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master eth0 state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff\    altname enP28215p0s2" }]
+2022-11-30T07:25:14.816302Z INFO ExtHandler Successfully added Azure fabric firewall rules
+2022-11-30T07:25:14.829112Z INFO ExtHandler Firewall rules:
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+       0        0 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        owner UID match 0
+       0        0 DROP       tcp  --  *      *       0.0.0.0/0            168.63.129.16        ctstate INVALID,NEW
+
+2022-11-30T07:25:14.858000Z INFO ExtHandler Set block dev timeout: sdb with timeout: 300
+2022-11-30T07:25:14.861297Z INFO ExtHandler Set block dev timeout: sda with timeout: 300
+2022-11-30T07:25:15.022737Z INFO ExtHandler Created slice for walinuxagent extensions system-walinuxagent.extensions.slice
+2022-11-30T07:25:15.027894Z INFO ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:15.032061Z INFO ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:15.131307Z INFO ExtHandler Found private key matching thumbprint 66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1
+2022-11-30T07:25:15.135687Z INFO ExtHandler Certificate with thumbprint 56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A has no matching private key.
+2022-11-30T07:25:15.320206Z INFO ExtHandler Agent WALinuxAgent-2.2.46 discovered update WALinuxAgent-2.8.0.11 -- exiting
+2022-11-30T07:25:15.439723Z INFO Daemon Agent WALinuxAgent-2.2.46 launched with command 'python3 -u /usr/sbin/waagent -run-exthandlers' is successfully running
+2022-11-30T07:25:15.446896Z INFO Daemon Determined Agent WALinuxAgent-2.8.0.11 to be the latest agent
+2022-11-30T07:25:15.867892Z INFO ExtHandler ExtHandler The agent will now check for updates and then will process extensions. Output to /dev/console will be suspended during those operations.
+2022-11-30T07:25:15.954739Z INFO ExtHandler ExtHandler Azure Linux Agent (Goal State Agent version 2.8.0.11)
+2022-11-30T07:25:15.956437Z INFO ExtHandler ExtHandler OS: ubuntu 22.04
+2022-11-30T07:25:15.956492Z INFO ExtHandler ExtHandler Python: 3.10.6
+2022-11-30T07:25:15.962380Z INFO ExtHandler ExtHandler Distro: ubuntu-22.04; OSUtil: UbuntuOSUtil; AgentService: walinuxagent; Python: 3.10.6; systemd: True; LISDrivers: Absent; logrotate: logrotate 3.19.0;
+2022-11-30T07:25:15.962574Z INFO ExtHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:15.962636Z INFO ExtHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:15.968215Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 1]
+2022-11-30T07:25:16.003607Z INFO ExtHandler ExtHandler HostGAPlugin version: 1.0.8.136
+2022-11-30T07:25:16.004157Z INFO ExtHandler
+2022-11-30T07:25:16.004239Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: 8c94da7c-88f4-41fe-ab5b-008656d9d10e eTag: 5283978567219527594 source: Fabric]
+2022-11-30T07:25:16.004288Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:25:16.004574Z INFO ExtHandler
+2022-11-30T07:25:16.004656Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 1]
+2022-11-30T07:25:16.096188Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:25:16.096450Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:25:16.096723Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:25:16.111973Z INFO ExtHandler ExtHandler WALinuxAgent-2.8.0.11 running as process 2356
+2022-11-30T07:25:16.115436Z INFO ExtHandler ExtHandler [CGI] systemd version: systemd 249 (249.11-0ubuntu3.6)
++PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY -P11KIT -QRENCODE +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified
+
+2022-11-30T07:25:16.122010Z INFO ExtHandler ExtHandler [CGI] Removed /etc/systemd/system/system-walinuxagent.extensions.slice
+2022-11-30T07:25:16.124419Z INFO ExtHandler ExtHandler [CGW] The CPU cgroup controller is not mounted
+2022-11-30T07:25:16.124822Z INFO ExtHandler ExtHandler [CGW] The memory cgroup controller is not mounted
+2022-11-30T07:25:16.126902Z INFO ExtHandler ExtHandler [CGI] cgroups v2 mounted at /sys/fs/cgroup.  Controllers: [cpuset cpu io memory hugetlb pids rdma misc
+]
+2022-11-30T07:25:16.127582Z INFO ExtHandler ExtHandler [CGW] The agent's process is not within a CPU cgroup
+2022-11-30T07:25:16.127939Z INFO ExtHandler ExtHandler [CGW] The agent's process is not within a memory cgroup
+2022-11-30T07:25:16.128275Z INFO ExtHandler ExtHandler [CGI] Agent cgroups enabled: False
+2022-11-30T07:25:16.128961Z INFO ExtHandler ExtHandler Starting setup for Persistent firewall rules
+2022-11-30T07:25:16.130823Z INFO ExtHandler ExtHandler Firewalld service not running/unavailable, trying to set up walinuxagent-network-setup.service
+2022-11-30T07:25:16.130978Z INFO ExtHandler ExtHandler Successfully updated the Binary file /var/lib/waagent/waagent-network-setup.py for firewall setup
+2022-11-30T07:25:16.136066Z INFO ExtHandler ExtHandler Unit file version matches with expected version: 1.3, not overwriting unit file
+2022-11-30T07:25:16.136162Z INFO ExtHandler ExtHandler Service: walinuxagent-network-setup.service already enabled. No change needed.
+2022-11-30T07:25:16.143368Z INFO ExtHandler ExtHandler Logs from the walinuxagent-network-setup.service since system boot:
+ Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+
+2022-11-30T07:25:16.143769Z INFO ExtHandler ExtHandler Persistent firewall rules setup successfully
+2022-11-30T07:25:16.151910Z INFO ExtHandler ExtHandler Firewall rule to allow DNS TCP request to wireserver for a non root user unavailable. Setting it now.
+2022-11-30T07:25:16.154404Z INFO ExtHandler ExtHandler Succesfully added firewall rule to allow non root users to do a DNS TCP request to wireserver
+2022-11-30T07:25:16.155800Z INFO ExtHandler ExtHandler Checking if log collection is allowed at this time [False]. All three conditions must be met: configuration enabled [True], cgroups enabled [False], python supported: [True]
+2022-11-30T07:25:16.156604Z INFO ExtHandler ExtHandler Starting env monitor service.
+2022-11-30T07:25:16.156854Z INFO MonitorHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:16.157016Z INFO MonitorHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:16.157996Z INFO ExtHandler ExtHandler Start SendTelemetryHandler service.
+2022-11-30T07:25:16.158641Z INFO EnvHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:16.158494Z INFO MonitorHandler ExtHandler Monitor.NetworkConfigurationChanges is disabled.
+2022-11-30T07:25:16.159049Z INFO ExtHandler ExtHandler Start Extension Telemetry service.
+2022-11-30T07:25:16.158827Z INFO EnvHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:16.159992Z INFO EnvHandler ExtHandler Configure routes
+2022-11-30T07:25:16.160107Z INFO MonitorHandler ExtHandler Routing table from /proc/net/route:
+Iface   Destination     Gateway         Flags   RefCnt  Use     Metric  Mask            MTU     Window  IRTT
+eth0    00000000        0100E00A        0003    0       0       100     00000000        0       0       0
+eth0    0000E00A        00000000        0001    0       0       100     0000FFFF        0       0       0
+eth0    0100E00A        00000000        0005    0       0       100     FFFFFFFF        0       0       0
+eth0    10813FA8        0100E00A        0007    0       0       100     FFFFFFFF        0       0       0
+eth0    FEA9FEA9        0100E00A        0007    0       0       100     FFFFFFFF        0       0       0
+
+2022-11-30T07:25:16.160562Z INFO EnvHandler ExtHandler Gateway:None
+2022-11-30T07:25:16.160855Z INFO TelemetryEventsCollector ExtHandler Extension Telemetry pipeline enabled: True
+2022-11-30T07:25:16.161333Z INFO TelemetryEventsCollector ExtHandler Successfully started the TelemetryEventsCollector thread
+2022-11-30T07:25:16.164130Z INFO EnvHandler ExtHandler Routes:None
+2022-11-30T07:25:16.164390Z INFO ExtHandler ExtHandler Goal State Period: 6 sec. This indicates how often the agent checks for new goal states and reports status.
+2022-11-30T07:25:16.158946Z INFO SendTelemetryHandler ExtHandler Successfully started the SendTelemetryHandler thread
+2022-11-30T07:25:16.170428Z INFO ExtHandler ExtHandler No requested version specified, checking for all versions for agent update (family: Prod)
+2022-11-30T07:25:16.171074Z WARNING EnvHandler ExtHandler Dhcp client is not running.
+2022-11-30T07:25:16.177507Z INFO MonitorHandler ExtHandler Network interfaces:
+Executing ['ip', '-a', '-o', 'link']:
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff
+3: eth1: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master eth0 state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff\    altname enP28215p0s2
+
+Executing ['ip', '-4', '-a', '-o', 'address']:
+1: lo    inet 127.0.0.1/8 scope host lo\       valid_lft forever preferred_lft forever
+2: eth0    inet 10.224.0.4/16 metric 100 brd 10.224.255.255 scope global eth0\       valid_lft forever preferred_lft forever
+
+Executing ['ip', '-6', '-a', '-o', 'address']:
+1: lo    inet6 ::1/128 scope host \       valid_lft forever preferred_lft forever
+2: eth0    inet6 fe80::6245:bdff:fe95:4a37/64 scope link \       valid_lft forever preferred_lft forever
+
+
+2022-11-30T07:25:16.189514Z INFO EnvHandler ExtHandler Current Firewall rules:
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+       0        0 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        tcp dpt:53
+      82    11904 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        owner UID match 0
+       0        0 DROP       tcp  --  *      *       0.0.0.0/0            168.63.129.16        ctstate INVALID,NEW
+
+2022-11-30T07:25:16.199802Z INFO ExtHandler ExtHandler
+2022-11-30T07:25:16.200288Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_1 channel: WireServer source: Fabric activity: 421608d8-4989-40bb-8e12-a4f7d2b9bf38 correlation b380dfe9-9b08-49a6-9b6b-733e4e179df8 created: 2022-11-30T07:24:44.421173Z]
+2022-11-30T07:25:16.227843Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_1]
+2022-11-30T07:25:16.228224Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: notinstalled
+2022-11-30T07:25:16.228571Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Downloading extension package: https://umsavzp4chz3rbvkxzqf.blob.core.windows.net/5237dd14-0aad-f051-0fad-1e33e1b63091/5237dd14-0aad-f051-0fad-1e33e1b63091_2.1.7.zip
+2022-11-30T07:25:16.389145Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Unzipping extension package: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript__2.1.7.zip
+2022-11-30T07:25:16.491814Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Initializing extension Microsoft.Azure.Extensions.CustomScript-2.1.7
+2022-11-30T07:25:16.492881Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:25:16.493216Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Install extension [bin/custom-script-shim install]
+2022-11-30T07:25:16.493518Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/wa
+agent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:18.497890Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim install
+[stdout]
++ /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension install
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=start
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 status="not reported for operation (by design)"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event="migrate to mrseq" error="Can't find out seqnum from /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status, not enough files"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event="created data dir" path=/var/lib/waagent/custom-script
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=installed
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 status="not reported for operation (by design)"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=end
+[stderr]
+2022-11-30T07:25:18.499202Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:25:18.499477Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:25:18.499785Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:20.505706Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Writing a placeholder status file indicating progress before forking: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="seqnum saved" path=mrseq
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="reading configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="read configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validating json schema"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="json schema valid"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="parsing configuration json"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="parsed configuration json"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validating configuration logically"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validated configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="creating output directory" path=/var/lib/waagent/custom-script/download/1
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="created output directory"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 files=0
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="executing command" output=/var/lib/waagent/custom-script/download/1
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="executing protected commandToExecute" output=/var/lib/waagent/custom-script/download/1
+[stderr]
+2022-11-30T07:25:20.543587Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_1]
+2022-11-30T07:25:20.543886Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: notinstalled
+2022-11-30T07:25:20.544284Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Downloading extension package: https://umsahzmhnpj1mp43lhs3.blob.core.windows.net/dba68a08-8fcc-b847-9570-04a083531b81/dba68a08-8fcc-b847-9570-04a083531b81_1.0.0.zip
+2022-11-30T07:25:20.575020Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Unzipping extension package: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing__1.0.0.zip
+2022-11-30T07:25:20.576108Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Initializing extension Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0
+2022-11-30T07:25:20.576804Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:25:20.577015Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Install extension [echo.sh install]
+2022-11-30T07:25:20.577253Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft
+.AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:22.582661Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh install
+[stdout]
+install
+[stderr]
+2022-11-30T07:25:22.583829Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:25:22.584077Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:25:22.584361Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:24.589045Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Writing a placeholder status file indicating progress before forking: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:25:24.591240Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_1 8391 ms]
+
+2022-11-30T07:25:24.616859Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'transitioning')]
+2022-11-30T07:25:24.617814Z INFO ExtHandler ExtHandler Looking for existing remote access users.
+2022-11-30T07:25:24.639181Z INFO ExtHandler ExtHandler [HEARTBEAT] Agent WALinuxAgent-2.8.0.11 is running as the goal state agent [DEBUG HeartbeatCounter: 0;HeartbeatId: B5A7DC3E-023F-46F3-8FC1-3E9B1D583D99;DroppedPackets: 0;UpdateGSErrors: 0;AutoUpdate: 1]
+2022-11-30T07:25:42.709251Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:25:42.710012Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:00.766031Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 2]
+2022-11-30T07:26:00.781423Z INFO ExtHandler
+2022-11-30T07:26:00.781585Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 2]
+2022-11-30T07:26:00.864922Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:26:00.865177Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:26:00.865446Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:26:00.865909Z INFO ExtHandler ExtHandler
+2022-11-30T07:26:00.866005Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_2 channel: WireServer source: Fabric activity: 2c45106d-85e3-4613-b330-44caa696d4a5 correlation be63fa97-e732-4468-b82c-36d584f890ec created: 2022-11-30T07:25:55.983170Z]
+2022-11-30T07:26:00.897934Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_2]
+2022-11-30T07:26:00.898425Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: enabled
+2022-11-30T07:26:00.898534Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:26:00.898797Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:26:00.899011Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:26:00.899283Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:26:02.904517Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=exit message="the script configuration has already been processed, will not run again"
+[stderr]
+2022-11-30T07:26:02.952041Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_2]
+2022-11-30T07:26:02.952531Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: enabled
+2022-11-30T07:26:02.952647Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:26:02.952847Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:26:02.953032Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:26:02.953291Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:26:04.959140Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:26:04.961505Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_2 4095 ms]
+
+2022-11-30T07:26:04.979068Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:04.979548Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:10.997781Z INFO ExtHandler
+2022-11-30T07:26:10.997927Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: 58cda46d-c469-45cd-9112-5e65eec0c2d2 eTag: 1148105675117150161 source: Fabric]
+2022-11-30T07:26:10.997986Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:28:53.556640Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 3]
+2022-11-30T07:28:53.566865Z INFO ExtHandler
+2022-11-30T07:28:53.566992Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: baf304b3-89ce-4897-b339-a3bdfc36fa6b eTag: 7554976929825801366 source: Fabric]
+2022-11-30T07:28:53.567046Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:28:53.567414Z INFO ExtHandler
+2022-11-30T07:28:53.567494Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 3]
+2022-11-30T07:28:53.658204Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:28:53.658378Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:28:53.658646Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:28:53.659114Z INFO ExtHandler ExtHandler
+2022-11-30T07:28:53.659205Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_3 channel: WireServer source: Fabric activity: 1b0ad94e-c0a4-4f72-b33e-158a1eb35758 correlation b9ea225c-0163-47c7-9b40-985528373ec2 created: 2022-11-30T07:28:46.388237Z]
+2022-11-30T07:28:53.659552Z INFO ExtHandler ExtHandler No extension/run-time settings settings found for Microsoft.AKS.Compute.AKS.Linux.AKSNode
+2022-11-30T07:28:53.702704Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:53.703184Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: enabled
+2022-11-30T07:28:53.703287Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:28:53.703524Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:28:53.703699Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:28:53.703930Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:28:55.710303Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=exit message="the script configuration has already been processed, will not run again"
+[stderr]
+2022-11-30T07:28:55.749227Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:55.749736Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: enabled
+2022-11-30T07:28:55.749863Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:28:55.750077Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:28:55.750275Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+root@aks-nodepool1-69713762-vmss000000:/#
+root@aks-nodepool1-69713762-vmss000000:/# cat /var/log/waagent.log
+2022-11-30T07:25:12.882501Z INFO Daemon Azure Linux Agent Version:2.2.46
+2022-11-30T07:25:12.884868Z INFO Daemon OS: ubuntu 22.04
+2022-11-30T07:25:12.886718Z INFO Daemon Python: 3.10.6
+2022-11-30T07:25:12.890672Z INFO Daemon CGroups Status: The cgroup filesystem is ready to use
+2022-11-30T07:25:12.894492Z WARNING Daemon Failed to create a cgroup for the VM Agent; resource usage for the Agent will not be tracked. Error: [CGroupsException] Failed to get paths of agent's cgroups. Error: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+2022-11-30T07:25:12.903763Z INFO Daemon Run daemon
+2022-11-30T07:25:12.966246Z INFO Daemon cloud-init is enabled: True
+2022-11-30T07:25:12.968466Z INFO Daemon Using cloud-init for provisioning
+2022-11-30T07:25:12.971102Z INFO Daemon Clean protocol and wireserver endpoint
+2022-11-30T07:25:12.973553Z INFO Daemon Running CloudInit provisioning handler
+2022-11-30T07:25:12.979717Z INFO Daemon Detect protocol endpoints
+2022-11-30T07:25:12.983130Z INFO Daemon Clean protocol and wireserver endpoint
+2022-11-30T07:25:12.985705Z INFO Daemon WireServer endpoint is not found. Rerun dhcp handler
+2022-11-30T07:25:12.990467Z INFO Daemon Test for route to 168.63.129.16
+2022-11-30T07:25:12.994514Z INFO Daemon Route to 168.63.129.16 exists
+2022-11-30T07:25:13.000594Z INFO Daemon Wire server endpoint:168.63.129.16
+2022-11-30T07:25:13.010939Z INFO Daemon Fabric preferred wire protocol version:2015-04-05
+2022-11-30T07:25:13.014532Z INFO Daemon Wire protocol version:2012-11-30
+2022-11-30T07:25:13.022598Z INFO Daemon Server preferred version:2015-04-05
+2022-11-30T07:25:13.379942Z INFO Daemon Found private key matching thumbprint 66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1
+2022-11-30T07:25:13.384103Z INFO Daemon Certificate with thumbprint 56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A has no matching private key.
+2022-11-30T07:25:13.399284Z INFO Daemon ssh host key found at: /etc/ssh/ssh_host_rsa_key.pub
+2022-11-30T07:25:13.408375Z INFO Daemon Thumbprint obtained from : /etc/ssh/ssh_host_rsa_key.pub
+2022-11-30T07:25:13.411906Z INFO Daemon Finished provisioning
+2022-11-30T07:25:14.431234Z INFO Daemon RDMA capabilities are not enabled, skipping
+2022-11-30T07:25:14.434477Z INFO Daemon Installed Agent WALinuxAgent-2.2.46 is the most current agent
+2022-11-30T07:25:14.580718Z INFO ExtHandler Agent WALinuxAgent-2.2.46 is running as the goal state agent
+2022-11-30T07:25:14.584311Z INFO ExtHandler Distro info: ubuntu 22.04, osutil class being used: UbuntuOSUtil, agent service name: walinuxagent
+2022-11-30T07:25:14.589971Z INFO ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:14.592699Z INFO ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:14.611197Z INFO ExtHandler Start env monitor service.
+2022-11-30T07:25:14.614011Z INFO ExtHandler Configure routes
+2022-11-30T07:25:14.616032Z INFO ExtHandler Gateway:None
+2022-11-30T07:25:14.617967Z INFO ExtHandler Routes:None
+2022-11-30T07:25:14.619945Z INFO ExtHandler Hostname record does not exist, creating [/var/lib/waagent/published_hostname] with hostname [aks-nodepool1-69713762-vmss000000]
+2022-11-30T07:25:14.627140Z ERROR ExtHandler Command: [iptables -w -t security -L OUTPUT --zero OUTPUT -nxv], return code: [4], result: [iptables v1.8.7 (nf_tables):  CHAIN_ZERO failed (No such file or directory): chain OUTPUT
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+Zeroing chain `OUTPUT'
+]
+2022-11-30T07:25:14.631126Z WARNING ExtHandler Dhcp client is not running.
+2022-11-30T07:25:14.646701Z INFO ExtHandler WALinuxAgent-2.2.46 running as process 2257
+2022-11-30T07:25:14.646022Z INFO ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:14.653178Z INFO ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:14.655296Z INFO ExtHandler CGroups Status: The cgroup filesystem is ready to use
+2022-11-30T07:25:14.662113Z WARNING ExtHandler Failed to create a cgroup for the VM Agent; resource usage for the Agent will not be tracked. Error: [CGroupsException] Failed to get paths of agent's cgroups. Error: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+2022-11-30T07:25:14.683630Z INFO ExtHandler Route table: [{"Iface": "eth0", "Destination": "0.0.0.0", "Gateway": "10.224.0.1", "Mask": "0.0.0.0", "Flags": "0x0003", "Metric": "100"},{"Iface": "eth0", "Destination": "10.224.0.0", "Gateway": "0.0.0.0", "Mask": "255.255.0.0", "Flags": "0x0001", "Metric": "100"},{"Iface": "eth0", "Destinati
+on": "10.224.0.1", "Gateway": "0.0.0.0", "Mask": "255.255.255.255", "Flags": "0x0005", "Metric": "100"},{"Iface": "eth0", "Destination": "168.63.129.16", "Gateway": "10.224.0.1", "Mask": "255.255.255.255", "Flags": "0x0007", "Metric": "100"},{"Iface": "eth0", "Destination": "169.254.169.254", "Gateway": "10.224.0.1", "Mask": "255.255.25
+5.255", "Flags": "0x0007", "Metric": "100"}]
+2022-11-30T07:25:14.713996Z INFO ExtHandler Initial NIC state: [{ "name": "lo", "link": "<LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00" }, { "name": "eth0", "link": "<BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP m
+ode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff" }, { "name": "eth1", "link": "<BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master eth0 state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff\    altname enP28215p0s2" }]
+2022-11-30T07:25:14.816302Z INFO ExtHandler Successfully added Azure fabric firewall rules
+2022-11-30T07:25:14.829112Z INFO ExtHandler Firewall rules:
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+       0        0 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        owner UID match 0
+       0        0 DROP       tcp  --  *      *       0.0.0.0/0            168.63.129.16        ctstate INVALID,NEW
+
+2022-11-30T07:25:14.858000Z INFO ExtHandler Set block dev timeout: sdb with timeout: 300
+2022-11-30T07:25:14.861297Z INFO ExtHandler Set block dev timeout: sda with timeout: 300
+2022-11-30T07:25:15.022737Z INFO ExtHandler Created slice for walinuxagent extensions system-walinuxagent.extensions.slice
+2022-11-30T07:25:15.027894Z INFO ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:15.032061Z INFO ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:15.131307Z INFO ExtHandler Found private key matching thumbprint 66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1
+2022-11-30T07:25:15.135687Z INFO ExtHandler Certificate with thumbprint 56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A has no matching private key.
+2022-11-30T07:25:15.320206Z INFO ExtHandler Agent WALinuxAgent-2.2.46 discovered update WALinuxAgent-2.8.0.11 -- exiting
+2022-11-30T07:25:15.439723Z INFO Daemon Agent WALinuxAgent-2.2.46 launched with command 'python3 -u /usr/sbin/waagent -run-exthandlers' is successfully running
+2022-11-30T07:25:15.446896Z INFO Daemon Determined Agent WALinuxAgent-2.8.0.11 to be the latest agent
+2022-11-30T07:25:15.867892Z INFO ExtHandler ExtHandler The agent will now check for updates and then will process extensions. Output to /dev/console will be suspended during those operations.
+2022-11-30T07:25:15.954739Z INFO ExtHandler ExtHandler Azure Linux Agent (Goal State Agent version 2.8.0.11)
+2022-11-30T07:25:15.956437Z INFO ExtHandler ExtHandler OS: ubuntu 22.04
+2022-11-30T07:25:15.956492Z INFO ExtHandler ExtHandler Python: 3.10.6
+2022-11-30T07:25:15.962380Z INFO ExtHandler ExtHandler Distro: ubuntu-22.04; OSUtil: UbuntuOSUtil; AgentService: walinuxagent; Python: 3.10.6; systemd: True; LISDrivers: Absent; logrotate: logrotate 3.19.0;
+2022-11-30T07:25:15.962574Z INFO ExtHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:15.962636Z INFO ExtHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:15.968215Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 1]
+2022-11-30T07:25:16.003607Z INFO ExtHandler ExtHandler HostGAPlugin version: 1.0.8.136
+2022-11-30T07:25:16.004157Z INFO ExtHandler
+2022-11-30T07:25:16.004239Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: 8c94da7c-88f4-41fe-ab5b-008656d9d10e eTag: 5283978567219527594 source: Fabric]
+2022-11-30T07:25:16.004288Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:25:16.004574Z INFO ExtHandler
+2022-11-30T07:25:16.004656Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 1]
+2022-11-30T07:25:16.096188Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:25:16.096450Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:25:16.096723Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:25:16.111973Z INFO ExtHandler ExtHandler WALinuxAgent-2.8.0.11 running as process 2356
+2022-11-30T07:25:16.115436Z INFO ExtHandler ExtHandler [CGI] systemd version: systemd 249 (249.11-0ubuntu3.6)
++PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY -P11KIT -QRENCODE +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified
+
+2022-11-30T07:25:16.122010Z INFO ExtHandler ExtHandler [CGI] Removed /etc/systemd/system/system-walinuxagent.extensions.slice
+2022-11-30T07:25:16.124419Z INFO ExtHandler ExtHandler [CGW] The CPU cgroup controller is not mounted
+2022-11-30T07:25:16.124822Z INFO ExtHandler ExtHandler [CGW] The memory cgroup controller is not mounted
+2022-11-30T07:25:16.126902Z INFO ExtHandler ExtHandler [CGI] cgroups v2 mounted at /sys/fs/cgroup.  Controllers: [cpuset cpu io memory hugetlb pids rdma misc
+]
+2022-11-30T07:25:16.127582Z INFO ExtHandler ExtHandler [CGW] The agent's process is not within a CPU cgroup
+2022-11-30T07:25:16.127939Z INFO ExtHandler ExtHandler [CGW] The agent's process is not within a memory cgroup
+2022-11-30T07:25:16.128275Z INFO ExtHandler ExtHandler [CGI] Agent cgroups enabled: False
+2022-11-30T07:25:16.128961Z INFO ExtHandler ExtHandler Starting setup for Persistent firewall rules
+2022-11-30T07:25:16.130823Z INFO ExtHandler ExtHandler Firewalld service not running/unavailable, trying to set up walinuxagent-network-setup.service
+2022-11-30T07:25:16.130978Z INFO ExtHandler ExtHandler Successfully updated the Binary file /var/lib/waagent/waagent-network-setup.py for firewall setup
+2022-11-30T07:25:16.136066Z INFO ExtHandler ExtHandler Unit file version matches with expected version: 1.3, not overwriting unit file
+2022-11-30T07:25:16.136162Z INFO ExtHandler ExtHandler Service: walinuxagent-network-setup.service already enabled. No change needed.
+2022-11-30T07:25:16.143368Z INFO ExtHandler ExtHandler Logs from the walinuxagent-network-setup.service since system boot:
+ Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+Nov 30 07:25:05 aks-nodepool1-69713762-vmss000000 systemd[1]: Condition check resulted in Setup network rules for WALinuxAgent being skipped.
+
+2022-11-30T07:25:16.143769Z INFO ExtHandler ExtHandler Persistent firewall rules setup successfully
+2022-11-30T07:25:16.151910Z INFO ExtHandler ExtHandler Firewall rule to allow DNS TCP request to wireserver for a non root user unavailable. Setting it now.
+2022-11-30T07:25:16.154404Z INFO ExtHandler ExtHandler Succesfully added firewall rule to allow non root users to do a DNS TCP request to wireserver
+2022-11-30T07:25:16.155800Z INFO ExtHandler ExtHandler Checking if log collection is allowed at this time [False]. All three conditions must be met: configuration enabled [True], cgroups enabled [False], python supported: [True]
+2022-11-30T07:25:16.156604Z INFO ExtHandler ExtHandler Starting env monitor service.
+2022-11-30T07:25:16.156854Z INFO MonitorHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:16.157016Z INFO MonitorHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:16.157996Z INFO ExtHandler ExtHandler Start SendTelemetryHandler service.
+2022-11-30T07:25:16.158641Z INFO EnvHandler ExtHandler WireServer endpoint 168.63.129.16 read from file
+2022-11-30T07:25:16.158494Z INFO MonitorHandler ExtHandler Monitor.NetworkConfigurationChanges is disabled.
+2022-11-30T07:25:16.159049Z INFO ExtHandler ExtHandler Start Extension Telemetry service.
+2022-11-30T07:25:16.158827Z INFO EnvHandler ExtHandler Wire server endpoint:168.63.129.16
+2022-11-30T07:25:16.159992Z INFO EnvHandler ExtHandler Configure routes
+2022-11-30T07:25:16.160107Z INFO MonitorHandler ExtHandler Routing table from /proc/net/route:
+Iface   Destination     Gateway         Flags   RefCnt  Use     Metric  Mask            MTU     Window  IRTT
+eth0    00000000        0100E00A        0003    0       0       100     00000000        0       0       0
+eth0    0000E00A        00000000        0001    0       0       100     0000FFFF        0       0       0
+eth0    0100E00A        00000000        0005    0       0       100     FFFFFFFF        0       0       0
+eth0    10813FA8        0100E00A        0007    0       0       100     FFFFFFFF        0       0       0
+eth0    FEA9FEA9        0100E00A        0007    0       0       100     FFFFFFFF        0       0       0
+
+2022-11-30T07:25:16.160562Z INFO EnvHandler ExtHandler Gateway:None
+2022-11-30T07:25:16.160855Z INFO TelemetryEventsCollector ExtHandler Extension Telemetry pipeline enabled: True
+2022-11-30T07:25:16.161333Z INFO TelemetryEventsCollector ExtHandler Successfully started the TelemetryEventsCollector thread
+2022-11-30T07:25:16.164130Z INFO EnvHandler ExtHandler Routes:None
+2022-11-30T07:25:16.164390Z INFO ExtHandler ExtHandler Goal State Period: 6 sec. This indicates how often the agent checks for new goal states and reports status.
+2022-11-30T07:25:16.158946Z INFO SendTelemetryHandler ExtHandler Successfully started the SendTelemetryHandler thread
+2022-11-30T07:25:16.170428Z INFO ExtHandler ExtHandler No requested version specified, checking for all versions for agent update (family: Prod)
+2022-11-30T07:25:16.171074Z WARNING EnvHandler ExtHandler Dhcp client is not running.
+2022-11-30T07:25:16.177507Z INFO MonitorHandler ExtHandler Network interfaces:
+Executing ['ip', '-a', '-o', 'link']:
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000\    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff
+3: eth1: <BROADCAST,MULTICAST,SLAVE,UP,LOWER_UP> mtu 1500 qdisc mq master eth0 state UP mode DEFAULT group default qlen 1000\    link/ether 60:45:bd:95:4a:37 brd ff:ff:ff:ff:ff:ff\    altname enP28215p0s2
+
+Executing ['ip', '-4', '-a', '-o', 'address']:
+1: lo    inet 127.0.0.1/8 scope host lo\       valid_lft forever preferred_lft forever
+2: eth0    inet 10.224.0.4/16 metric 100 brd 10.224.255.255 scope global eth0\       valid_lft forever preferred_lft forever
+
+Executing ['ip', '-6', '-a', '-o', 'address']:
+1: lo    inet6 ::1/128 scope host \       valid_lft forever preferred_lft forever
+2: eth0    inet6 fe80::6245:bdff:fe95:4a37/64 scope link \       valid_lft forever preferred_lft forever
+
+
+2022-11-30T07:25:16.189514Z INFO EnvHandler ExtHandler Current Firewall rules:
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+    pkts      bytes target     prot opt in     out     source               destination
+       0        0 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        tcp dpt:53
+      82    11904 ACCEPT     tcp  --  *      *       0.0.0.0/0            168.63.129.16        owner UID match 0
+       0        0 DROP       tcp  --  *      *       0.0.0.0/0            168.63.129.16        ctstate INVALID,NEW
+
+2022-11-30T07:25:16.199802Z INFO ExtHandler ExtHandler
+2022-11-30T07:25:16.200288Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_1 channel: WireServer source: Fabric activity: 421608d8-4989-40bb-8e12-a4f7d2b9bf38 correlation b380dfe9-9b08-49a6-9b6b-733e4e179df8 created: 2022-11-30T07:24:44.421173Z]
+2022-11-30T07:25:16.227843Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_1]
+2022-11-30T07:25:16.228224Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: notinstalled
+2022-11-30T07:25:16.228571Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Downloading extension package: https://umsavzp4chz3rbvkxzqf.blob.core.windows.net/5237dd14-0aad-f051-0fad-1e33e1b63091/5237dd14-0aad-f051-0fad-1e33e1b63091_2.1.7.zip
+2022-11-30T07:25:16.389145Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Unzipping extension package: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript__2.1.7.zip
+2022-11-30T07:25:16.491814Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Initializing extension Microsoft.Azure.Extensions.CustomScript-2.1.7
+2022-11-30T07:25:16.492881Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:25:16.493216Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Install extension [bin/custom-script-shim install]
+2022-11-30T07:25:16.493518Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/wa
+agent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:18.497890Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim install
+[stdout]
++ /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension install
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=start
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 status="not reported for operation (by design)"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event="migrate to mrseq" error="Can't find out seqnum from /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status, not enough files"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event="created data dir" path=/var/lib/waagent/custom-script
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=installed
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 status="not reported for operation (by design)"
+time=2022-11-30T07:25:16Z version=v2.1.6/git@ad1546c-dirty operation=install seq=1 event=end
+[stderr]
+2022-11-30T07:25:18.499202Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:25:18.499477Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:25:18.499785Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:20.505706Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Writing a placeholder status file indicating progress before forking: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="seqnum saved" path=mrseq
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="reading configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="read configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validating json schema"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="json schema valid"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="parsing configuration json"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="parsed configuration json"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validating configuration logically"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="validated configuration"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="creating output directory" path=/var/lib/waagent/custom-script/download/1
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="created output directory"
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 files=0
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="executing command" output=/var/lib/waagent/custom-script/download/1
+time=2022-11-30T07:25:18Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="executing protected commandToExecute" output=/var/lib/waagent/custom-script/download/1
+[stderr]
+2022-11-30T07:25:20.543587Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_1]
+2022-11-30T07:25:20.543886Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: notinstalled
+2022-11-30T07:25:20.544284Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Downloading extension package: https://umsahzmhnpj1mp43lhs3.blob.core.windows.net/dba68a08-8fcc-b847-9570-04a083531b81/dba68a08-8fcc-b847-9570-04a083531b81_1.0.0.zip
+2022-11-30T07:25:20.575020Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Unzipping extension package: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing__1.0.0.zip
+2022-11-30T07:25:20.576108Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Initializing extension Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0
+2022-11-30T07:25:20.576804Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:25:20.577015Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Install extension [echo.sh install]
+2022-11-30T07:25:20.577253Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft
+.AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:22.582661Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh install
+[stdout]
+install
+[stderr]
+2022-11-30T07:25:22.583829Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:25:22.584077Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:25:22.584361Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:25:24.589045Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Writing a placeholder status file indicating progress before forking: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:25:24.591240Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_1 8391 ms]
+
+2022-11-30T07:25:24.616859Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'transitioning')]
+2022-11-30T07:25:24.617814Z INFO ExtHandler ExtHandler Looking for existing remote access users.
+2022-11-30T07:25:24.639181Z INFO ExtHandler ExtHandler [HEARTBEAT] Agent WALinuxAgent-2.8.0.11 is running as the goal state agent [DEBUG HeartbeatCounter: 0;HeartbeatId: B5A7DC3E-023F-46F3-8FC1-3E9B1D583D99;DroppedPackets: 0;UpdateGSErrors: 0;AutoUpdate: 1]
+2022-11-30T07:25:42.709251Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:25:42.710012Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:00.766031Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 2]
+2022-11-30T07:26:00.781423Z INFO ExtHandler
+2022-11-30T07:26:00.781585Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 2]
+2022-11-30T07:26:00.864922Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:26:00.865177Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:26:00.865446Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:26:00.865909Z INFO ExtHandler ExtHandler
+2022-11-30T07:26:00.866005Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_2 channel: WireServer source: Fabric activity: 2c45106d-85e3-4613-b330-44caa696d4a5 correlation be63fa97-e732-4468-b82c-36d584f890ec created: 2022-11-30T07:25:55.983170Z]
+2022-11-30T07:26:00.897934Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_2]
+2022-11-30T07:26:00.898425Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: enabled
+2022-11-30T07:26:00.898534Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:26:00.898797Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:26:00.899011Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:26:00.899283Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:26:02.904517Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:26:00Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=exit message="the script configuration has already been processed, will not run again"
+[stderr]
+2022-11-30T07:26:02.952041Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_2]
+2022-11-30T07:26:02.952531Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: enabled
+2022-11-30T07:26:02.952647Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:26:02.952847Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:26:02.953032Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:26:02.953291Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:26:04.959140Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:26:04.961505Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_2 4095 ms]
+
+2022-11-30T07:26:04.979068Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:04.979548Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:26:10.997781Z INFO ExtHandler
+2022-11-30T07:26:10.997927Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: 58cda46d-c469-45cd-9112-5e65eec0c2d2 eTag: 1148105675117150161 source: Fabric]
+2022-11-30T07:26:10.997986Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:28:53.556640Z INFO ExtHandler Fetched a new incarnation for the WireServer goal state [incarnation 3]
+2022-11-30T07:28:53.566865Z INFO ExtHandler
+2022-11-30T07:28:53.566992Z INFO ExtHandler Fetched new vmSettings [HostGAPlugin correlation ID: baf304b3-89ce-4897-b339-a3bdfc36fa6b eTag: 7554976929825801366 source: Fabric]
+2022-11-30T07:28:53.567046Z INFO ExtHandler The vmSettings originated via Fabric; will ignore them.
+2022-11-30T07:28:53.567414Z INFO ExtHandler
+2022-11-30T07:28:53.567494Z INFO ExtHandler Fetching full goal state from the WireServer [incarnation 3]
+2022-11-30T07:28:53.658204Z INFO ExtHandler Downloaded certificate {'thumbprint': '66E7382AB37ABCDDE1FA6863E17C7D266D7B96F1', 'hasPrivateKey': True}
+2022-11-30T07:28:53.658378Z INFO ExtHandler Downloaded certificate {'thumbprint': '56D5C3F87F7E289C58A583CC9DF8E16B00AC0C7A', 'hasPrivateKey': False}
+2022-11-30T07:28:53.658646Z INFO ExtHandler Fetch goal state completed
+2022-11-30T07:28:53.659114Z INFO ExtHandler ExtHandler
+2022-11-30T07:28:53.659205Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState started [incarnation_3 channel: WireServer source: Fabric activity: 1b0ad94e-c0a4-4f72-b33e-158a1eb35758 correlation b9ea225c-0163-47c7-9b40-985528373ec2 created: 2022-11-30T07:28:46.388237Z]
+2022-11-30T07:28:53.659552Z INFO ExtHandler ExtHandler No extension/run-time settings settings found for Microsoft.AKS.Compute.AKS.Linux.AKSNode
+2022-11-30T07:28:53.702704Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:53.703184Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] [Enable] current handler state is: enabled
+2022-11-30T07:28:53.703287Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Update settings file: 1.settings
+2022-11-30T07:28:53.703524Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Requested extension state: enabled
+2022-11-30T07:28:53.703699Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Enable extension: [bin/custom-script-shim enable]
+2022-11-30T07:28:53.703930Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Executing command: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-shim enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waa
+gent/Microsoft.Azure.Extensions.CustomScript-2.1.7", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "2.1.7", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:28:55.710303Z INFO ExtHandler [Microsoft.Azure.Extensions.CustomScript-2.1.7] Command: bin/custom-script-shim enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/status/1.status
++ nohup /var/lib/waagent/Microsoft.Azure.Extensions.CustomScript-2.1.7/bin/custom-script-extension enable
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=start
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=pre-check
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event="comparing seqnum" path=mrseq
+time=2022-11-30T07:28:53Z version=v2.1.6/git@ad1546c-dirty operation=enable seq=1 event=exit message="the script configuration has already been processed, will not run again"
+[stderr]
+2022-11-30T07:28:55.749227Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:55.749736Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] [Enable] current handler state is: enabled
+2022-11-30T07:28:55.749863Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Update settings file: 1.settings
+2022-11-30T07:28:55.750077Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Requested extension state: enabled
+2022-11-30T07:28:55.750275Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Enable extension: [echo.sh enable]
+2022-11-30T07:28:55.750624Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/echo.sh enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waagent/Microsoft.
+AKS.Compute.AKS.Linux.Billing-1.0.0", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.0.0", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "1", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022-11-30T07:28:57.756515Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0] Command: echo.sh enable
+[stdout]
+Not writing a placeholder status file, already exists: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.Billing-1.0.0/status/1.status
+enable
+[stderr]
+2022-11-30T07:28:57.789734Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Target handler state: enabled [incarnation_3]
+2022-11-30T07:28:57.790038Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] [Enable] current handler state is: notinstalled
+2022-11-30T07:28:57.790318Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Downloading extension package: https://umsavcfzchn20dbjl1hn.blob.core.windows.net/6d113876-96b8-b1c2-c8dc-0d00586db055/6d113876-96b8-b1c2-c8dc-0d00586db055_1.30.zip
+2022-11-30T07:28:59.073257Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Unzipping extension package: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode__1.30.zip
+2022-11-30T07:28:59.510520Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Initializing extension Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30
+2022-11-30T07:28:59.512168Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Extension has no settings, write empty 0.settings
+2022-11-30T07:28:59.512400Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Install extension [shim.sh entrypoint.py -install]
+2022-11-30T07:28:59.512645Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30/shim.sh entrypoint.py -install with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waag
+ent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.30", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "0", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022/11/30 07:28:59 Compute.AKS.Linux.AKSNode started to handle.
+2022/11/30 07:28:59 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] cwd is /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30
+2022/11/30 07:28:59 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Change log file to /var/log/azure/Microsoft.AKS.Compute.AKS.Linux.AKSNode/extension.log
+2022-11-30T07:29:02.519114Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Command: shim.sh entrypoint.py -install
+[stdout]
+2022/11/30 07:29:01 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Install,success,0,Successfully installed Compute.AKS.Linux.AKSNode extension
+[stderr]
+/var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30/waagent:2555: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+  if me.returncode is not 0 and chk_err is True and log_cmd:
+2022-11-30T07:29:02.520534Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Enable extension: [shim.sh entrypoint.py -enable]
+2022-11-30T07:29:02.520875Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Executing command: /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30/shim.sh entrypoint.py -enable with environment variables: {"AZURE_GUEST_AGENT_UNINSTALL_CMD_EXIT_CODE": "NOT_RUN", "AZURE_GUEST_AGENT_EXTENSION_PATH": "/var/lib/waage
+nt/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30", "AZURE_GUEST_AGENT_EXTENSION_VERSION": "1.30", "AZURE_GUEST_AGENT_WIRE_PROTOCOL_ADDRESS": "168.63.129.16", "ConfigSequenceNumber": "0", "AZURE_GUEST_AGENT_EXTENSION_SUPPORTED_FEATURES": "[{\"Key\": \"ExtensionTelemetryPipeline\", \"Value\": \"1.0\"}]"}
+2022/11/30 07:29:02 Compute.AKS.Linux.AKSNode started to handle.
+2022/11/30 07:29:02 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] cwd is /var/lib/waagent/Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30
+2022/11/30 07:29:02 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Change log file to /var/log/azure/Microsoft.AKS.Compute.AKS.Linux.AKSNode/extension.log
+2022-11-30T07:29:05.527574Z INFO ExtHandler [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.30] Command: shim.sh entrypoint.py -enable
+[stdout]
+2022/11/30 07:29:04 [Microsoft.AKS.Compute.AKS.Linux.AKSNode-1.0.0.0] Enable,success,0,Successfully enabled Compute.AKS.Linux.AKSNode extension
+[stderr]
+2022-11-30T07:29:05.529884Z INFO ExtHandler ExtHandler ProcessExtensionsGoalState completed [incarnation_3 11870 ms]
+
+2022-11-30T07:29:05.548813Z INFO ExtHandler ExtHandler Extension status: [('Microsoft.AKS.Compute.AKS.Linux.AKSNode', 'Ready'), ('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:29:05.549304Z INFO ExtHandler ExtHandler All extensions in the goal state have reached a terminal state: [('Microsoft.AKS.Compute.AKS.Linux.AKSNode', 'Ready'), ('Microsoft.AKS.Compute.AKS.Linux.Billing', 'success'), ('Microsoft.Azure.Extensions.CustomScript', 'success')]
+2022-11-30T07:30:16.222665Z INFO TelemetryEventsCollector ExtHandler Collected 22 events for extension: Microsoft.Azure.Extensions.CustomScript
+2022-11-30T07:40:16.403209Z INFO Daemon Agent WALinuxAgent-2.8.0.11 launched with command 'python3 -u bin/WALinuxAgent-2.8.0.11-py2.7.egg -run-exthandlers' is successfully running
+2022-11-30T07:55:29.745106Z INFO ExtHandler ExtHandler [HEARTBEAT] Agent WALinuxAgent-2.8.0.11 is running as the goal state agent [DEBUG HeartbeatCounter: 1;HeartbeatId: B5A7DC3E-023F-46F3-8FC1-3E9B1D583D99;DroppedPackets: 0;UpdateGSErrors: 0;AutoUpdate: 1]
+2022-11-30T08:25:18.225405Z INFO ExtHandler ExtHandler No requested version specified, checking for all versions for agent update (family: Prod)
+2022-11-30T08:25:30.320763Z INFO ExtHandler ExtHandler [HEARTBEAT] Agent WALinuxAgent-2.8.0.11 is running as the goal state agent [DEBUG HeartbeatCounter: 2;HeartbeatId: B5A7DC3E-023F-46F3-8FC1-3E9B1D583D99;DroppedPackets: 0;UpdateGSErrors: 0;AutoUpdate: 1]
