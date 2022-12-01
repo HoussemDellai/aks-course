@@ -194,8 +194,6 @@ kind: Ingress
 metadata:
   name: demo-app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /\$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
@@ -208,20 +206,13 @@ spec:
   - host: $DOMAIN_NAME_FQDN
     http:
       paths:
-      - path: /app(/|$)(.*)
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: $SERVICE_NAME
             port:
-              number: 443 # 80
-      - path: /(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: $SERVICE_NAME
-            port:
-              number: 443 # 80
+              number: 443
 EOF
 
 kubectl apply -f app-ingress.yaml --namespace $NAMESPACE_APP

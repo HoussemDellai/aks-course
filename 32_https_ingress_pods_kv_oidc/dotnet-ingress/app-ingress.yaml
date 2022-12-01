@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: demo-app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
@@ -17,17 +15,10 @@ spec:
   - host: app-07.westeurope.cloudapp.azure.com
     http:
       paths:
-      - path: /app(/|$)(.*)
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: app-svc
             port:
-              number: 443 # 80
-      - path: /(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: app-svc
-            port:
-              number: 443 # 80
+              number: 443
