@@ -1,5 +1,6 @@
+## Using HTTPS in Kubernetes Ingress and Pods
 
-create an AKS cluster
+Create an AKS cluster
 
 ```bash
 RG="rg-aks-demo-tls"
@@ -12,8 +13,6 @@ az aks create -g $RG -n $AKS \
               --enable-managed-identity \
               --node-count 2 \
               --network-plugin azure \
-              --enable-oidc-issuer \
-              --enable-workload-identity \
               --enable-addons azure-keyvault-secrets-provider \
               --rotation-poll-interval 5m \
               --enable-secret-rotation
