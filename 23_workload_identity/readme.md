@@ -98,7 +98,7 @@ spec:
     - image: ghcr.io/azure/azure-workload-identity/msal-go
       name: oidc
       env:
-      - name: KEYVAULT_NAME
+      - name: KEYVAULT_URL
         value: ${KEYVAULT_NAME}
       - name: SECRET_NAME
         value: ${KEYVAULT_SECRET_NAME}
@@ -106,6 +106,7 @@ spec:
     kubernetes.io/os: linux
 EOF
 ```
+# Note: Newer version of the sample image will only need KEYVAULT_URL variable.
 
 ```bash
 kubectl describe pod quick-start
