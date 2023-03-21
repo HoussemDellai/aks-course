@@ -1,0 +1,23 @@
+# app-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-deploy
+  name: app-deploy
+spec:
+  replicas: 200
+  selector:
+    matchLabels:
+      app: app-deploy
+  template:
+    metadata:
+      labels:
+        app: app-deploy
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+      nodeSelector:
+        agentpool: pooltenant01
+# node affinity

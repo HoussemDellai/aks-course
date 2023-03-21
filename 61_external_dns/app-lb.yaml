@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app01
+spec:
+  selector:
+    matchLabels:
+      app: app01
+  template:
+    metadata:
+      labels:
+        app: app01
+    spec:
+      containers:
+        - image: mcr.microsoft.com/dotnet/samples:aspnetapp
+          name: aspnetapp
+          ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app01-svc
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: app01.houssem.cloud # external-dns configuration
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: app01
+  type: LoadBalancer

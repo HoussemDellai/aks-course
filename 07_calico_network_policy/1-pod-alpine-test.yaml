@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine
+  namespace: development
+  labels:
+    app: webapp
+    role: frontend
+spec:
+  containers:
+  - image: alpine:3.11
+    name: alpine
+    args: [/bin/sh, -c, 'i=0; while true; do sleep 10; done']

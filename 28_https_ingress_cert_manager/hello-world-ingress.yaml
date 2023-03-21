@@ -1,0 +1,71 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # cert-manager.io/issuer: letsencrypt
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  ingressClassName: nginx-app-03 # nginx
+  tls:
+  - hosts:
+    - aks-app-03.westeurope.cloudapp.azure.com
+    # - frontend.20.73.235.13.nip.io
+    # - aks-app-01.westeurope.cloudapp.azure.com
+    secretName: tls-ingress-app-02-secret
+  rules:
+  - host: aks-app-03.westeurope.cloudapp.azure.com
+  # - host: aks-app-01.westeurope.cloudapp.azure.com
+  # - host: frontend.20.73.235.13.nip.io
+    http:
+      paths:
+      - path: /hello-world-one(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: aks-helloworld-one
+            port:
+              number: 80
+      - path: /hello-world-two(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: aks-helloworld-two
+            port:
+              number: 80
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: aks-helloworld-one
+            port:
+              number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world-ingress-static
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+    # cert-manager.io/issuer: letsencrypt
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  ingressClassName: nginx-app-03 # nginx
+  tls:
+  - hosts:
+    - aks-app-03.westeurope.cloudapp.azure.com
+    secretName: tls-ingress-app-02-secret
+  rules:
+  - host: aks-app-03.westeurope.cloudapp.azure.com
+    http:
+      paths:
+      - path: /static(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: aks-helloworld-one
+            port: 
+              number: 80

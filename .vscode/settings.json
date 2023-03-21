@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///toc.schema.json": "/toc\\.yml/i",
+        "kubernetes://schema/apps/v1%40statefulset": "file:///d%3A/Projects/docker-kubernetes-course/18_nodepool_upgrade/web-ss.yaml"
+    }
+}

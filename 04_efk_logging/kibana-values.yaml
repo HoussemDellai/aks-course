@@ -1,0 +1,10 @@
+files:
+  kibana.yml:
+    ## Default Kibana configuration from kibana-docker.
+    server.name: kibana
+    server.host: "0"
+    ## For kibana < 6.6, use elasticsearch.url instead
+    elasticsearch.hosts: http://elasticsearch-client:9200
+
+service:
+  type: LoadBalancer # ClusterIP

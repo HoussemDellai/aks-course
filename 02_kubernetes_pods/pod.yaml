@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mc1
+  labels:
+    app: mc1
+spec:
+  volumes:
+  - name: html
+    emptyDir: {}
+  containers:
+  - name: 1st
+    image: nginx
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html
+  - name: 2nd
+    image: debian
+    volumeMounts:
+    - name: html
+      mountPath: /html
+    env:
+      - name: MY_NODE_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+      - name: MY_POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+    # command: ["/bin/sh"]
+    # args: ["-c", "echo Hello from the debian container > /html/index.html"]
+  
+    # command: ["/bin/sh"]
+    # args: ["-c", "printenv > /html/index.html;"]
+    # args:
+    #   - printenv >> /html/index.html;
+    command: ["/bin/sh", "-c"]
+    args:
+      - while true; do
+          echo -en '\n';
+          echo "HOSTNAME: " >> /html/index.html;
+          printenv HOSTNAME > /html/index.html;
+          echo "MY_POD_IP: " >> /html/index.html;
+          printenv MY_POD_IP >> /html/index.html;
+          echo "MY_NODE_NAME: " >> /html/index.html;
+          printenv MY_NODE_NAME >> /html/index.html;
+          sleep 10;
+        done;
+      # - while true; do
+      #     printenv > /html/index.html;
+      #     sleep 1;
+      #   done

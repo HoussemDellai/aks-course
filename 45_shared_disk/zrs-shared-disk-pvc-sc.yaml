@@ -1,0 +1,25 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: zrs-shared-managed-csi
+provisioner: disk.csi.azure.com
+parameters:
+  skuName: Premium_ZRS
+  maxShares: "3"
+  cachingMode: None  # ReadOnly cache is not available for premium SSD with maxShares>1
+  # resourceGroup: aks-storage-westeurope
+  # tags: costcenter=Marketing
+reclaimPolicy: Delete
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: zrs-shared-pvc-azuredisk
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 256Gi  # minimum size of shared disk is 256GB (P15)
+  volumeMode: Block
+  storageClassName: zrs-shared-managed-csi

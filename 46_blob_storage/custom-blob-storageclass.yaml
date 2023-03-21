@@ -1,0 +1,20 @@
+# # https://github.com/kubernetes-sigs/blob-csi-driver/blob/master/docs/driver-parameters.md
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: custom-azureblob-nfs-standard-grs
+# parameters:
+#   protocol: nfs # fuse, fuse2, nfs
+#   skuName: Standard_LRS # Standard_LRS, Premium_LRS, Standard_GRS, Standard_RAGRS
+#   location: westeurope
+#   resourceGroup: rg-aks-storage # should be existing
+#   storageAccount: storageblobaks013
+#   containerName: "existing container name"
+#   containerNamePrefix: "aks-pvc-blob"
+#   allowBlobPublicAccess: "false"
+#   tags: "tier=frontend,costcenter=10005"
+#   server: "accountname.privatelink.blob.core.windows.net"
+# provisioner: blob.csi.azure.com
+# volumeBindingMode: Immediate
+# allowVolumeExpansion: true
+# reclaimPolicy: Delete # Retain

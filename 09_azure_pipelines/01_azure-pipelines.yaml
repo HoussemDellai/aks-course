@@ -1,0 +1,53 @@
+trigger: none
+# - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  acr_name: contosoteam7
+  tag: 1.0.0-$(Build.BuildId)
+
+steps:
+
+- task: AzureCLI@2
+  displayName: Docker Build & Push
+  inputs:
+    azureSubscription: 'spn-team7'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      docker build -t $(acr_name).azurecr.io/webapp:$(tag) app-dotnet
+      az acr login -n $(acr_name)
+      docker push $(acr_name).azurecr.io/webapp:$(tag)
+      
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace Image TAG'
+  inputs:
+    rootDirectory: '02_kubernetes_aks'
+    targetFiles: 'app-deploy.yaml'
+    encoding: 'auto'
+    writeBOM: true
+    actionOnMissing: 'warn'
+    keepToken: false
+    tokenPrefix: '__'
+    tokenSuffix: '__'
+    useLegacyPattern: false
+    enableTransforms: false
+    enableTelemetry: true
+
+- script: cat 02_kubernetes_aks/app-deploy.yaml
+
+- task: Kubernetes@1
+  displayName: Kubernetes Deploy
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: 'aks-spn-ca'
+    azureResourceGroup: 'rg-aks-cluster'
+    kubernetesCluster: 'aks-cluster'
+    namespace: 'default'
+    command: 'apply'
+    useConfigurationFile: true
+    configuration: '02_kubernetes_aks'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'

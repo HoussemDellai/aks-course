@@ -1,0 +1,29 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: app01
+spec:
+  secretName: app01-tls-cert-secret
+  privateKey:
+    rotationPolicy: Always
+  commonName: app01.default.svc.cluster.local
+  dnsNames:
+    - app01.default.svc.cluster.local
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  # keystores:
+  #   jks:
+  #     create: true
+  #     passwordSecretRef: # Password used to encrypt the keystore
+  #       key: password-key
+  #       name: jks-password-secret
+  #   pkcs12:
+  #     create: true
+  #     passwordSecretRef: # Password used to encrypt the keystore
+  #       key: password-key
+  #       name: pkcs12-password-secret

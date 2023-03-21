@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-custom
+  namespace: kube-system
+data:
+  test.server: | # you may select any name here, but it must end with the .server file extension
+    houssem01.com:53 {
+      log
+      errors
+      rewrite stop {
+        name regex (.*)\.houssem01.com {1}.default.svc.cluster.local
+        answer name (.*)\.default\.svc\.cluster\.local {1}.houssem01.com
+      }
+      forward . /etc/resolv.conf # you can redirect this to a specific DNS server such as 10.0.0.10, but that server must be able to resolve the rewritten domain name
+    }
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: coredns-custom
+#   namespace: kube-system
+# data:
+#   Corefile: |
+#     .:53 {
+#         errors
+#         health
+#         rewrite stop {
+#            name regex (.*)\.my\.domain\.$ {1}.default.svc.cluster.local
+#            answer name (.*)\.default\.svc\.cluster\.local\.$ {1}.my.domain
+#         }          
+#         kubernetes cluster.local in-addr.arpa ip6.arpa {
+#            pods insecure
+#            upstream
+#            fallthrough in-addr.arpa ip6.arpa
+#         }
+#         prometheus :9153
+#         proxy . /etc/resolv.conf
+#         cache 30
+#         reload
+#         loadbalance
+#     }

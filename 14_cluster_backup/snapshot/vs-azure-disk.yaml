@@ -1,0 +1,8 @@
+apiVersion: snapshot.storage.k8s.io/v1beta1
+kind: VolumeSnapshot
+metadata:
+  name: azuredisk-volume-snapshot
+spec:
+  volumeSnapshotClassName: csi-azuredisk-vsc
+  source:
+    persistentVolumeClaimName: pvc-azuredisk

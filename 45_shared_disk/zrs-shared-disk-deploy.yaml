@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+      name: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        volumeDevices: # instead of volumeMounts
+          - name: azuredisk
+            devicePath: /dev/sdx # instead of mountPath
+      volumes:
+        - name: azuredisk
+          persistentVolumeClaim:
+            claimName: zrs-shared-pvc-azuredisk

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-zrs
+spec:
+  selector:
+    matchLabels:
+      app: nginx-zrs
+  template:
+    metadata:
+      labels:
+        app: nginx-zrs
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        command:
+        - "/bin/sh"
+        - "-c"
+        - while true; do echo $(date) >> /mnt/azuredisk/outfile; sleep 60; done
+        volumeMounts:
+          - name: azuredisk-zrs
+            mountPath: "/mnt/azuredisk"
+      volumes:
+        - name: azuredisk-zrs
+          persistentVolumeClaim:
+            claimName: azure-managed-disk-zrs

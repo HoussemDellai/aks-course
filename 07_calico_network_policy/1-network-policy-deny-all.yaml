@@ -1,0 +1,12 @@
+# 1-network-policy-deny-all.yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: backend-policy
+  namespace: development
+spec:
+  podSelector:
+    matchLabels:
+      app: webapp
+      role: backend
+  ingress: []

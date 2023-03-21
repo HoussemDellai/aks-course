@@ -1,0 +1,347 @@
+trigger: none
+# - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  tag: 1.0.0-$(Build.BuildId)
+
+parameters:
+- name: pool_image
+  displayName: Pool Image
+  type: string
+  default: ubuntu-latest
+  values:
+  - windows-latest
+  - ubuntu-latest
+  - macOS-latest
+- name: runCompletePipeline
+  displayName: Run All Tasks ?
+  type: boolean
+  default: false
+
+stages:
+- stage: Build
+  displayName: Build & Push Image
+  jobs:
+
+  - job: ScanAndTest
+    displayName: Scan & Test Code
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    
+    - task: Bash@3
+      displayName: install checkov
+      enabled: ${{ parameters.runCompletePipeline}}
+      inputs:
+        targetType: 'inline'
+        script: |
+          ls $(pwd)/app/dockerfile/java
+          #docker run --tty --volume $(pwd)/app/dockerfile/java:/dfile bridgecrew/checkov --directory /dfile
+          # docker run --tty --volume /app/dockerfile/java:/dfile bridgecrew/checkov --directory /dfile
+          sudo apt update
+          sudo apt install software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt install python3.7
+          sudo apt install python3-pip
+          sudo python3.7 -m pip install -U checkov
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    - task: Bash@3
+      displayName: Scan Dockerfile
+      enabled: ${{ parameters.runCompletePipeline}}
+      continueOnError: true
+      inputs:
+        targetType: 'inline'
+        script: |
+          checkov --directory app-dotnet
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    - task: Bash@3
+      displayName: Scan YAML Manifest
+      enabled: ${{ parameters.runCompletePipeline}}
+      continueOnError: true
+      inputs:
+        targetType: 'inline'
+        script: |
+          checkov --directory 02_kubernetes_aks
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+    - task: Bash@3
+      displayName: 'Run Unit Tests'
+      enabled: ${{ parameters.runCompletePipeline}}
+      inputs:
+        targetType: 'inline'
+        script: 'echo Run Unit Tests..'
+
+    - task: Bash@3
+      displayName: 'Scan Code'
+      enabled: ${{ parameters.runCompletePipeline}}
+      inputs:
+        targetType: 'inline'
+        script: 'echo Scan Application Code with SonarQube, Codecov..'
+
+  - job: Build
+    displayName: Build Image
+    dependsOn: ScanAndTest
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+
+    - task: Bash@3
+      displayName: Build Container
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker build -t acrforakscluster.azurecr.io/webapp:$(tag) app-dotnet
+
+    - task: Bash@3
+      displayName: Scan Container
+      enabled: ${{ parameters.runCompletePipeline}}
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --exit-code 0 --severity MEDIUM,HIGH,CRITICAL --ignore-unfixed acrforakscluster.azurecr.io/webapp:$(tag)
+
+    - task: AzureCLI@2
+      displayName: Push Container to ACR
+      inputs:
+        azureSubscription: 'aks-spn-ca'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login -n acrforakscluster
+
+          docker push acrforakscluster.azurecr.io/webapp:$(tag)
+
+    - task: AzureCLI@2
+      displayName: '[Optional] Build Container inside ACR'
+      enabled: ${{ parameters.runCompletePipeline}}
+      inputs:
+        azureSubscription: 'aks-spn-ca'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login -n acrforakscluster
+
+          az acr build -r acrforakscluster -t webapp:$(tag) app-dotnet
+
+    - task: qetza.replacetokens.replacetokens-task.replacetokens@4
+      displayName: Replace TAG in YAML Deployment
+      inputs:
+        targetFiles: '02_kubernetes_aks/app-deploy.yaml'
+        encoding: 'auto'
+        tokenPattern: 'rm'
+        writeBOM: true
+        actionOnMissing: 'warn'
+        keepToken: false
+        actionOnNoFiles: 'continue'
+        enableTransforms: false
+        useLegacyPattern: false
+        enableTelemetry: true
+
+    - task: Bash@3
+      displayName: Verify TAG Updated
+      inputs:
+        targetType: 'inline'
+        script: 'cat 02_kubernetes_aks/app-deploy.yaml'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Upload YAML manifest
+      inputs:
+        PathtoPublish: '02_kubernetes_aks'
+        ArtifactName: 'drop\manifest'
+        publishLocation: 'Container'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Upload Helm Chart
+      inputs:
+        PathtoPublish: '03_helm/firstchart'
+        ArtifactName: 'drop\helm_chart'
+        publishLocation: 'Container'
+
+
+- stage: Release_DEV
+  displayName: Deploy to DEV
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy to DEV'
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+
+    - task: DownloadBuildArtifacts@1
+      displayName: Download Artifacts
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop\manifest'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - task: Kubernetes@1
+      displayName: Deploy YAML Manifest
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'aks-spn-ca'
+        azureResourceGroup: 'rg-aks-cluster'
+        kubernetesCluster: 'aks-cluster'
+        namespace: 'default'
+        command: 'apply'
+        useConfigurationFile: true
+        configuration: '$(System.ArtifactsDirectory)/drop/manifest'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+
+  - job: Test
+    displayName: 'Integration Tests DEV'
+    dependsOn: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - task: Bash@3
+      displayName: 'Run Integration Tests'
+      inputs:
+        targetType: 'inline'
+        script: 'echo Run Integration Tests..'
+
+- stage: Release_QA
+  displayName: Deploy to QA
+  jobs:
+  - job: Deploy
+    displayName: Deploy to QA
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+
+    - task: DownloadBuildArtifacts@1
+      displayName: Download Artifacts
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop\helm_chart'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - task: HelmDeploy@0
+      displayName: Deploy Helm Chart
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'aks-spn-ca'
+        azureResourceGroup: 'rg-aks-cluster'
+        kubernetesCluster: 'aks-cluster'
+        namespace: 'qa'
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: '$(System.ArtifactsDirectory)/drop/helm_chart'
+        releaseName: 'first-app'
+        overrideValues: 'image.tag="1.21.0", --namespace qa'
+        arguments: '--create-namespace'
+
+  - job: Test
+    displayName: 'Integration Tests QA'
+    dependsOn: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - task: Bash@3
+      displayName: 'Run Integration Tests'
+      inputs:
+        targetType: 'inline'
+        script: 'echo Run Integration Tests..'
+
+- stage: Release_PROD
+  displayName: Deploy to PROD
+  jobs:
+
+  - job: waitForValidation
+    displayName: Wait for external validation  
+    pool: server    
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:   
+    - task: ManualValidation@0
+      timeoutInMinutes: 1 # 1440 # task times out in 1 day
+      enabled: ${{ parameters.runCompletePipeline}}
+      inputs:
+        notifyUsers: 'someone@example.com'
+        instructions: |
+          Please validate the build configuration and resume
+          Tag: $(tag)
+        onTimeout: 'resume'
+
+  - job: Deploy
+    displayName: Deploy to PROD
+    dependsOn: waitForValidation
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+
+    - task: DownloadBuildArtifacts@1
+      displayName: Download Artifacts
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop\helm_chart'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - task: AzureCLI@2
+      displayName: 'Deploy Helm Chart'
+      inputs:
+        azureSubscription: 'aks-spn-ca'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        workingDirectory: '$(System.ArtifactsDirectory)/drop/helm_chart'
+        inlineScript: |
+          az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
+
+          kubectl cluster-info
+
+          helm upgrade -f values.yaml --set image.tag="1.20.0" --set service.type=LoadBalancer my-app . --install --namespace prod --create-namespace
+
+  - job: Test
+    displayName: 'Integration Tests PROD'
+    dependsOn: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - task: Bash@3
+      displayName: 'Run Integration Tests'
+      inputs:
+        targetType: 'inline'
+        script: 'echo Run Integration Tests..'
+        
+    - task: AzureCLI@2
+      displayName: 'Scan Cluster Config'
+      # enabled: ${{ parameters.runCompletePipeline}}
+      inputs:
+        azureSubscription: 'aks-spn-ca'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
+          kubectl cluster-info
+
+          # Deploy job.yaml to scan Kubernetes config and job-aks.yaml to scan specific AKS config
+          kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
+          sleep 10s # Waits 10 seconds.
+          # Pod logs outputs Kubernetes scan results and Job outputs AKS specific results
+          POD=$(kubectl get pods --selector app=kube-bench -o name)
+          kubectl logs $POD
+          kubectl delete -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job.yaml
+          
+          sleep 10s
+          
+          kubectl apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-aks.yaml
+          sleep 10s
+          JOB=$(kubectl get jobs --selector job-name=kube-bench -o name)
+          kubectl logs $JOB
+          # TODO upload the scan results
+          kubectl delete -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-aks.yaml

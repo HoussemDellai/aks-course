@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app02
+spec:
+  selector:
+    matchLabels:
+      app: app02
+  template:
+    metadata:
+      labels:
+        app: app02
+    spec:
+      containers:
+        - image: mcr.microsoft.com/dotnet/samples:aspnetapp
+          name: aspnetapp
+          ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app02-svc
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: app02
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app02-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: app02.houssemd.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app02-svc
+                port:
+                  number: 80

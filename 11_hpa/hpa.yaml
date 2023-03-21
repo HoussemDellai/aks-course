@@ -1,0 +1,47 @@
+# hpa.yaml
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: webapp-hpa
+spec:
+  minReplicas: 3
+  maxReplicas: 50 
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: webapp-deployment
+
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+
+# - type: Pods
+#   pods:
+#     metric:
+#       name: packets-per-second
+#     target:
+#       type: AverageValue
+#       averageValue: 1k
+# - type: Object
+#   object:
+#     metric:
+#       name: requests-per-second
+#     describedObject:
+#       apiVersion: networking.k8s.io/v1beta1
+#       kind: Ingress
+#       name: main-route
+#     target:
+#       type: Value
+#       value: 10k
+# - type: External
+#   external:
+#     metric:
+#       name: queue_messages_ready
+#       selector: "queue=worker_tasks"
+#     target:
+#       type: AverageValue
+#       averageValue: 30

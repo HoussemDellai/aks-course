@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: inspectorgadget-service
+spec:
+  selector:
+    app: inspectorgadget
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer #NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inspector-gadget
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: inspectorgadget
+      tier: front-end
+  template:
+    metadata:
+      labels:
+        app: inspectorgadget
+        tier: front-end
+    spec:
+      containers:
+      - name: inspectorgadget
+        image: jelledruyts/inspectorgadget
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: PathBase # Apply path base so the app knows it's under this relative path
+          value: "/" # "/inspectorgadget"
+        - name: tier
+          value: "Front End"
+        - name: InfoMessage
+          value: "You're on the Front End tier"
+        - name: BackgroundColor
+          value: "#fbfbfb"
+---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: inspectorgadget-ingress
+#   # annotations:
+#   #   kubernetes.io/ingress.class: azure/application-gateway
+#     #appgw.ingress.kubernetes.io/backend-path-prefix: "/" # Optional because we're using PathBase in the app settings
+# spec:
+#   ingressClassName: azure-application-gateway
+#   rules:
+#   - http:
+#       paths:
+#       - path: /inspectorgadget # Need a rule for non-trailing slash separately, see https://github.com/Azure/application-gateway-kubernetes-ingress/issues/458
+#         backend:
+#           service:
+#             name: inspectorgadget-service
+#             port:
+#               number: 80
+#         pathType: Prefix
+#       - path: /inspectorgadget/* # Need to include "*" for wildcard match in AppGateway
+#         backend:
+#           service:
+#             name: inspectorgadget-service
+#             port:
+#               number: 80
+#         pathType: Prefix

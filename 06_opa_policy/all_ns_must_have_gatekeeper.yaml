@@ -1,0 +1,19 @@
+# src: https://github.com/open-policy-agent/gatekeeper/blob/master/demo/basic/constraints/all_ns_must_have_gatekeeper.yaml
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: ns-must-have-gk
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+    excludedNamespaces:
+    - kube-system
+    - kube-public
+    - kube-node-lease
+    - default
+    - gatekeeper-system
+    - kured
+  parameters:
+    labels: ["gatekeeper"]

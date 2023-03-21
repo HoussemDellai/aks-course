@@ -1,0 +1,27 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: azure-servicebus-queue-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: nginx-deployment # must be in the same namespace as the ScaledObject
+  pollingInterval: 3  # Optional. Default: 30 seconds
+  cooldownPeriod: 2 # Optional. Default: 300 seconds
+  minReplicaCount: 0 # Optional. Default: 0
+  maxReplicaCount: 10 # Optional. Default: 100
+  triggers:
+  - type: azure-servicebus
+    metadata:
+      queueName: my-queue # to be replaced
+      messageCount: "3" # Optional. Count of messages to trigger scaling on. Default: 5 messages
+      connectionFromEnv: SERVICEBUS_CONNECTIONSTRING # Name of the environment variable your deployment uses to get the connection string of the Azure Service Bus namespace. (Optional) This must be a connection string for a queue itself, and not a namespace level (e.g. RootAccessPolicy) connection string [#215](https://github.com/kedacore/keda/issues/215)
+      # Required: queueName OR topicName and subscriptionName
+      # topicName: functions-sbtopic
+      # subscriptionName: sbtopic-sub1
+      # Optional, required when pod identity is used
+      # namespace: service-bus-namespace
+      # Optional, can use TriggerAuthentication as well
+      # Optional
+      # cloud: Private # Optional. Default: AzurePublicCloud
+      # endpointSuffix: servicebus.airgap.example # Required when cloud=Private

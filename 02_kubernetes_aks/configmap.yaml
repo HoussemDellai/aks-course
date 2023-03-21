@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mssql-connection-configmap
+  labels:
+    app: webapp
+data:
+  # db-connection-string: Server=tcp:refinitiv-sql-01.database.windows.net,1433;Initial Catalog=ProdcutsDB;Persist Security Info=False;User ID=houssem;Password=@Aa123456789;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+  db-connection-string: Server=mssql-service;Database=ProdcutsDB;User ID=SA;Password=@Aa123456789;Encrypt=False;

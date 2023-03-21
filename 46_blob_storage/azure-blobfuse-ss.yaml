@@ -1,0 +1,38 @@
+#  Azure Blob CSI driver only supports NFS 3.0 protocol for Kubernetes versions 1.25 (preview) on AKS.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset-blob
+  labels:
+    app: nginx
+spec:
+  serviceName: statefulset-blob
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: statefulset-blob
+        image: mcr.microsoft.com/oss/nginx/nginx:1.19.5
+        command:
+        - "/bin/sh"
+        - "-c"
+        - while true; do echo $(date) >> /mnt/azureblob/data; sleep 60; done
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /mnt/azureblob
+  volumeClaimTemplates:
+  - metadata:
+      name: persistent-storage
+      annotations:
+        volume.beta.kubernetes.io/storage-class: azureblob-fuse-premium
+    spec:
+      accessModes: ["ReadWriteMany"]
+      resources:
+        requests:
+          storage: 100Gi

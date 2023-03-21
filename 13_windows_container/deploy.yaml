@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: windows-app
+  labels:
+    app: windows-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: windows-app
+      labels:
+        app: windows-app
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": windows
+      containers:
+      - name: windows-app
+        image: bnpdemo.azurecr.io/windowsapp:1.0.0
+        # image: mcr.microsoft.com/dotnet/framework/samples:aspnetapp
+        resources:
+          limits:
+            cpu: 2
+            memory: 2000M
+          requests:
+            cpu: 500m
+            memory: 500M
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: windows-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: windows-app
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: windows-app
