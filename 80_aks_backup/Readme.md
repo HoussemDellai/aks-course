@@ -1,5 +1,7 @@
 # Creating AKS Backup for Kubernetes objects and Azure Disk
 
+<img src="images/architecture.png">
+
 ## Introduction
 
 
