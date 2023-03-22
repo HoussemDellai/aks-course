@@ -26,73 +26,73 @@ resource "azurerm_kubernetes_cluster" "aks_01" {
   }
 }
 
-# resource "null_resource" "install_dataprotection_aks_01" {
+resource "null_resource" "install_dataprotection_aks_01" {
 
-#   provisioner "local-exec" {
-#     interpreter = ["PowerShell", "-Command"]
-#     on_failure  = continue # fail
-#     when        = create
-#     command     = <<-EOT
+  provisioner "local-exec" {
+    interpreter = ["PowerShell", "-Command"]
+    on_failure  = continue # fail
+    when        = create
+    command     = <<-EOT
 
-#         az extension add --name k8s-extension
+        az extension add --name k8s-extension
 
-#         az k8s-extension create --name azure-aks-backup `
-#         --extension-type Microsoft.DataProtection.Kubernetes `
-#         --scope cluster `
-#         --cluster-type managedClusters `
-#         --cluster-name ${azurerm_kubernetes_cluster.aks_01.name} `
-#         --resource-group ${azurerm_kubernetes_cluster.aks_01.resource_group_name} `
-#         --release-train stable `
-#         --configuration-settings `
-#         blobContainer=${azurerm_storage_container.container_backup_aks.name} `
-#         storageAccount=${azurerm_storage_account.sa_backup_aks.name} `
-#         storageAccountResourceGroup=${azurerm_storage_account.sa_backup_aks.resource_group_name} `
-#         storageAccountSubscriptionId=${data.azurerm_client_config.current.subscription_id}
+        az k8s-extension create --name azure-aks-backup `
+        --extension-type Microsoft.DataProtection.Kubernetes `
+        --scope cluster `
+        --cluster-type managedClusters `
+        --cluster-name ${azurerm_kubernetes_cluster.aks_01.name} `
+        --resource-group ${azurerm_kubernetes_cluster.aks_01.resource_group_name} `
+        --release-train stable `
+        --configuration-settings `
+        blobContainer=${azurerm_storage_container.container_backup_aks.name} `
+        storageAccount=${azurerm_storage_account.sa_backup_aks.name} `
+        storageAccountResourceGroup=${azurerm_storage_account.sa_backup_aks.resource_group_name} `
+        storageAccountSubscriptionId=${data.azurerm_client_config.current.subscription_id}
 
-#         # View Backup Extension installation status
+        # View Backup Extension installation status
 
-#         az k8s-extension show --name azure-aks-backup `
-#            --cluster-type managedClusters `
-#            --cluster-name ${azurerm_kubernetes_cluster.aks_01.name} `
-#            -g ${azurerm_kubernetes_cluster.aks_01.resource_group_name}
+        az k8s-extension show --name azure-aks-backup `
+           --cluster-type managedClusters `
+           --cluster-name ${azurerm_kubernetes_cluster.aks_01.name} `
+           -g ${azurerm_kubernetes_cluster.aks_01.resource_group_name}
 
-#     EOT
-#   }
+    EOT
+  }
 
-#   triggers = {
-#     "key" = "value1"
-#   }
+  triggers = {
+    "key" = "value1"
+  }
 
-#   depends_on = [
-#     azurerm_kubernetes_cluster.aks_01
-#   ]
-# }
+  depends_on = [
+    azurerm_kubernetes_cluster.aks_01
+  ]
+}
 
-# resource "null_resource" "configure_trustedaccess_aks_01" {
+resource "null_resource" "configure_trustedaccess_aks_01" {
 
-#   provisioner "local-exec" {
-#     interpreter = ["PowerShell", "-Command"]
-#     on_failure  = continue
-#     when        = create
-#     command     = <<-EOT
+  provisioner "local-exec" {
+    interpreter = ["PowerShell", "-Command"]
+    on_failure  = continue
+    when        = create
+    command     = <<-EOT
 
-#         az aks trustedaccess rolebinding create `
-#            -g ${azurerm_kubernetes_cluster.aks_01.resource_group_name} `
-#            --cluster-name ${azurerm_kubernetes_cluster.aks_01.name} `
-#            -n trustedaccess `
-#            -s ${azurerm_data_protection_backup_vault.vault.id} `
-#            --roles Microsoft.DataProtection/backupVaults/backup-operator
+        az aks trustedaccess rolebinding create `
+           -g ${azurerm_kubernetes_cluster.aks_01.resource_group_name} `
+           --cluster-name ${azurerm_kubernetes_cluster.aks_01.name} `
+           -n trustedaccess `
+           -s ${azurerm_data_protection_backup_vault.backup_vault.id} `
+           --roles Microsoft.DataProtection/backupVaults/backup-operator
 
-#     EOT
-#   }
+    EOT
+  }
 
-#   triggers = {
-#     "key" = "value2"
-#   }
+  triggers = {
+    "key" = "value2"
+  }
 
-#   depends_on = [
-#     azurerm_kubernetes_cluster.aks_01
-#   ]
-# }
+  depends_on = [
+    azurerm_kubernetes_cluster.aks_01
+  ]
+}
 
-# data "azurerm_client_config" "current" {}
+data "azurerm_client_config" "current" {}

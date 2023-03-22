@@ -7,16 +7,16 @@ az feature register --namespace "Microsoft.ContainerService" --name "TrustedAcce
 
 # 1. Setup environment variables
 
-$AKS_NAME_01="aks-cluster-01"
-$AKS_RG_01="rg-aks-cluster-01"
+$AKS_NAME_01="aks-1"
+$AKS_RG_01="rg-aks-1"
 
-$AKS_NAME_02="aks-cluster-02"
-$AKS_RG_01_02="rg-aks-cluster-02"
+$AKS_NAME_02="aks-2"
+$AKS_RG_02="rg-aks-2"
 
 $VAULT_NAME="backup-vault"
 $VAULT_RG="rg-backup-vault"
 
-$SA_NAME="storage4aks1backup135"
+$SA_NAME="storage4aks1backup1357"
 $SA_RG="rg-backup-storage"
 $BLOB_CONTAINER_NAME="aks-backup"
 $SUBSCRIPTION_ID=$(az account list --query [?isDefault].id -o tsv)
@@ -55,19 +55,6 @@ az aks create -g $AKS_RG_01 -n $AKS_NAME_01 -k "1.25.5" --zones 1 2 3
 # Verify that CSI Disk Driver and Snapshot Controller are installed
 
 az aks show -g $AKS_RG_01 -n $AKS_NAME_01 --query storageProfile
-# {
-#   "blobCsiDriver": null,
-#   "diskCsiDriver": {
-#     "enabled": true,
-#     "version": "v1"
-#   },
-#   "fileCsiDriver": {
-#     "enabled": true
-#   },
-#   "snapshotController": {
-#     "enabled": true
-#   }
-# }
 
 # If not installed, you ca install it with this command:
 # az aks update -g $AKS_RG_01 -n $AKS_NAME_01 --enable-disk-driver --enable-snapshot-controller

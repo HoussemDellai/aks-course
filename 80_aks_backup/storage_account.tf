@@ -1,10 +1,10 @@
 resource "azurerm_resource_group" "rg_backup_storage" {
-  name     = "rg-backup-storage"
+  name     = "rg-backup-storage-aks"
   location = "West Europe"
 }
 
 resource "azurerm_storage_account" "sa_backup_aks" {
-  name                     = "storage4aks1backup135"
+  name                     = "storage4aks1backup13579"
   resource_group_name      = azurerm_resource_group.rg_backup_storage.name
   location                 = azurerm_resource_group.rg_backup_storage.location
   account_tier             = "Standard"
