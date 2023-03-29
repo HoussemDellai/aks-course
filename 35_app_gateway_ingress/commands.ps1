@@ -17,6 +17,10 @@ az aks addon enable -n aks-cluster -g rg-aks-cluster `
 
 az aks get-credentials -n aks-cluster -g rg-aks-cluster
 
+kubectl get ingressclass
+# NAME                        CONTROLLER                  PARAMETERS   AGE
+# azure-application-gateway   azure/application-gateway   <none>       3h24m
+
 kubectl apply -f ingress_appgw.yaml
 # deployment.apps/aspnetapp created
 # service/aspnetapp created
