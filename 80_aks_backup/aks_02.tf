@@ -80,7 +80,7 @@ resource "null_resource" "configure_trustedaccess_aks_02" {
            -g ${azurerm_kubernetes_cluster.aks_02.resource_group_name} `
            --cluster-name ${azurerm_kubernetes_cluster.aks_02.name} `
            -n trustedaccess `
-           -s ${azurerm_data_protection_backup_vault.backup_vault.id} `
+           --source-resource-id ${azurerm_data_protection_backup_vault.backup_vault.id} `
            --roles Microsoft.DataProtection/backupVaults/backup-operator
 
     EOT
@@ -91,6 +91,7 @@ resource "null_resource" "configure_trustedaccess_aks_02" {
   }
 
   depends_on = [
-    azurerm_kubernetes_cluster.aks_02
+    azurerm_kubernetes_cluster.aks_02,
+    null_resource.install_dataprotection_aks_02
   ]
 }

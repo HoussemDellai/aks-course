@@ -1,0 +1,50 @@
+{
+    "properties": {
+        "friendlyName": "aks-01\\backup-instance-aks-01-cli",
+        "dataSourceInfo": {
+            "resourceID": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-01/providers/Microsoft.ContainerService/managedClusters/aks-01",
+            "resourceUri": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-01/providers/Microsoft.ContainerService/managedClusters/aks-01",
+            "datasourceType": "Microsoft.ContainerService/managedClusters",
+            "resourceName": "aks-01",
+            "resourceType": "Microsoft.ContainerService/managedClusters",
+            "resourceLocation": "westeurope",
+            "resourceProperties": {
+                "objectType": null
+            },
+            "objectType": "Datasource"
+        },
+        "policyInfo": {
+            "policyId": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-backup-vault-aks/providers/Microsoft.DataProtection/backupVaults/backup-vault-aks/backupPolicies/backup-policy-aks-01",
+            "policyVersion": "",
+            "policyParameters": {
+                "dataStoreParametersList": [
+                    {
+                        "objectType": "AzureOperationalStoreParameters",
+                        "dataStoreType": "OperationalStore",
+                        "resourceGroupId": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-backup-storage-aks"
+                    }
+                ],
+                "backupDatasourceParametersList": [
+                    {
+                        "objectType": "KubernetesClusterBackupDatasourceParameters",
+                        "includedNamespaces": [
+                            "default"
+                        ],
+                        "excludedNamespaces": null,
+                        "includedResourceTypes": null,
+                        "excludedResourceTypes": [
+                            "v1/Secret"
+                        ],
+                        "labelSelectors": null,
+                        "snapshotVolumes": true,
+                        "includeClusterScopeResources": true
+                    }
+                ]
+            }
+        },
+        "objectType": "BackupInstance"
+    },
+    "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-backup-vault-aks/providers/Microsoft.DataProtection/backupVaults/backup-vault-aks/backupInstances/aks-01-aks-01-dcd9f22e-3feb-42ef-b1fe-621113866046",
+    "name": "aks-01-aks-01",
+    "type": "Microsoft.DataProtection/backupVaults/backupInstances"
+}
