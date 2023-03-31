@@ -5,7 +5,7 @@
 Kubernetes exposes services securely (HTTPS) through an ingress controller.
 Kubernets supports the ingress resources. But users should provide and install a plugin to handle ingress traffic. There are lots of plugins available like Nginx Ingress Controller or also Azure Application Gateway Ingress Controller (AGIC).
 
-In this demonstration, we will enable AGIC extension in AKS and use it to expose a sample application to the internet.
+In this demonstration, we will enable AGIC extension in AKS and use it to expose a sample application to the internet or internal network.
 
 ## How AGIC works ?
 
@@ -41,7 +41,7 @@ Note: The App Gateway will not consume resources from the cluster when doing TLS
 Note: With Kubenet, the cluster route table should be attached to the App Gateway subnet to reach pods.
 More details here: https://azure.github.io/application-gateway-kubernetes-ingress/how-tos/networking/
 
-## 1. Create an AKS cluster with Azure CNI network plugin
+## 1. Creating an AKS cluster with Azure CNI network plugin
 
 App Gateway works with both Azure CNI and Kubenet plugins.
 
@@ -53,7 +53,19 @@ az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure
 
 AKS by default uses 10.224.0.0/12 for VNET and 10.224.0.0/16 for Subnet
 
-## 2. Enable Azure Application Gateway Ingress Controller
+## 2. Enabling Azure Application Gateway Ingress Controller
+
+Enabling the AGIC component could be done using the portal, the command line, ARM templates, Bicep and Terraform.
+The easiest option is to enable it using the Azure portal. 
+From inside AKS, go to Networking section then enable Application Gateway.
+
+<img src="images\enable-agic.png">
+
+App Gateway will be deployed into its own subnet. Provide a subnet CIDR range. `/27` would be enough.
+
+<img src="images\appgw-subnet.png">
+
+If you prefer using the command line, here is the command.
 
 ```shell
 az aks addon enable -n aks-cluster -g rg-aks-cluster `
@@ -62,7 +74,7 @@ az aks addon enable -n aks-cluster -g rg-aks-cluster `
        --appgw-name gateway
 ```
 
-## 3. Check what is created ?
+## 3. Checking the created resources
 
 AGIC will create the following resources:
 1) New ingress class called : `azure-application-gateway`
@@ -72,6 +84,8 @@ AGIC will create the following resources:
 5) Public IP for App Gateway
 6) User Managed Identity in node resource group for AGIC pod
 
+Check the created ingress class.
+
 ```shell
 az aks get-credentials -n aks-cluster -g rg-aks-cluster
 
@@ -80,7 +94,30 @@ kubectl get ingressclass
 # azure-application-gateway   azure/application-gateway   <none>       3h24m
 ```
 
-## 4. Deploy sample ingress using App Gateway
+Check the created AGIC pod inside kube-system namespace.
+
+```shell
+kubectl get pods -n kube-system -l app=ingress-appgw
+# NAME                                       READY   STATUS    RESTARTS   AGE
+# ingress-appgw-deployment-8c6db6f79-vzf5x   1/1     Running   0          43m
+```
+
+Check the created Azure Application Gateway, Public IP for App Gateway and User Managed Identity in node resource group.
+
+<img src="images\node-rg.png"/>
+
+Note the RBAC role `Contributor` over the node resource group. This will be used by AGIC pod to connect to the App Gateway and change its configuration.
+
+Check the created new Subnet in cluster VNET.
+
+<img src="images\subnet.png"/>
+
+## 4. Deploying sample ingress using App Gateway
+
+Let's deploy a sample application and expose it through public endpoint.
+We create a deployment, service and ingress resources.
+
+The full file content is here: https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/35_app_gateway_ingress/ingress_appgw.yaml
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -100,6 +137,8 @@ spec:
               number: 80
         pathType: Exact
 ```
+
+Let's deploy the resources into AKS.
 
 ```shell
 kubectl apply -f ingress_appgw.yaml
@@ -127,7 +166,19 @@ kubectl get pods -o wide
 # aspnetapp-bbcc5cf6c-x8r7z   1/1     Running   0          41s   10.224.0.28   aks-nodepool1-28007812-vmss000001
 ```
 
+Note from above output the public IP address `20.8.165.123` for the exposed ingress.
+That IP is the same as the App Gateway public IP.
+
+
+
 ## Expose internal services using AGIC
+
+### Enable Application Gateway private IP
+
+
+
+### Create private ingress
+
 
 
 ## More resources:
