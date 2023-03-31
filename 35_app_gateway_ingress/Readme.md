@@ -37,33 +37,71 @@ There are a lot of features available for App Gateway and for Nginx IC. Here I w
 | WAF | Supported with SKU WAF_v2 | Very basic, needs Nginx Plus license |
 
 Note: The App Gateway will not consume resources from the cluster when doing TLS termination or scale out.
+
 Note: With Kubenet, the cluster route table should be attached to the App Gateway subnet to reach pods.
 More details here: https://azure.github.io/application-gateway-kubernetes-ingress/how-tos/networking/
 
 ## 1. Create an AKS cluster with Azure CNI network plugin
 
+App Gateway works with both Azure CNI and Kubenet plugins.
+
 ```shell
 az group create -n rg-aks-cluster -l westeurope
 
 az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure
+```
 
-# AKS by default uses 10.224.0.0/12 for VNET and 10.224.0.0/16 for Subnet
+AKS by default uses 10.224.0.0/12 for VNET and 10.224.0.0/16 for Subnet
 
-# enable Azure Application Gateway Ingress Controller
+## 2. Enable Azure Application Gateway Ingress Controller
 
+```shell
 az aks addon enable -n aks-cluster -g rg-aks-cluster `
        --addon ingress-appgw `
        --appgw-subnet-cidr 10.225.0.0/16 `
        --appgw-name gateway
+```
 
-# connect to AKS cluster
+## 3. Check what is created ?
 
+AGIC will create the following resources:
+1) New ingress class called : `azure-application-gateway`
+2) AGIC pod inside kube-system namespace
+3) Azure Application Gateway
+4) New Subnet in cluster VNET
+5) Public IP for App Gateway
+6) User Managed Identity in node resource group for AGIC pod
+
+```shell
 az aks get-credentials -n aks-cluster -g rg-aks-cluster
 
 kubectl get ingressclass
 # NAME                        CONTROLLER                  PARAMETERS   AGE
 # azure-application-gateway   azure/application-gateway   <none>       3h24m
+```
 
+## 4. Deploy sample ingress using App Gateway
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aspnetapp
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: aspnetapp
+            port:
+              number: 80
+        pathType: Exact
+```
+
+```shell
 kubectl apply -f ingress_appgw.yaml
 # deployment.apps/aspnetapp created
 # service/aspnetapp created
