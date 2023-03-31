@@ -37,6 +37,8 @@ There are a lot of features available for App Gateway and for Nginx IC. Here I w
 | WAF | Supported with SKU WAF_v2 | Very basic, needs Nginx Plus license |
 
 Note: The App Gateway will not consume resources from the cluster when doing TLS termination or scale out.
+Note: With Kubenet, the cluster route table should be attached to the App Gateway subnet to reach pods.
+More details here: https://azure.github.io/application-gateway-kubernetes-ingress/how-tos/networking/
 
 ## 1. Create an AKS cluster with Azure CNI network plugin
 
@@ -86,3 +88,7 @@ kubectl get pods -o wide
 # aspnetapp-bbcc5cf6c-k8lqw   1/1     Running   0          41s   10.224.0.34   aks-nodepool1-28007812-vmss000000
 # aspnetapp-bbcc5cf6c-x8r7z   1/1     Running   0          41s   10.224.0.28   aks-nodepool1-28007812-vmss000001
 ```
+
+## More resources:
+
+https://azure.github.io/application-gateway-kubernetes-ingress/
