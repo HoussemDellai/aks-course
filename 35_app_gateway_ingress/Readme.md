@@ -112,7 +112,7 @@ Check the created new Subnet in cluster VNET.
 
 <img src="images\subnet.png"/>
 
-## 4. Deploying sample ingress using App Gateway
+## 4. Deploying (public) ingress using App Gateway
 
 Let's deploy a sample application and expose it through public endpoint.
 We create a deployment, service and ingress resources.
@@ -169,17 +169,83 @@ kubectl get pods -o wide
 Note from above output the public IP address `20.8.165.123` for the exposed ingress.
 That IP is the same as the App Gateway public IP.
 
-
-
-## Expose internal services using AGIC
+## 5. Deploying (internal) ingress using App Gateway
 
 ### Enable Application Gateway private IP
 
+Some organisations wants to expose their AKS applications on internal network, instead of public network.
+Application Gateway have a public IP by default. But it can also have a (only one) private IP.
+AGIC will use this private IP to expose private services.
+Let's enable Application Gateway private IP using command line. This could be done also using Azure portal.
+Change the values accordingly and choose an IP within the range of the App Gateway Subnet (avoid 3 first IPs).
 
+```shell
+az network application-gateway frontend-ip create `
+           --name frontendIp `
+           --gateway-name gateway `
+           --resource-group MC_rg-aks-cluster_aks-cluster_westeurope `
+           --vnet-name aks-vnet-11733080 `
+           --subnet gateway-subnet `
+           --private-ip-address 10.225.0.10
+```
 
 ### Create private ingress
 
+To create a private ingress resource, we just add the annotation: `appgw.ingress.kubernetes.io/use-private-ip: "true"`.
+Here is an example:
 
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aspnetapp-internal
+  annotations:
+    appgw.ingress.kubernetes.io/use-private-ip: "true"
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: aspnetapp
+            port:
+              number: 80
+        pathType: Exact
+```
+
+```shell
+kubectl apply -f ingress_private.yaml
+# ingress.networking.k8s.io/aspnetapp-internal created
+
+kubectl get ingress
+# NAME                 CLASS                       HOSTS   ADDRESS       PORTS   AGE
+# aspnetapp            azure-application-gateway   *       20.23.82.47   80      131m
+# aspnetapp-internal   azure-application-gateway   *       10.225.0.10   80      27m
+
+kubectl run nginx --image=nginx
+kubectl exec nginx -it -- /bin/bash
+## inside nginx
+root@nginx:/# curl 10.225.0.10
+# <!DOCTYPE html>
+# <html lang="en">
+# <head>
+#     <meta charset="utf-8" />
+# ...
+```
+
+## Conclusion
+
+This demonstration is a getting started with App Gateway integration with AKS.
+We choosed the simplest configuration. However, there are a lot of possibilities for multiple scenarios.
+Here are some of the possibilities:
+- Share an Application Gateway between multiple clusters.
+- Can configure TLS certificates.
+- Configure re-routing.
+- Configure App Gateway scalability.
+
+Note: there is some limitations to App Gateway. For example, the public IP could not be disabled.
 
 ## More resources:
 
