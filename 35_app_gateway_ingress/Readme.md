@@ -21,7 +21,7 @@ But how the App Gateway could know the private IPs of the pods ?
 Here comes the AGIC extension. AGIC will be installed into the AKS cluster as a pod within kube-system namespace. Its role is to listen for ingress resources creation, get pod IPs then use it to control the configuration of the App Gateway. This means it will connect to the App Gateway and authenticate and authorize using a User Assigned Managed Identity created within the node resource group. AGIC will create the listeners and backend configuration for App Gateway.
 The following picture shows the workflow.
 
-<img src="images\architecture.png" style="background-color:white;">
+<img src="images\architecture-white.png" style="background-color:white;">
 
 ## What are the pros and cons of using AGIC when compared with Nginx Ingress Controler ?
 
