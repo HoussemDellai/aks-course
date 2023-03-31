@@ -32,7 +32,7 @@ There are a lot of features available for App Gateway and for Nginx IC. Here I w
 | Support HTTPS/TLS | Yes | Yes |
 | TLS decryption | outside the cluster | inside the cluster |
 | Scale out | Outside the cluster | Inside the cluster (HPA) |
-| Consume cluster resources | No | No |
+| Consume cluster resources | No | Yes |
 | Cost | Cost of Azure resource (more expensive) | Cost of pods inside cluster (cheaper) |
 | WAF | Supported with SKU WAF_v2 | Very basic, needs Nginx Plus license |
 
