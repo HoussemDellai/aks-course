@@ -127,6 +127,9 @@ kubectl get pods -o wide
 # aspnetapp-bbcc5cf6c-x8r7z   1/1     Running   0          41s   10.224.0.28   aks-nodepool1-28007812-vmss000001
 ```
 
+## Expose internal services using AGIC
+
+
 ## More resources:
 
 https://azure.github.io/application-gateway-kubernetes-ingress/
