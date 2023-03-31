@@ -244,6 +244,8 @@ Here are some of the possibilities:
 - Can configure TLS certificates.
 - Configure re-routing.
 - Configure App Gateway scalability.
+- Rewrite HTTP headers and URL.
+- Enabling Cookie affinity.
 
 Note: there is some limitations to App Gateway. For example, the public IP could not be disabled.
 
