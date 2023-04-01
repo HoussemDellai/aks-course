@@ -15,15 +15,8 @@ resource "null_resource" "enable_azuremonitormetrics" {
     "key" = "value1"
   }
 
-  # # for linux
+  # for linux
   # provisioner "local-exec" {
-  #   on_failure = continue
-  #   command    = <<-EOT
-
-  #     az aks update --enable-azuremonitormetrics \
-  #                   -g ${azurerm_kubernetes_cluster.aks.resource_group_name} \
-  #                   -n ${azurerm_kubernetes_cluster.aks.name} \
-  #                   --azure-monitor-workspace-resource-id ${azapi_resource.prometheus.id}
-  #   EOT
+  #   command    = "az aks update --enable-azuremonitormetrics -g ${azurerm_kubernetes_cluster.aks.resource_group_name} -n ${azurerm_kubernetes_cluster.aks.name} --azure-monitor-workspace-resource-id ${azapi_resource.prometheus.id}"
   # }
 }
