@@ -20,4 +20,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     log_analytics_workspace_id      = azurerm_log_analytics_workspace.workspace.id
     msi_auth_for_monitoring_enabled = true
   }
+
+  lifecycle {
+    ignore_changes = [
+      monitor_metrics
+    ]
+  }
 }
