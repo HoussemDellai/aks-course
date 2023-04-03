@@ -17,7 +17,7 @@ $AKS_NAME="aks-cluster"
 az group create -n $AKS_RG -l westeurope
 
 az aks create -g $AKS_RG -n $AKS_NAME `
-              --kubernetes-version "1.25.2" `
+              --kubernetes-version "1.25.5" `
               --enable-managed-identity `
               --node-count 3 `
               --network-plugin azure
@@ -259,12 +259,12 @@ linkerd check
 
 linkerd viz dashboard
 
-# access the web ap using port-forward
+# access the web app using port-forward
 
 kubectl -n emojivoto port-forward svc/web-svc 8080:80
 
 # add the app to the mesh
-# kubectl get deploy -n emojivoto -o yaml | linkerd inject - | kubectl apply -f -
+kubectl get deploy -n emojivoto -o yaml | linkerd inject - | kubectl apply -f -
 # deployment "emoji" injected
 # deployment "vote-bot" injected
 # deployment "voting" injected
@@ -325,3 +325,10 @@ kubectl get pods,svc -n $NAMESPACE_APP
 # get the list of containers
 kubectl get pods -n $NAMESPACE_APP -o jsonpath='{.items[*].spec.containers[*].name}'
 # linkerd-proxy demo-app linkerd-proxy demo-app linkerd-proxy demo-app
+
+
+## More resources
+https://linkerd.io/2.12/features/automatic-mtls/
+https://github.com/BuoyantIO/mTLS-workshop/blob/main/mtls-workshop/STEPS.md
+https://www.youtube.com/watch?v=zqjLX5NntUY
+https://buoyant.io/service-mesh-academy/a-deep-dive-into-kubernetes-mtls-with-linkerd

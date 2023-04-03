@@ -1,8 +1,8 @@
 # aks cluster
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks-cluster"
-  location            = "westeurope"
-  resource_group_name = "rg-aks-cluster"
+  name                = var.aks_name
+  location            = azurerm_resource_group.rg_aks_cluster.location
+  resource_group_name = azurerm_resource_group.rg_aks_cluster.name
   dns_prefix          = "aks"
   kubernetes_version  = "1.25.5"
 
