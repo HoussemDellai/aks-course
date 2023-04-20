@@ -1,3 +1,5 @@
+## AKS Egress Traffic with Load Balancer, NAT Gateway, and User Defined Route
+
 # 1. AKS cluster with outbound type load balancer
 
 az group create -n rg-aks-lb -l westeurope
@@ -11,7 +13,6 @@ az aks get-credentials -g rg-aks-lb -n aks-lb --overwrite-existing
 
 kubectl run nginx --image=nginx
 kubectl exec nginx -it -- curl http://ifconfig.me
-# 20.101.4.180
 
 # Note that is the public IP of the Load Balancer. This is the default behavior of AKS clusters.
 
@@ -28,9 +29,8 @@ az aks get-credentials -g rg-aks-natgateway -n aks-natgateway --overwrite-existi
 
 kubectl run nginx --image=nginx
 kubectl exec nginx -it -- curl http://ifconfig.me
-# 20.101.4.185
+
 kubectl exec nginx -it -- curl http://ifconfig.me
-# 20.102.5.80
 
 # Note the egress traffic uses 2 public IPs of the NAT Gateway.
 
@@ -98,7 +98,6 @@ az aks get-credentials -g rg-aks-usernatgateway -n natCluster --overwrite-existi
 kubectl run nginx --image=nginx
 
 kubectl exec nginx -it -- curl http://ifconfig.me
-# 20.16.100.134
 
 # Note the egress traffic uses public IPs of the NAT Gateway.
 
@@ -213,16 +212,12 @@ az aks create -g $RG -n $AKSNAME -l $LOC `
 # Connect to the cluster
 
 az aks get-credentials -n $AKSNAME -g $RG --overwrite-existing
-# Merged "aks-udr" as current context in C:\Users\hodellai\.kube\config
 
 # 4.7. Test the egress traffic is using the Firewall public IP
 
 kubectl run nginx --image=nginx
-# pod/nginx created
 
 kubectl get pods
-# NAME    READY   STATUS         RESTARTS   AGE
-# nginx   0/1     ErrImagePull   0          8s
 
 # Note the error message in the events section. The image is not available in the cluster. The cluster is trying to pull the image from Docker Hub. The firewall is blocking the traffic.
 
@@ -235,13 +230,11 @@ kubectl get pods
 # nginx   1/1     Running   0          21m
 
 kubectl exec nginx -it -- curl http://ifconfig.me
-# Action: Deny. Reason: No rule matched. Proceeding with default action.
 
 # Create an application rule to allow access to ifconfig.me
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'ifconfig' -n 'ifconfig' --action allow --priority 300 --source-addresses '*' --protocols 'http=80' --target-fqdns ifconfig.me
 
 kubectl exec nginx -it -- curl http://ifconfig.me
-# 13.95.91.166
 
 # Note the IP address is the public IP address of the firewall.
 
@@ -252,22 +245,9 @@ az aks enable-addons -n $AKSNAME -g $RG -a ingress-appgw --appgw-name azure-appg
 # 4.8.1. Deploy an application
 
 kubectl apply -f pod-svc-ingress.yaml
-# pod/aspnetapp created
-# service/aspnetapp created
-# ingress.networking.k8s.io/aspnetapp created
 
 # 4.8.2. Test the application
 
 kubectl get pod,svc,ingress
-# NAME            READY   STATUS    RESTARTS   AGE
-# pod/aspnetapp   1/1     Running   0          21s
-# pod/nginx       1/1     Running   0          98m
 
-# NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-# service/aspnetapp    ClusterIP   10.0.8.241   <none>        80/TCP    21s
-# service/kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   6h9m
-
-# NAME                                  CLASS    HOSTS   ADDRESS        PORTS   AGE
-# ingress.networking.k8s.io/aspnetapp   <none>   *       20.13.91.180   80      21s
-
-# View the application in the browser: http://20.13.91.180
+# View the application in the browser: http://<REPLACE_INGRESS_IP>

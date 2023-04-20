@@ -1,4 +1,4 @@
-# AKS Egress Traffic
+# AKS Egress Traffic with Load Balancer, NAT Gateway, and User Defined Route
 
 ## 1. AKS cluster with outbound type load balancer
 
