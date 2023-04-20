@@ -1,5 +1,7 @@
 # AKS Egress Traffic with Load Balancer, NAT Gateway, and User Defined Route
 
+<img src="images/architecture.png">
+
 ## 1. AKS cluster with outbound type load balancer
 
 ```shell
