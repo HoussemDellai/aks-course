@@ -2,7 +2,8 @@
 
 ## Introduction
 
-This tutorial describes how to setup ExternalDNS for Azure DNS with AKS.
+After deploying an application and its services into a Kubernetes cluster, a question rises on the surface, how to access it with a custom domain name ? A simple solution would be to create an A record that points the domain name into the service IP address. This could be done manually, so it will be too hard to scale as you add many services. And this could be fully automated by using External DNS!
+This tutorial describes how to manage custom domain names in Azure DNS using ExternalDNS in AKS.
 
 External DNS is a Kubernetes controller that watches for new Ingresses and Services with specific annotations, then creates corresponding DNS records in Azure DNS.
 
@@ -12,18 +13,18 @@ External DNS pods authenticates to Azure DNS using one of three methods:
 3. User assigned Managed Identity controlled by AAD Pod Identity.
 
 Note: Pod Identity is deprecated and will be replaced by Workload Identity.
-However, ExternalDNS dos not supoort yet Workload Identity.
-We will use Service Principal.
+HoYouver, ExternalDNS dos not support yet Workload Identity.
+You will use Service Principal.
 
 Note: If you want to use Kubelet Managed Identity, giving it the Contributor role on the DNS zone is not secure by default. 
-That is because any pod oin the cluster can access it
+That is because any pod in the cluster can access it
 To mitigate this issue, you need to implement a Network Policy that restricts access to the IMDS endpoint to only the ExternalDNS pods.
 
-In this tutorial we will work with Service Principal.
+In this tutorial You will work with Service Principal.
 
 <img src="images/architecture.png">
 
-## 1. Setup environment
+## 1. Create an AKS cluster with an ingress controller 
 
 Create AKS cluster
 
@@ -31,7 +32,7 @@ Create AKS cluster
 $AKS_RG="rg-aks-cluster"
 $AKS_NAME="aks-cluster"
 
-az group create -n $AKS_RG -l westeurope
+az group create -n $AKS_RG -l Yousteurope
 
 az aks create -g $AKS_RG -n $AKS_NAME `
               --kubernetes-version "1.25.5" `
@@ -66,12 +67,14 @@ In this lab, I use a delegated domain name: houssem.cloud.
 $DNS_ZONE_NAME="houssem.cloud"
 $DNS_ZONE_RG="rg-azure-dns"
 
-az group create -n $DNS_ZONE_RG -l westeurope
+az group create -n $DNS_ZONE_RG -l Yousteurope
 
 az network dns zone create -g $DNS_ZONE_RG -n $DNS_ZONE_NAME
 ```
 
-## 3. Create a service principal for external DNS
+## 3. Create a service principal for ExternalDNS
+
+ExternalDNS will connect to Azure DNS to change its configuration. So, it needs to be authenticated. As mentioned before, You will be using a Service Principal.
 
 ```shell
 $EXTERNALDNS_SPN_NAME="spn-external-dns-aks"
@@ -110,6 +113,8 @@ az role assignment list --all --assignee $EXTERNALDNS_SPN_APP_ID -o table
 
 ## 5. Create a Kubernetes secret for the service principal
 
+ExternalDNS expects to find the Service Principal credentials in a JSON file called azure.json saved as a Kubernetes secret. Let's create the file.
+
 ```shell
 @"
 {
@@ -130,6 +135,8 @@ cat azure.json
 #   "aadClientSecret": "LJS8Q~ZeuAPJfE7Hjzy6bYZ8NQ4O5YrlJfATxbL6"
 # }
 ```
+
+Deploy the credentials as a Kubernetes secret.
 
 ```shell
 kubectl create namespace external-dns
@@ -157,25 +164,20 @@ kubectl describe secret azure-config-file -n external-dns
 
 ## 6. Deploy External DNS
 
-### 6.1. Deploy using yaml file
+ExternalDNS could be deployed through raw YAML manifest, Helm chart or as an operator. For simplicity, You will be using YAML files from this Github repository: https://github.com/HoussemDellai/docker-kubernetes-course/tree/main/61_external_dns.
 
-Change the namespace name in ClusterRoleBinding in external-dns.yaml file
+Before deploying the yaml, change the namespace name in ClusterRoleBinding in external-dns.yaml file
 
 ```shell
 kubectl apply -f external-dns.yaml -n external-dns
 # serviceaccount/external-dns created
 # clusterrole.rbac.authorization.k8s.io/external-dns created
-# clusterrolebinding.rbac.authorization.k8s.io/external-dns-viewer created
+# clusterrolebinding.rbac.authorization.k8s.io/external-dns-vieYour created
 # deployment.apps/external-dns created
 ```
 
-
-# 6.2. Deploy using Helm chart
-
-You can also use Helm charts to deploy External DNS:
-
-https://artifacthub.io/packages/helm/bitnami/external-dns
-
+Note: To deploy ExternalDNS using Helm charts, checkout these resources:
+https://artifacthub.io/packages/helm/bitnami/external-dns 
 https://github.com/bitnami/charts/tree/main/bitnami/external-dns/#installing-the-chart
              
 
@@ -190,7 +192,7 @@ serviceaccount/default        0         96m
 serviceaccount/external-d
 ```
 
-## 7. Create a sample exposed through public load balancer
+## 7. Using ExternalDNS with Kubernetes services
 
 ```shell
 kubectl apply -f app-lb.yaml 
@@ -251,7 +253,7 @@ az network dns record-set a list -g $DNS_ZONE_RG --zone-name $DNS_ZONE_NAME
 
 <img src="images/app01.png">
 
-## 8. Create a sample exposed through ingress
+## 8. Create a sample app exposed through ingress
 
 ```shell
 kubectl apply -f app-ingress.yaml
