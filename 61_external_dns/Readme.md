@@ -6,6 +6,8 @@ After deploying an application and its services into a Kubernetes cluster, a que
 This tutorial describes how to manage custom domain names in Azure DNS using ExternalDNS in AKS.
 
 External DNS is a Kubernetes controller that watches for new Ingresses and Services with specific annotations, then creates corresponding DNS records in Azure DNS.
+DNS records in Azure DNS. It is available as an opensource project in Github: 
+https://github.com/kubernetes-sigs/external-dns. It supports more than 30 DNS providers including Azure DNS and Private DNS Zone.
 
 External DNS pods authenticates to Azure DNS using one of three methods:
 1. Service principal.
@@ -13,8 +15,8 @@ External DNS pods authenticates to Azure DNS using one of three methods:
 3. User assigned Managed Identity controlled by AAD Pod Identity.
 
 Note: Pod Identity is deprecated and will be replaced by Workload Identity.
-HoYouver, ExternalDNS dos not support yet Workload Identity.
-You will use Service Principal.
+However, ExternalDNS dos not support yet Workload Identity.
+In this tutorial, you will use Service Principal.
 
 Note: If you want to use Kubelet Managed Identity, giving it the Contributor role on the DNS zone is not secure by default. 
 That is because any pod in the cluster can access it

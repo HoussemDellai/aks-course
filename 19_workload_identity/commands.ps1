@@ -42,7 +42,7 @@ metadata:
 
 $sa | kubectl apply -f -
 
-$APPLICATION_OBJECT_ID="$(az ad app show --id $APPLICATION_CLIENT_ID --query objectId -o tsv)"
+$APPLICATION_OBJECT_ID=$(az ad app show --id $APPLICATION_CLIENT_ID --query objectId -o tsv)
 
 $body=@"
 {

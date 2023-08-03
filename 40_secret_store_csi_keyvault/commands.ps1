@@ -10,13 +10,13 @@ $AKS_NAME="aks-cluster"
 az group create -n $AKS_RG -l westeurope
 
 az aks create -g $AKS_RG -n $AKS_NAME `
-              --kubernetes-version "1.25.2" `
+              --kubernetes-version "1.26.3" `
               --enable-managed-identity `
-              --node-count 2 `
+              --node-count 3 `
               --network-plugin azure `
               --enable-addons azure-keyvault-secrets-provider `
               --enable-secret-rotation `
-              --rotation-poll-interval 5m `
+              --rotation-poll-interval 2m `
               --enable-oidc-issuer `
               --enable-workload-identity
 
