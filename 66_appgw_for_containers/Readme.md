@@ -87,6 +87,9 @@ az identity federated-credential create --name "identity-azure-alb" `
     --subject "system:serviceaccount:azure-alb-system:alb-controller-sa"
 ```
 
+Verify the applied configuration.
+<img src="images/federated_cred.png">
+
 Login to the cluster
 
 ```powershell
@@ -122,11 +125,17 @@ kubectl get gatewayclass azure-alb-external -o yaml
 az network alb create -g $RG_NAME -n $AGFC_NAME
 ```
 
+Verify the deployed resource.
+<img src="images/resources.png">
+
 Create a frontend resource in the App Gateway for Containers
 
 ```powershell
 az network alb frontend create -g $RG_NAME -n $AGFC_FRONTEND_NAME --alb-name $AGFC_NAME
 ```
+
+Verify the applied configuration.
+<img src="images/frontend.png">
 
 ## 4. Create a new Subnet for the AppGw for Containers association 
 
@@ -154,6 +163,9 @@ az network vnet subnet create `
   --delegations "Microsoft.ServiceNetworking/trafficControllers"
 ```
 
+Verify the applied configuration.
+<img src="images/subnets.png">
+
 Delegate AppGw for Containers Configuration Manager role to AKS Managed Cluster RG
 
 ```powershell
@@ -179,6 +191,9 @@ az role assignment create --assignee-object-id $IDENTITY_ALB_PRINCIPAL_ID `
         --role "4d97b98b-1d4f-4787-a291-c67834d212e7"
 ```
 
+Verify the applied configuration.
+<img src="images/roles.png">
+
 ## 5. Create the AppGw for Containers association and connect it to the referenced subnet
  
 It can take 5-6 minutes for the Application Gateway for Containers association to be created.
@@ -188,6 +203,9 @@ az network alb association create -g $RG_NAME -n $AGFC_ASSOCIATION `
            --alb-name $AGFC_NAME `
            --subnet $ALB_SUBNET_ID
 ```
+
+Verify the applied configuration.
+<img src="images/association.png">
 
 ## 6. Create Kubernetes Gateway resource
 
@@ -261,7 +279,7 @@ kubectl apply -f httproute.yaml
 kubectl get httproute -A
 ```
 
-# 9. Verify the app is running in the browser on $FQDN
+## 9. Verify the app is running in the browser on $FQDN
 
 ```powershell
 curl $FQDN
