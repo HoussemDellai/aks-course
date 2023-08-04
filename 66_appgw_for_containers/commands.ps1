@@ -109,17 +109,17 @@ echo $VNET_ID
 # and enable subnet delegation for the Application Gateway for Containers association resource
 
 $SUBNET_ADDRESS_PREFIX='10.225.0.0/24'
-$ALB_SUBNET_NAME='subnet-alb' # subnet name can be any non-reserved subnet name (i.e. GatewaySubnet, AzureFirewallSubnet, AzureBastionSubnet would all be invalid)
+$AGFC_SUBNET_NAME='subnet-alb' # subnet name can be any non-reserved subnet name (i.e. GatewaySubnet, AzureFirewallSubnet, AzureBastionSubnet would all be invalid)
 
 az network vnet subnet create `
   --resource-group $VNET_RG `
   --vnet-name $VNET_NAME `
-  --name $ALB_SUBNET_NAME `
+  --name $AGFC_SUBNET_NAME `
   --address-prefixes $SUBNET_ADDRESS_PREFIX `
   --delegations 'Microsoft.ServiceNetworking/trafficControllers' `
   --output table
 
-$ALB_SUBNET_ID=$(az network vnet subnet show --name $ALB_SUBNET_NAME --resource-group $VNET_RG --vnet-name $VNET_NAME --query '[id]' --output tsv)
+$ALB_SUBNET_ID=$(az network vnet subnet show --name $AGFC_SUBNET_NAME --resource-group $VNET_RG --vnet-name $VNET_NAME --query '[id]' --output tsv)
 echo $ALB_SUBNET_ID
 
 $IDENTITY_ILB_PRINCIPAL_ID=$(az identity show -g $RG -n $IDENTITY_ALB --query principalId -otsv)
