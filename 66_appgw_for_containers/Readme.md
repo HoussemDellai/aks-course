@@ -5,6 +5,12 @@ Application Gateway for Containers is a new application (layer 7) load balancing
 
 Application Gateway for Containers is the evolution of the Application Gateway Ingress Controller (AGIC), a Kubernetes application that enables Azure Kubernetes Service (AKS) customers to use Azure's native Application Gateway application load-balancer. In its current form, AGIC monitors a subset of Kubernetes Resources for changes and applies them to the Application Gateway, utilizing Azure Resource Manager (ARM).
 
+Ingress API vs Gateway API.
+<img src="images/ingress_gateway_api.png">
+
+AGIC vs Application Gateway for Containers.
+<img src="images/app_gateway.png">
+
 ## 1. Setup the environment
 
 Create environment variables
