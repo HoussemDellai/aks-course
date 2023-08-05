@@ -3,7 +3,7 @@
 # Create environment variables
 
 $AKS_NAME="aks-cluster"
-$RG_NAME="rg-aks-appgwc"
+$RG_NAME="rg-aks-agwc"
 $LOCATION="westeurope"
 $IDENTITY_ALB="identity-azure-alb"
 $AGFC_NAME="agwc-alb" # Name of the Application Gateway for Containers
@@ -71,6 +71,7 @@ az aks get-credentials --resource-group $RG_NAME --name $AKS_NAME --overwrite-ex
 # Install ALB controller through Helm chart
 
 $IDENTITY_ALB_CLIENT_ID=$(az identity show -g $RG_NAME -n $IDENTITY_ALB --query clientId -o tsv)
+echo $IDENTITY_ALB_CLIENT_ID
 
 helm install alb-controller oci://mcr.microsoft.com/application-lb/charts/alb-controller `
      --version 0.4.023971 `
@@ -211,4 +212,4 @@ kubectl get httproute -A
 
 # 9. Verify the app is running in the browser on $FQDN
 
-curl $FQDN
+Start-Process https://$FQDN

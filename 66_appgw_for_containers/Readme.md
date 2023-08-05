@@ -106,6 +106,7 @@ Install ALB controller through Helm chart
 
 ```powershell
 $IDENTITY_ALB_CLIENT_ID=$(az identity show -g $RG_NAME -n $IDENTITY_ALB --query clientId -o tsv)
+echo $IDENTITY_ALB_CLIENT_ID
 
 helm install alb-controller oci://mcr.microsoft.com/application-lb/charts/alb-controller `
      --version 0.4.023971 `
