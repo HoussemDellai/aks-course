@@ -3,7 +3,7 @@
 # Create environment variables
 
 $AKS_NAME="aks-cluster"
-$RG_NAME="rg-aks-agwc"
+$RG_NAME="rg-aks-agwfc"
 $LOCATION="westeurope"
 $IDENTITY_ALB="identity-azure-alb"
 $AGFC_NAME="agwc-alb" # Name of the Application Gateway for Containers
