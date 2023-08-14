@@ -21,7 +21,7 @@ But how the App Gateway could know the private IPs of the pods ?
 Here comes the AGIC extension. AGIC will be installed into the AKS cluster as a pod within kube-system namespace. Its role is to listen for ingress resources creation, get pod IPs then use it to control the configuration of the App Gateway. This means it will connect to the App Gateway and authenticate and authorize using a User Assigned Managed Identity created within the node resource group. AGIC will create the listeners and backend configuration for App Gateway.
 The following picture shows the workflow.
 
-<img src="images\architecture-white.png" style="background-color:white;">
+![](images\35_app_gateway_ingress__architecture-white.png)
 
 ## What are the pros and cons of using AGIC when compared with Nginx Ingress Controler ?
 
@@ -59,11 +59,11 @@ Enabling the AGIC component could be done using the portal, the command line, AR
 The easiest option is to enable it using the Azure portal. 
 From inside AKS, go to Networking section then enable Application Gateway.
 
-<img src="images\enable-agic.png">
+![](images\35_app_gateway_ingress__enable-agic.png)
 
 App Gateway will be deployed into its own subnet. Provide a subnet CIDR range. `/27` would be enough.
 
-<img src="images\appgw-subnet.png">
+![](images\35_app_gateway_ingress__subnet.png)
 
 If you prefer using the command line, here is the command.
 
@@ -104,13 +104,13 @@ kubectl get pods -n kube-system -l app=ingress-appgw
 
 Check the created Azure Application Gateway, Public IP for App Gateway and User Managed Identity in node resource group.
 
-<img src="images\node-rg.png"/>
+![](images\35_app_gateway_ingress__node-rg.png)
 
 Note the RBAC role `Contributor` over the node resource group. This will be used by AGIC pod to connect to the App Gateway and change its configuration.
 
 Check the created new Subnet in cluster VNET.
 
-<img src="images\subnet.png"/>
+![](images\35_app_gateway_ingress__subnet.png)
 
 ## 4. Deploying (public) ingress using App Gateway
 
@@ -229,7 +229,7 @@ kubectl exec nginx -it -- /bin/bash
 ## inside nginx
 root@nginx:/# curl 10.225.0.10
 # <!DOCTYPE html>
-# <html lang="en">
+# <html lang="en)
 # <head>
 #     <meta charset="utf-8" />
 # ...

@@ -8,7 +8,7 @@ The pod will consume this TLS certificate through environment variables.
 In this demo, we just use self-signed certificate for simplicity. 
 But Cert-Manager can request a TLS certificate from `Let's Encrypt`.
 
-<img src="./media/architecture.png"/>
+![](images/34_https_pod_certmanager_letsencrypt__architecture.png)
 
 For production workloads, follow the official guide: https://cert-manager.io/docs/tutorials/getting-started-aks-letsencrypt/
 

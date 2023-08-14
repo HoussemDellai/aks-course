@@ -6,7 +6,7 @@
 CoreDNS is a replacement to `kube-dns` that was previously used in kubernetes.
 CoreDNS is pre-installed in `kube-system` namespace.
 
-<img src='./images/customdns.png'>
+<img src='./images/60_coredns__customdns.png'>
 
 The objective of this lab is to use CoreDNS to provide custom domain names inside the cluster.
 We can replace the service named `myapp.default.svc.cluster.local` to something like `mayapp.aks.com`.

@@ -12,7 +12,7 @@ Can be used with PPG for lowest latency.
 Supports Ultra Disk, Premium SSD & Standard SSD.  
 Supports LRS and ZRS disks.  
 
-<img src="images/architecture-manual.png">
+![](images/45_shared_disk__architecture-manual.png)
 
 ## Setup demo environment
 
@@ -98,7 +98,7 @@ az disk list -g $NODE_RG -o table
 
 Check the Disk config on the Azure portal
 
-<img src="images/shared-disk.png">
+![](images/45_shared_disk__shared-disk.png)
 
 Verify the Disk is accessible by 3 nodes
 

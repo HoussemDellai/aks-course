@@ -1,6 +1,6 @@
 # Creating AKS Backup for Kubernetes objects and Azure Disk
 
-<img src="images/architecture.png">
+![](images/80_aks_backup__architecture.png)
 
 ## Introduction
 

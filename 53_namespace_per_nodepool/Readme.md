@@ -4,7 +4,7 @@
 
 How can we enforce all pods within a namespace to be deployed into specific nodes or nodepools ?
 
-<img src="images/arch.png">
+![](images/53_namespace_per_nodepool__arch.png)
 
 Kubernetes supports logical and physical isolation for pods. This includes using namespaces, taints, nodeselectors, node affinity and antiaffinity, etc.
 Some customers requires strict physical isolation to meet security requirements or to isolate large applications. 

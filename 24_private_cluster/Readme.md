@@ -12,15 +12,15 @@ It could be secured using authentication and authorization using Azure AD for ex
 But for organizations who want to disable this public endpoint, they can leverage the private cluster feature.  
 
 AKS supports 4 access options to the control plane:
-1) public cluster
-2) private cluster
-3) public cluster with API Integration enabled
-4) private cluster with API Integration enabled  
+1. public cluster
+2. private cluster
+3. public cluster with API Integration enabled
+4. private cluster with API Integration enabled  
 
 This article will explain these 4 options showing the architectural implementation for each one.  
 This does not cover scenarios where a user accesses an application through public Load Balancer or Ingress Controller.  
 
-<img src="images\aks_access_modes.png">
+![](images\24_private_cluster__aks_access_modes.png)
 
 ## 1. Public cluster
 
@@ -70,26 +70,26 @@ kubectl get endpoints
 # kubernetes   20.103.218.175:443   114m
 ```
 
-<img src="images\architecture_public_cluster.png">
+![](images\24_private_cluster__architecture_public_cluster.png)
 
 Following is print screen for created resources for public cluster.
 
-<img src="images\resources_public_cluster.png">
+![](images\24_private_cluster__resources_public_cluster.png)
 
 > **Note:** In the cluster resources we see a public IP created with the cluster. It is used for egress traffic (outbound from pods and worker nodes). It is different from the public endpoint for our cluster. It already has a different IP address.
 
 > AKS can whitelist the IP addresses that can connect to the control plane.
 More details about [api-server-authorized-ip-ranges](https://learn.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges)
 
-<img src="images\authorized-ip.png">
+![](images\24_private_cluster__authorized-ip.png)
 
 The public cluster advantages are:  
-➕ Easy to get started.  
-➕ Kubernetes CLI connects easily through the public endpoint.  
+* Easy to get started.  
+* Kubernetes CLI connects easily through the public endpoint.  
 
 However, it has some drawbacks:  
-➖ Public endpoint exposure on internet is not tolerated for some use cases.  
-➖ Worker nodes connect to control plane over public endpoint (within Azure backbone).  
+* Public endpoint exposure on internet is not tolerated for some use cases.  
+* Worker nodes connect to control plane over public endpoint (within Azure backbone).  
 
 ## 2. Private cluster using Private Endpoint
 
@@ -97,7 +97,7 @@ For customers looking to avoid public exposure of their resources, the `Private 
 
 A [private AKS cluster](https://learn.microsoft.com/en-us/azure/aks/private-clusters) disable the public endpoint and creates a private endpoint to access the control plane. As a result, access to the cluster for kubectl and CD pipelines requires access to cluster's private endpoint.  
 
-<img src="images\architecture_private_cluster.png">
+![](images\24_private_cluster__architecture_private_cluster.png)
 
 Let us see how that works.
 
@@ -133,13 +133,13 @@ The private cluster still (by default) exposes a public FQDN resolving the priva
 
 The following is a print screen for the created resources. Note here the Private Endpoint, Network Interface and Private DNS Zone. They are all created inside the managed node resource group that starts with MC_. This means they will be managed by AKS for you.
 
-<img src="images\resources_private_cluster.png">
+![](images\24_private_cluster__resources_private_cluster.png)
 
 > Private AKS creates a new Private DNS Zone by default. But you can [bring your own private DNS Zone](https://learn.microsoft.com/en-us/azure/aks/private-clusters#create-a-private-aks-cluster-with-custom-private-dns-zone-or-private-dns-subzone).
 
 Let us take a closer look at the Private DNS Zone. Note how it adds an `A` record to resolve the private IP address of the Private Endpoint. 
 
-<img src="images\resources_private_cluster_dns.png">
+![](images\24_private_cluster__resources_private_cluster_dns.png)
 
 ```bash
 # get the private FQDN
@@ -172,11 +172,12 @@ az aks command invoke --resource-group rg-aks-private --name aks-cluster --comma
 + IP authorized ranges cannot be applied to the private API server endpoint, they only apply to the public API server.
 + To connect to the private cluster, consider the dedicated section below.
 
-The pros and the cons of this mode:  
-➕ No public endpoint exposed on internet (which helps implement Zero Trust Network).  
-➕ Worker nodes connect to control plane using private endpoint.  
-➖ More work should be done to get access to the cluster for DevOps pipelines and cluster operators.  
-➖ Choosing private cluster is only possible during cluster creation. Not possible for existing clusters.
+The pros of this mode:  
+* No public endpoint exposed on internet (which helps implement Zero Trust Network).  
+* Worker nodes connect to control plane using private endpoint.  
+and the cons:
+* More work should be done to get access to the cluster for DevOps pipelines and cluster operators.  
+* Choosing private cluster is only possible during cluster creation. Not possible for existing clusters.
 
 ## 3. Public cluster using API Integration
 
@@ -193,7 +194,7 @@ The API server (part of the control plane) will be projected into a dedicated an
 
 Following is the simplified architecture.
 
-<img src="images\architecture_public_cluster_vnet_integration.png">
+![](images\24_private_cluster__architecture_public_cluster_vnet_integration.png)
 
 Let us see how that works.
 
@@ -205,15 +206,15 @@ az aks create -n aks-cluster -g rg-aks-public-vnet-integration --enable-apiserve
 
 Following is print screen for created resources. Note the created internal Load Balancer.
 
-<img src="images\resources_public_cluster_vnet_integration_ilb.png">
+![](images\24_private_cluster__resources_public_cluster_vnet_integration_ilb.png)
 
 And note also the created Subnet within the AKS VNET.
 
-<img src="images\resources_public_cluster_vnet_integration_subnet.png">
+![](images\24_private_cluster__resources_public_cluster_vnet_integration_subnet.png)
 
 Note the private IP address used in the internal Load Balancer.
 
-<img src="images\resources_public_cluster_vnet_integration.png">
+![](images\24_private_cluster__resources_public_cluster_vnet_integration.png)
 
 Let us retrieve the public endpoint which will resolve into public IP.
 
@@ -257,17 +258,18 @@ kubectl get endpoints
 It is possible to [convert existing public AKS clusters to use VNET Integration](https://learn.microsoft.com/en-us/azure/aks/api-server-vnet-integration#convert-an-existing-aks-cluster-to-api-server-vnet-integration). Pay attention when you do that, the public IP address of the control plane will change.  
 
 Pros and cons of this approach:  
-➕ Easy to get started.  
-➕ Kubernetes CLI connects easily through the public endpoint.  
-➕ Worker nodes connect to control plane over internal Load Balancer.  
-➖ Uses a subnet with CIDR range `/28` at least.  
+* Easy to get started.  
+* Kubernetes CLI connects easily through the public endpoint.  
+* Worker nodes connect to control plane over internal Load Balancer.  
+and the cons 
+* Uses a subnet with CIDR range `/28` at least.  
 
 ## 4. Private cluster using VNET Integration
 
 Default VNET Integration will create private access for the worker nodes to access the control plane through internal Load Balancer. Any resource with access to that internal Load Balancer can access the cluster control plane. This is a simpler alternative to using the Private Endpoint with Private DNS Zone for private clusters.
 But it keeps the public endpoint. We can [disable or enable that public endpoint](https://learn.microsoft.com/en-us/azure/aks/api-server-vnet-integration#enable-or-disable-private-cluster-mode-on-an-existing-cluster-with-api-server-vnet-integration).
 
-<img src="images\architecture_private_cluster_vnet_integration.png" width="60%">
+![](images\24_private_cluster__architecture_private_cluster_vnet_integration.png)
 
 Let us see how that works.
 
@@ -279,11 +281,11 @@ az aks create -n aks-cluster -g rg-aks-private-vnet-integration --enable-apiserv
 
 That will create the following resources. Note the internal Load Balancer and the Private DNS Zone.
 
-<img src="images\resources_private_cluster_vnet_integration.png">
+![](images\24_private_cluster__resources_private_cluster_vnet_integration.png)
 
 The Private DNS Zone will privately resolve the private FQDN to the private IP of the internal Load Balancer to communicate with control plane.
 
-<img src="images\resources_private_cluster_vnet_integration_dns.png">
+![](images\24_private_cluster__resources_private_cluster_vnet_integration_dns.png)
 
 Note here how the public FQDN (could be disabled) resolves to the private IP.
 
@@ -309,10 +311,11 @@ nslookup aks-cluste-rg-aks-private-v-17b128-38360d0d.2788811a-873a-450d-811f-b7c
 # Address:  not found
 ```
 
-Pros and cons of this approach:    
-➕ Kubernetes CLI connects only through internal Load Balancer.  
-➕ Worker nodes connect to control plane over internal Load Balancer.  
-➖ Uses a subnet with CIDR range `/28` at least.
+Pros of this approach:    
+* Kubernetes CLI connects only through internal Load Balancer.  
+* Worker nodes connect to control plane over internal Load Balancer.  
+and cons:
+* Uses a subnet with CIDR range `/28` at least.
 
 ## How to access a private cluster
 
@@ -348,4 +351,4 @@ More details on how to [connect to private cluster](https://learn.microsoft.com/
 This article is also available in a video format on youtube:
 https://www.youtube.com/watch?v=8e8vBLZiIhQ&list=PLpbcUe4chE79sB7Jg7B4z3HytqUUEwcNE&index=60&t=772s
 
-<a href="https://www.youtube.com/watch?v=8e8vBLZiIhQ&list=PLpbcUe4chE79sB7Jg7B4z3HytqUUEwcNE&index=60&t=772s"> <img src="images\video-youtube.png"> </a>
+<a href="https://www.youtube.com/watch?v=8e8vBLZiIhQ&list=PLpbcUe4chE79sB7Jg7B4z3HytqUUEwcNE&index=60&t=772s) ![](images\24_private_cluster__video-youtube.png) </a>

@@ -1,4 +1,4 @@
-﻿# k8s-opa-gatekeeper-demo
+# k8s-opa-gatekeeper-demo
 
 This project is demoing OPA Gatekeeper with Kubernetes. Gatekeeper is an opensource project supported by CNCF. It aims for creating policies to manage Kubernetes like:
 
@@ -9,4 +9,4 @@ This project is demoing OPA Gatekeeper with Kubernetes. Gatekeeper is an opensou
 * Enforcing running containers as non-root.
 
 Watch the video here: https://youtu.be/urvSPmlU69k
-<src href="https://youtu.be/urvSPmlU69k"><img src="https://github.com/HoussemDellai/k8s-opa-gatekeeper-demo/blob/master/opa-thumb.jpg?raw=true" /></src>
+<src href="https://youtu.be/urvSPmlU69k)![](https://github.com/HoussemDellai/k8s-opa-gatekeeper-demo/blob/master/opa-thumb.jpg?raw=true" /></src>

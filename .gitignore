@@ -40,3 +40,7 @@ override.tf.json
 .terraformrc
 terraform.rc
 # .gitignore
+
+# ignore book
+**.pdf
+**.docx

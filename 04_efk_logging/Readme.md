@@ -26,5 +26,5 @@ Open Kibana dashboard.
 
 The workshop is available as a video on youtube:
 
-<a href="https://www.youtube.com/watch?v=mwToMPpDHfg&list=PLpbcUe4chE7-Eb5DUTKcR80rPAK-ZnefW"><img src="https://github.com/HoussemDellai/EFK-Kubernetes/blob/master/images/efk-sketch-light.jpg?raw=true" width="80%"></a>
+<a href="https://www.youtube.com/watch?v=mwToMPpDHfg&list=PLpbcUe4chE7-Eb5DUTKcR80rPAK-ZnefW">![](images/04_efk_logging__efk-sketch-light.png)</a>
 

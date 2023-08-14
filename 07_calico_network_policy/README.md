@@ -1,9 +1,8 @@
-﻿# NetworkPolicy-Calico
+# Kubernetes NetworkPolicy using Calico
+
 This workshop will walk you through how to create network policies in Kubernetes using Calico.  
 
-An article with more details and explanation will be available soon.  
-
-<img src="https://github.com/HoussemDellai/NetworkPolicy-Calico/blob/master/architecture.jpg?raw=true" width="80%">  
+![](images/07_calico_network_policy__architecture.png)  
 
 Check the commands.sh file to get all the commands used in this workshop.  
 

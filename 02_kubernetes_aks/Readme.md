@@ -69,16 +69,21 @@ nginx        LoadBalancer   10.0.147.78   20.61.145.135   80:32640/TCP   17s
 ## Deploying Images from ACR into AKS
 
 ### Create an Docker Registry in Azure (ACR)
+
 Follow this link to create an ACR using the portal: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal
 Or this link to create it through the command line: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-event-grid-quickstart
+
 ### Create an image in ACR
-Navigate into the \app-dotnet folder and run the following command to package the source code, upload it into ACR and build the docker image inside ACR:
+
+Navigate into the `app-dotnet` folder and run the following command to package the source code, upload it into ACR and build the docker image inside ACR:
+
 ```bash 
 $acrName="<myacr>"
 az acr build -t "$acrName.azurecr.io/dotnet-app:1.0.0" -r $acrName .
 ```
  
 Deploy the created image in ACR into the AKS cluster and replace image and registry names:
+
 ```bash 
  $ kubectl run dotnet-app --image=<houssemdellaiacr>.azurecr.io/dotnet-app:1.0.0
 pod/dotnet-app created

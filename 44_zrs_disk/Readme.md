@@ -4,7 +4,7 @@
 
 This lab will show how to use an Azure DISK with ZRS feature and how it can be used in multiple availability zones.
 
-<img src="images/architecture.png">
+![](images/44_zrs_disk__architecture.png)
 
 ## Lab steps
 0. Setup demo environment
@@ -58,7 +58,7 @@ Verify resources deployed successfully
 ```
 
 View the disk on the Azure portal.
-<img src="images/zrs-disk.png">
+![](images/44_zrs_disk__zrs-disk.png)
 
 Verify data persisted in the disk
 

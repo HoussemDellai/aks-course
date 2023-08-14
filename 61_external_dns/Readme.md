@@ -24,7 +24,7 @@ To mitigate this issue, you need to implement a Network Policy that restricts ac
 
 In this tutorial You will work with Service Principal.
 
-<img src="images/architecture.png">
+![](images/61_external_dns__architecture.png)
 
 ## 1. Create an AKS cluster with an ingress controller 
 
@@ -253,7 +253,7 @@ az network dns record-set a list -g $DNS_ZONE_RG --zone-name $DNS_ZONE_NAME
 #   }]
 ```
 
-<img src="images/app01.png">
+![](images/61_external_dns__app01.png)
 
 ## 8. Create a sample app exposed through ingress
 
@@ -313,12 +313,12 @@ az network dns record-set a list -g $DNS_ZONE_RG --zone-name $DNS_ZONE_NAME
 
 Lets check the app and DNS resolution
 
-<img src="images/app02.png">
+![](images/61_external_dns__app02.png)
 
 Let us check the Azure DNS zone configuration.
 Note the A records was added with public IP for service and ingress controller.
 
-<img src="images/azure-dns.png">
+![](images/61_external_dns__azure-dns.png)
 
 ## Conclusion
 

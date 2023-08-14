@@ -4,7 +4,7 @@
 
 This lab shows how to use Terraform to provision an AKS cluster, Grafana and Monitor Workspace for Prometheus. All configured together to collect metrics from the cluster and expose it through Grafana dashboard.
 
-<img src="images\architecture.png">
+![](images\85_prometheus_grafana__architecture.png)
 
 ## Challenges
 

@@ -16,7 +16,7 @@ These credentials can be accessed by the kubelet via the instance metadata servi
 IMDS can be accessed via an HTTP request on a link-local IP address: `169.254.169.254`. 
 By default, this metadata service is reachable to all pods on the nodes.
 
-<img src="images/architecture.png"/>
+![](images/54_deny_access_imds__architecture.png)
 
 More information about IMDS here:
 

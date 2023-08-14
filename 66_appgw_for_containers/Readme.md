@@ -6,10 +6,10 @@ Application Gateway for Containers is a new application (layer 7) load balancing
 Application Gateway for Containers is the evolution of the Application Gateway Ingress Controller (AGIC), a Kubernetes application that enables Azure Kubernetes Service (AKS) customers to use Azure's native Application Gateway application load-balancer. In its current form, AGIC monitors a subset of Kubernetes Resources for changes and applies them to the Application Gateway, utilizing Azure Resource Manager (ARM).
 
 Ingress API vs Gateway API.
-<img src="images/ingress_gateway_api.png">
+![](images/66_appgw_for_containers__ingress_gateway_api.png)
 
 AGIC vs Application Gateway for Containers.
-<img src="images/app_gateway.png">
+![](images/66_appgw_for_containers__app_gateway.png)
 
 ## 1. Setup the environment
 
@@ -94,7 +94,7 @@ az identity federated-credential create --name "identity-azure-alb" `
 ```
 
 Verify the applied configuration.
-<img src="images/federated_cred.png">
+![](images/66_appgw_for_containers__federated_cred.png)
 
 Login to the cluster
 
@@ -133,7 +133,7 @@ az network alb create -g $RG_NAME -n $AGFC_NAME
 ```
 
 Verify the deployed resource.
-<img src="images/resources.png">
+![](images/66_appgw_for_containers__resources.png)
 
 Create a frontend resource in the App Gateway for Containers
 
@@ -142,7 +142,7 @@ az network alb frontend create -g $RG_NAME -n $AGFC_FRONTEND_NAME --alb-name $AG
 ```
 
 Verify the applied configuration.
-<img src="images/frontend.png">
+![](images/66_appgw_for_containers__frontend.png)
 
 ## 4. Create a new Subnet for the AppGw for Containers association 
 
@@ -171,7 +171,7 @@ az network vnet subnet create `
 ```
 
 Verify the applied configuration.
-<img src="images/subnets.png">
+![](images/66_appgw_for_containers__subnets.png)
 
 Delegate AppGw for Containers Configuration Manager role to AKS Managed Cluster RG
 
@@ -199,7 +199,7 @@ az role assignment create --assignee-object-id $IDENTITY_ALB_PRINCIPAL_ID `
 ```
 
 Verify the applied configuration.
-<img src="images/roles.png">
+![](images/66_appgw_for_containers__roles.png)
 
 ## 5. Create the AppGw for Containers association and connect it to the referenced subnet
  
@@ -212,7 +212,7 @@ az network alb association create -g $RG_NAME -n $AGFC_ASSOCIATION `
 ```
 
 Verify the applied configuration.
-<img src="images/association.png">
+![](images/66_appgw_for_containers__association.png)
 
 ## 6. Create Kubernetes Gateway resource
 

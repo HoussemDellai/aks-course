@@ -6,7 +6,7 @@ This lab will create a StatfulSet for MySQL database.
 We will have one primary instance for read/write and many replicas instances for read-only.
 Data is always inserted into primary database then replicated and synchronized using [Percona XtraBackup](https://github.com/percona/percona-xtrabackup).
 
-<img src="images/architecture.png">
+![](images/42_statefulset_mysql__architecture.png)
 
 ## Plan
 0. Setup demo environment
@@ -80,7 +80,7 @@ kubectl get sts,pod,svc,pv,pvc
 
 We can also check the 3 Azure Disks in the portal.
 
-<img src="images/disk-pv.png">
+![](images/42_statefulset_mysql__disk-pv.png)
 
 ## 2. Insert data into the primary mysql database
 

@@ -27,7 +27,7 @@ We will go through these steps:
 7. Verify the Blob storage mounted successfully
 
 
-<img src="images/architecture.png"/>
+![](images/47_blob_fuse_msi__architecture.png)
 
 ## 0. Setup demo environment
 
@@ -112,7 +112,7 @@ az role assignment create --assignee $CURRENT_USER_ID `
 
 Verify the resources are created on the Azure portal.
 
-<img src="images\blob.png"/>
+![](images\47_blob_fuse_msi__blob.png)
 
 ## 2. Create Managed Identity
 
@@ -133,7 +133,7 @@ az role assignment create --assignee $IDENTITY_CLIENT_ID `
 
 The end result should be like this.
 
-<img src="images\identity-role.png"/>
+![](images\47_blob_fuse_msi__identity-role.png)
 
 ## 4. Attach Managed Identity to AKS VMSS (System nodepool only recommended)
 
@@ -149,11 +149,11 @@ az vmss identity assign -g $NODE_RG -n $VMSS_NAME --identities $IDENTITY_ID
 
 Verify the config on the portal.
 
-<img src="images\vmss-identity.png"/>
+![](images\47_blob_fuse_msi__vmss-identity.png)
 
 Now we should have the three resources created.
 
-<img src="images\resources.png"/>
+![](images\47_blob_fuse_msi__resources.png)
 
 ## 5. Configure Persistent Volume (PV) with managed identity
 
@@ -238,7 +238,7 @@ kubectl exec -it $POD_NAME -- ls /usr/share/nginx/html
 
 Navigate to http://<PUBLIC_SERVICE_IP>/blobfile.html to view web app running the uploaded blobfile.html file.
 
-<img src="images\browser.png"/>
+![](images\47_blob_fuse_msi__browser.png)
 
 ## Additional resources
 Src: https://github.com/qxsch/Azure-Aks/tree/master/aks-blobfuse-mi  

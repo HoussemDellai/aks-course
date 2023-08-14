@@ -13,7 +13,7 @@ We will perform the following steps:
 6. Create ingress resoure that uses TLS
 7. Check app is working with HTTPS
 
-<img src="media/basic-ingress-tls.png">
+![](images/27_https_ingress_tls_secret__basic-ingress-tls.png)
 
 ## 1. Create an AKS cluster
 
@@ -395,24 +395,24 @@ curl -v -k --resolve $DOMAIN_NAME_FQDN:443:$INGRESS_PUPLIC_IP https://$DOMAIN_NA
 # < strict-transport-security: max-age=15724800; includeSubDomains
 # <
 # <!DOCTYPE html>
-# <html xmlns="http://www.w3.org/1999/xhtml">
+# <html xmlns="http://www.w3.org/1999/xhtml)
 # <head>
-#     <link rel="stylesheet" type="text/css" href="/static/default.css">
+#     <link rel="stylesheet" type="text/css" href="/static/default.css)
 #     <title>Welcome to Azure Kubernetes Service (AKS)</title>
 
-#     <script language="JavaScript">
+#     <script language="JavaScript)
 #         function send(form){
 #         }
 #     </script>
 
 # </head>
 # <body>
-#     <div id="container">
-#         <form id="form" name="form" action="/"" method="post"><center>
-#         <div id="logo">Welcome to Azure Kubernetes Service (AKS)</div>
-#         <div id="space"></div>
-#         <img src="/static/acs.png" als="acs logo">
-#         <div id="form">
+#     <div id="container)
+#         <form id="form" name="form" action="/"" method="post)<center>
+#         <div id="logo)Welcome to Azure Kubernetes Service (AKS)</div>
+#         <div id="space)</div>
+#         ![](/static/acs.png" als="acs logo)
+#         <div id="form)
 #         </div>
 #     </div>
 # </body>

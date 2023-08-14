@@ -14,7 +14,7 @@ The flow will be the following:
 6. Secret Store CSI driver sync TLS certificate into k8s Secret.
 7. Ingress controller will ‘hot reload’ the cert (no reboot).
 
-<img src="media/tls-ingress-keyvault-oidc.png">
+![](images/31_https_ingress_pods_kv_oidc__tls-ingress-keyvault-oidc.png)
 
 The lab steps:
 1. Create an AKS cluster with Secret Store CSI and Workload Identity enabled
@@ -139,7 +139,7 @@ az role assignment create --assignee $CURRENT_USER_ID `
 az keyvault certificate import --vault-name $AKV_NAME -n $CERT_NAME -f "$CERT_NAME.pfx"
 ```
 
-<img src="media/keyvault-cert.png">
+![](images/31_https_ingress_pods_kv_oidc__keyvault-cert.png)
 
 ## 5. Create a user managed Identity
 
@@ -165,7 +165,7 @@ az role assignment create --assignee $IDENTITY_CLIENT_ID `
         --scope $AKV_ID
 ```
 
-<img src="media/identity-role-assignment.png">
+![](images/31_https_ingress_pods_kv_oidc__identity-role-assignment.png)
 
 ## 6. Create Service Account for the app that need federated credential
 
@@ -215,7 +215,7 @@ az identity federated-credential create -n $FEDERATED_IDENTITY_NAME -g $AKS_RG `
 
 ```
 
-<img src="media/federated-cred.png">
+![](images/31_https_ingress_pods_kv_oidc__federated-cred.png)
 
 ## 8. Configure SecretProviderClass to retrieve keyvault secret and save it into kubernetes secret
 
@@ -457,7 +457,7 @@ echo $DOMAIN_NAME_FQDN
 # "aks-app-07.westeurope.cloudapp.azure.com"
 ```
 
-<img src="media/public-ip.png">
+![](images/31_https_ingress_pods_kv_oidc__public-ip.png)
 
 ## 11.2. Option 2: Name to associate with Azure DNS Zone
 
@@ -523,7 +523,7 @@ kubectl get ingress --namespace $NAMESPACE_APP
 
 Open the app in the browser and check the link.
 
-<img src="media/app-browser.png">
+![](images/31_https_ingress_pods_kv_oidc__app-browser.png)
 
 ```powershell
 curl -v -k --resolve $DOMAIN_NAME_FQDN:443:$INGRESS_PUPLIC_IP https://$DOMAIN_NAME_FQDN

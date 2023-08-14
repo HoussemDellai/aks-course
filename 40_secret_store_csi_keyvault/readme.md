@@ -29,7 +29,7 @@ In this lab, we'll do the following:
 9. Configure secret provider class to get secret from Keyvault and to use user managed identity
 10. Test access to Secret in keyvault with sample deployment
 
-<img src="media/Secret Store CSI with Workload Identity.png">
+![](images/40_secret_store_csi_keyvault__secret-store-csi-wi-architecture.png)
 
 ## 1. Create an AKS cluster with Secret Store CSI driiver and Workload Identity
 
