@@ -116,7 +116,7 @@ helm install alb-controller oci://mcr.microsoft.com/application-lb/charts/alb-co
 Verify the ALB Controller installation
 
 ```powershell
-sleep 60 # wait for the controller to be ready
+sleep 60 # wait for the controller to be ready 
 kubectl get pods -n azure-alb-system
 ```
 
