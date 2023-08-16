@@ -1,21 +1,18 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hodellai\\Desktop\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj": {}
+    "D:\\Projects\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hodellai\\Desktop\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj": {
+    "D:\\Projects\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hodellai\\Desktop\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
+        "projectUniqueName": "D:\\Projects\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
         "projectName": "WebApp",
-        "projectPath": "C:\\Users\\hodellai\\Desktop\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
+        "projectPath": "D:\\Projects\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
         "packagesPath": "C:\\Users\\hodellai\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hodellai\\Desktop\\docker-kubernetes-course\\app-dotnet\\obj\\",
+        "outputPath": "D:\\Projects\\docker-kubernetes-course\\app-dotnet\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
           "C:\\Users\\hodellai\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -68,28 +65,11 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[5.0.0, 5.0.0]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[5.0.17, 5.0.17]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[5.0.0, 5.0.0]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[5.0.0, 5.0.0]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -98,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

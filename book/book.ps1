@@ -93,13 +93,6 @@ ForEach ($readmeFile in $(Get-ChildItem –Path ../ -Recurse -Include Readme.md)
     Copy-Item -Path $imgFolderFullName -Destination . -Recurse
 }
 
-
-# get all folders containing Readme.md files
-
-$readmeFiles = $(Get-ChildItem –Path ../ -Recurse -Include Readme.md).FullName
-
-pandoc -s --toc -o book.docx -V geometry:a4paper,margin=2cm $readmeFiles 
-
 # generate chapters
 ForEach ($readmeFile in $(Get-ChildItem –Path ../ -Recurse -Include Readme.md)) {
 
@@ -112,3 +105,9 @@ ForEach ($readmeFile in $(Get-ChildItem –Path ../ -Recurse -Include Readme.md)
     pandoc -s --toc -o chapters\$bookName -V geometry:a4paper,margin=2cm $readmeFile
 }
 
+
+# get all folders containing Readme.md files
+$readmeFiles = $(Get-ChildItem –Path ../ -Recurse -Include Readme.md).FullName
+
+# generate book
+pandoc -s --toc -o book.docx -V geometry:a4paper,margin=2cm $readmeFiles 

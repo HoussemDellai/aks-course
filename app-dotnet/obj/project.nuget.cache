@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dCBMTHyEwySHUOKpXP1UPCWWYsLOSyilLLhSaLw9vZOZ7k1JncTEi26Sk5CPeAQ6v6eB6qqi6EOc0wCpRmZ1GQ==",
+  "dgSpecHash": "vgC+K7nL/0ONmaloK3XPl4VObfHhZdfNulxME06TjAkBIBtvIA83IgufoZcO09U1BaXERTP6KgS9PI3eG2MbUw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\hodellai\\Desktop\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
+  "projectFilePath": "D:\\Projects\\docker-kubernetes-course\\app-dotnet\\WebApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hodellai\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\hodellai\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
@@ -136,11 +136,7 @@
     "C:\\Users\\hodellai\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\hodellai\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\hodellai\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\hodellai\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
-    "C:\\Users\\hodellai\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.17\\microsoft.netcore.app.host.win-x64.5.0.17.nupkg.sha512",
-    "C:\\Users\\hodellai\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\5.0.0\\microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
-    "C:\\Users\\hodellai\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\5.0.0\\microsoft.windowsdesktop.app.ref.5.0.0.nupkg.sha512",
-    "C:\\Users\\hodellai\\.nuget\\packages\\microsoft.netcore.app.ref\\5.0.0\\microsoft.netcore.app.ref.5.0.0.nupkg.sha512"
+    "C:\\Users\\hodellai\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
   "logs": []
 }
