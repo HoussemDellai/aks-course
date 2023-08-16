@@ -64,7 +64,25 @@ This will install the chart with the specified image tag.
 
 ## 6. Install a Chart with Custom Values
  
-You can also install a chart with a custom values.yaml file that specifies the values to use when installing the chart. Create a custom values.yaml file and install the chart with the following command:
+You can also install a chart with a custom `values.yaml` file that specifies the values to use when installing the chart.
+Create a custom `values.yaml` file.
+
+```yaml
+# values.yaml
+replicaCount: 1
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "1.21.0"
+service:
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: false
+  className: ""
+```
+
+Then install the chart with the following command:
 
 ```shell
 helm install -f values.yaml my-app firstchart  
