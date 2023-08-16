@@ -43,7 +43,7 @@ We have a sample .NET Core 5.0 web MVC application. The source code is available
 The source code is on the /app-dotnet folder.
 
 Here is the structure of the project.
-<img src="images/dotnet-project.png" width="30%"/>
+
 ![](images/dotnet-project.png)
 
 We can run this application through the .NET cli tool. We build it first, then we run it.
@@ -227,7 +227,7 @@ In addition to storing and managing container images, some container registries 
 
 In this lab, we will work with Docker Hub container registry.
 
-Create a Docker Hub account at: https://hub.docker.com/.
+Create a Docker Hub account at: [https://hub.docker.com/](https://hub.docker.com/).
 Login to Docker Hub registry:
 
 ```bash
@@ -247,6 +247,7 @@ $ docker push <houssemdocker>/webapp:1.0
 ```
 
 Now, verify the image is stored in the registry.
+
 ![](images/dockerhub.png)
 
 ## 10. Working with Container Registry (Azure Container Registry)
@@ -268,7 +269,7 @@ Build the image on ACR (Optional):
 az acr build -t "$acrName.azurecr.io/webapp:1.0" -r $acrName .
 ```
 
-Note that image is already pushed to ACR.
+Note that image is already pushed to ACR by viewing the ACR resource in Azure portal.
 
 ## Conclusion
 
