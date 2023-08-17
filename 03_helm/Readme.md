@@ -31,7 +31,26 @@ Create a sample Helm chart by running the following command:
 helm create firstchart  
 ```
 
-This will create a basic Helm chart in a directory named firstchart.
+This will create a basic Helm chart in a folder named firstchart.
+
+```shell
+firstchart
+│   .helmignore
+│   Chart.yaml
+│   values.yaml
+│
+└───templates
+    │   deployment.yaml
+    │   hpa.yaml
+    │   ingress.yaml
+    │   NOTES.txt
+    │   service.yaml
+    │   serviceaccount.yaml
+    │   _helpers.tpl
+    │
+    └───tests
+            test-connection.yaml
+```
 
 ## 3. Check Helm Syntax
  
