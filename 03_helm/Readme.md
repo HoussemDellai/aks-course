@@ -1,4 +1,4 @@
-# Workshop: Kubernetes and Helm
+# Creating and installing Helm Charts
  
 
 ## Introduction
