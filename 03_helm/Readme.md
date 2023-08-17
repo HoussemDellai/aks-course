@@ -14,7 +14,7 @@ Prerequisites
 
 ## 1. Install Helm
  
-Helm is a package manager for Kubernetes that simplifies the process of installing and managing applications on a Kubernetes cluster. Follow the guide at https://helm.sh/docs/intro/install/ to install Helm on your machine. Once installed, verify the version by running:
+Helm is a package manager for Kubernetes that simplifies the process of installing and managing applications on a Kubernetes cluster. Follow the guide at [helm.sh/docs/intro/install/](https://helm.sh/docs/intro/install/) to install Helm on your machine. Once installed, verify the version by running:
 
 ```shell
 helm version  
@@ -24,7 +24,8 @@ This should output the version of Helm that you have installed.
 
 ## 2. Create a Sample Chart
  
-A Helm chart is a collection of files that describe a set of Kubernetes resources that can be deployed together as a single unit. Create a sample Helm chart by running the following command:
+A Helm chart is a collection of files that describe a set of Kubernetes resources that can be deployed together as a single unit.
+Create a sample Helm chart by running the following command:
 
 ```shell
 helm create firstchart  
@@ -34,7 +35,8 @@ This will create a basic Helm chart in a directory named firstchart.
 
 ## 3. Check Helm Syntax
  
-Before installing a Helm chart, it's a good idea to check the syntax of the chart to ensure that it is valid. Check the syntax of the Helm chart by running the following command:
+Before installing a Helm chart, it's a good idea to check the syntax of the chart to ensure that it is valid. 
+Check the syntax of the Helm chart by running the following command:
 
 ```shell
 helm lint firstchart
@@ -42,9 +44,10 @@ helm lint firstchart
  
 This will check the syntax of the chart and ensure that it is valid.
 
-## 4. Install a Helm Chart
+## 4. Install a Helm Chart into Kubernetes
  
-Once you have created a Helm chart, you can install it on your Kubernetes cluster. Install the Helm chart by running the following command:
+Once you have created a Helm chart, you can install it on your Kubernetes cluster.
+Install the Helm chart by running the following command:
 
 ```shell
 helm install my-app firstchart  
@@ -52,9 +55,17 @@ helm install my-app firstchart
 
 This will install the Helm chart with the release name my-app.
 
-## 5. Override Chart Values
+Verify the created resources. You should see a Deployment, Service, HPA and Ingress resources.
+
+```shell
+kubectl get deploy,svc,hpa,ingress
+```
+
+## 5. Override Chart Values in command line
  
-Helm charts can include default values that are used when the chart is installed. You can override these default values by specifying them on the command line when you install the chart. Override the default chart values by running the following command:
+Helm charts can include default values that are used when the chart is installed.
+You can override these default values by specifying them on the command line when you install the chart.
+Override the default chart values by running the following command.
 
 ```shell
 helm install --set image.tag="1.21.0" my-app firstchart  
@@ -62,7 +73,7 @@ helm install --set image.tag="1.21.0" my-app firstchart
 
 This will install the chart with the specified image tag.
 
-## 6. Install a Chart with Custom Values
+## 6. Install a Chart with custom values
  
 You can also install a chart with a custom `values.yaml` file that specifies the values to use when installing the chart.
 Create a custom `values.yaml` file.
@@ -88,13 +99,21 @@ Then install the chart with the following command:
 helm install -f values.yaml my-app firstchart  
 ```
 
-This will install the chart with the values specified in the values.yaml file.
+This will install the chart with the values specified in the `values.yaml` file.
 
-## 7. Install a Chart in Different Environments
+## 7. Install a Chart in different Environments (Dev/Test/Prod)
  
-You may want to install a chart in different environments with different values. You can achieve this by specifying different value files when installing the chart. For example, to deploy the chart to a dev cluster, you can run the following command:
+You may want to install a chart to different environments with different values. 
+You can achieve this by specifying different value files when installing the chart.
+For example, `values.dev.yaml` file contain values for the `dev` environment.
+And `values.prod.yaml` file contain values for the `production` environment.
+
+To deploy the chart to a dev cluster, you can run the following command:
+
+```shell
 helm install -f values.dev.yaml my-app firstchart  
- 
+```
+
 To deploy the chart to a prod cluster, you can run the following command:
 
 ```shell
@@ -111,7 +130,7 @@ the specified image tag and the values specified in the values.yaml file, run th
 helm install -f values.yaml --set image.tag="1.19.0" my-app firstchart  
 ```
 
-## 9. List Installed Charts
+## 9. List installed Charts
  
 You can list the installed charts by running the following command:
 
@@ -141,9 +160,13 @@ helm uninstall my-app
 
 This will delete the chart with the release name my-app.
 
-## 12. Add a Helm Repository
- 
-You can add a Helm repository to your list of repositories by running the following command:
+## 12. Reuse an existing Helm Repository
+
+Until now, we have created and used our own helm chart, specific for our application.
+There are many other helm charts available in opensource.
+These helm charts are really helpful to install packaged applications like Ingress Controller, Database, Wordpress, GitOps, monitoring tools, etc.
+These helm charts are available in `helm repository` like the one provided by `Bitnami`. Here is the link: [github.com/bitnami/charts/tree/main/bitnami](https://github.com/bitnami/charts/tree/main/bitnami).
+You can download and add a Helm repository to your list of repositories in your machine by running the following command.
 
 ```shell
 helm repo add bitnami https://charts.bitnami.com/bitnami  
