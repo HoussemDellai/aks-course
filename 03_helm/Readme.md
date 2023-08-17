@@ -6,7 +6,8 @@
 Kubernetes is a popular open-source container orchestration platform that allows you to deploy, scale, and manage containerized applications. Helm is a package manager for Kubernetes that simplifies the process of installing and managing applications on a Kubernetes cluster. Helm provides a way to package Kubernetes resources, such as deployments, services, and config maps, into a single, reusable unit called a chart.
 
 This workshop will guide you through the process of creating and installing a Helm chart on a Kubernetes cluster. You will learn how to create a sample chart, check the syntax of the chart, install the chart, override chart values, install a chart with custom values, install a chart in different environments, upgrade a chart, and delete a chart.
-Prerequisites
+
+## Prerequisites
  
 - A Kubernetes cluster
 - Helm installed on your machine
