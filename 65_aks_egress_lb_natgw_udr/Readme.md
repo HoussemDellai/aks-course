@@ -1,8 +1,35 @@
 # AKS Egress Traffic with Load Balancer, NAT Gateway, and User Defined Route
 
+## Introduction
+
+Welcome to this lab where we will explore the different outbound types in Azure Kubernetes Service (AKS).
+Outbound traffic refers to the network traffic that originates from a pod or node in a cluster and is destined for external destinations.
+Outbound traffic will leave the cluster through one of the supported load balancing solutions for egress. 
+These solutions are the outbound types in AKS.
+
+There are four outbound types.  
+1. Load Balancer (default)  
+2. Managed NAT Gateway  
+3. User defined NAT Gateway  
+4. User Defined Routes (UDR)  
+
+The egress traffic destination could be:  
+1. Microsoft Container Registry (MCR) used to pull system container images  
+2. Azure Container Registry (ACR) used to pull user container images  
+3. Ubuntu or Windows update server used to download node images updates  
+4. External resources used by the apps like Azure Key vault, Storage Account, Cosmos DB, etc  
+5. External third party REST API  
+
 ![](images/65_aks_egress_lb_natgw_udr__architecture.png)
 
+We will discuss the differences between these outbound types and their use cases.
+By the end of this lab, participants will have a better understanding of the outbound types available in AKS and will be able to implement the appropriate outbound type to suit their specific requirements.
+
+For each type, you will learn how to configure it, their features and the IP address they use to leave the cluster.
+
 ## 1. AKS cluster with outbound type load balancer
+
+Let's create an AKS cluster with default LoadBalancer outboundType and let's see how it works.
 
 ```shell
 az group create -n rg-aks-lb -l westeurope
@@ -13,17 +40,82 @@ az aks create -g rg-aks-lb -n aks-lb `
 az aks get-credentials -g rg-aks-lb -n aks-lb --overwrite-existing
 ```
 
-Check outbound egress traffic uses Load Balancer public IP
+Check the created resurces in the node resource group. 
+Note the public Load Balancer (LB) and the public IP address (PIP). 
+These resources will be used for egress traffic.
+
+![](images/65_aks_egress_lb_natgw_udr__lb-resources.png)
+
+Verify that outbound egress traffic uses Load Balancer public IP address.
 
 ```shell
 kubectl run nginx --image=nginx
 kubectl exec nginx -it -- curl http://ifconfig.me
-# 20.101.4.180
+# 20.126.14.246
 ```
 
-Note that is the public IP of the Load Balancer. This is the default behavior of AKS clusters.
+![](images/65_aks_egress_lb_natgw_udr__lb-pip.png)
+
+Note that is the public IP of the Load Balancer.
+This is the default behavior of AKS clusters.
+
+When user creates a kubernetes public service object or an ingress controller, a new public IP address will be created and attached to the Load Balancer for ingress traffic.
+
+```shell
+kubectl expose deployment nginx --name nginx --port=80 --type LoadBalancer 
+kubectl get svc
+# NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
+# kubernetes   ClusterIP      10.0.0.1      <none>          443/TCP        10h
+# nginx        LoadBalancer   10.0.106.59   20.31.208.171   80:31371/TCP   9s
+```
+
+`20.31.208.171` is the new created public IP address attached to the Load Balancer.
+
+![](images/65_aks_egress_lb_natgw_udr__lb-pip-service.png)
+
+To conclude, with Load Balancer mode, AKS uses one (default) single IP address for egress and one or more IP addresses for ingress traffic.
+
+![](images/65_aks_egress_lb_natgw_udr__lb-traffic.png)
+
+### 1.1. SNAT port exhaustion issue with Load Balancer
+
+A Load Balancer is a simple and easy solution as outbound type. 
+But it doesn't scale well in terms of SNAT port numbers.
+When there are so many pods trying to connect to external services, they will use source network address translation (SNAT) to translate virtual machine's private IP into the load balancer's public IP address.
+That is a known issue with LB. 
+Here is why.
+
+With LB, each VM use a fixed number (up to 1024) pre-allocated SNAT ports. 
+If a VM need more, it will run into port exhaustion and connection will be dropped.
+Meanwhile, other VMs might have available SNAT ports!
+With NAT Gateway, pre-allocation of SNAT ports isn't required, which means SNAT ports aren't left unused by VMs not actively needing them.
+
+![](images/65_aks_egress_lb_natgw_udr__snat-issue.png)
+
+There are two solutions for this issue.
+
+### 1.2. Solution 1: Adding public IP addresses for egress traffic
+
+We can scale the number of managed outbound public IPs.
+Each IP address provides 64k ephemeral ports to use as SNAT ports.
+
+```shell
+az aks update -g rg-aks-lb -n aks-lb --load-balancer-managed-outbound-ip-count 3
+```
+
+![](images/65_aks_egress_lb_natgw_udr__lb-pip-egress-scale.png)
+
+But still the free pre-allocated IPs are not reused by other VMs.
+This might be acceptable at a certain limit.
+
+### 1.3. Solution 2: Replacing the Load Balancer with NAT Gateway.
+
+The NAT Gateway service was created to resolve this exact issue.
+Let's explore hoow it works in the next section.
 
 ## 2. AKS cluster with outbound type managed NAT Gateway
+
+Let's create an AKS cluster that uses managed NAT Gateway.
 
 ```shell
 az group create -n rg-aks-natgateway -l westeurope
@@ -36,7 +128,7 @@ az aks create -g rg-aks-natgateway -n aks-natgateway `
 az aks get-credentials -g rg-aks-natgateway -n aks-natgateway --overwrite-existing
 ```
 
-Note the egress traffic uses 2 public IPs of the NAT Gateway.
+Note the egress traffic uses the two public IPs of the NAT Gateway.
 
 ```shell
 kubectl run nginx --image=nginx
@@ -153,39 +245,6 @@ az network vnet create `
     --address-prefixes 10.42.0.0/16 `
     --subnet-name $AKSSUBNET_NAME `
     --subnet-prefix 10.42.1.0/24
-# {
-#   "newVNet": {
-#     "addressSpace": {
-#       "addressPrefixes": [
-#         "10.42.0.0/16"
-#       ]
-#     },
-#     "enableDdosProtection": false,
-#     "etag": "W/\"d5266e0b-4251-49d2-bc0f-e501473eb886\"",
-#     "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/virtualNetworks/aks-vnet",
-#     "location": "westeurope",
-#     "name": "aks-vnet",
-#     "provisioningState": "Succeeded",
-#     "resourceGroup": "rg-aks-cluster-egress",
-#     "resourceGuid": "60613112-7755-4af6-8d42-1056c34f5c30",
-#     "subnets": [
-#       {
-#         "addressPrefix": "10.42.1.0/24",
-#         "delegations": [],
-#         "etag": "W/\"d5266e0b-4251-49d2-bc0f-e501473eb886\"",
-#         "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/virtualNetworks/aks-vnet/subnets/aks-subnet",
-#         "name": "aks-subnet",
-#         "privateEndpointNetworkPolicies": "Disabled",
-#         "privateLinkServiceNetworkPolicies": "Enabled",
-#         "provisioningState": "Succeeded",
-#         "resourceGroup": "rg-aks-cluster-egress",
-#         "type": "Microsoft.Network/virtualNetworks/subnets"
-#       }
-#     ],
-#     "type": "Microsoft.Network/virtualNetworks",
-#     "virtualNetworkPeerings": []
-#   }
-# }
 
 # Dedicated subnet for Azure Firewall (Firewall name cannot be changed)
 
@@ -194,281 +253,63 @@ az network vnet subnet create `
     --vnet-name $VNET_NAME `
     --name $FWSUBNET_NAME `
     --address-prefix 10.42.2.0/24
-# {
-#   "addressPrefix": "10.42.2.0/24",
-#   "delegations": [],
-#   "etag": "W/\"2fb83303-5359-4609-8cd6-daba462136ca\"",
-#   "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/virtualNetworks/aks-vnet/subnets/AzureFirewallSubnet",
-#   "name": "AzureFirewallSubnet",
-#   "privateEndpointNetworkPolicies": "Disabled",
-#   "privateLinkServiceNetworkPolicies": "Enabled",
-#   "provisioningState": "Succeeded",
-#   "resourceGroup": "rg-aks-cluster-egress",
-#   "type": "Microsoft.Network/virtualNetworks/subnets"
-# }
 
 # 3. Create and set up an Azure Firewall with a UDR
 
 # Azure Firewall inbound and outbound rules must be configured. The main purpose of the firewall is to enable organizations to configure granular ingress and egress traffic rules into and out of the AKS Cluster.
 
 az network public-ip create -g $RG -n $FWPUBLICIP_NAME -l $LOC --sku "Standard"
-# {
-#   "publicIp": {
-#     "ddosSettings": {
-#       "protectionMode": "VirtualNetworkInherited"
-#     },
-#     "etag": "W/\"689dbc85-3bdd-4bcc-bc4a-3beb2ea9c1b9\"",
-#     "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/publicIPAddresses/firewall-publicip",
-#     "idleTimeoutInMinutes": 4,
-#     "ipAddress": "20.229.246.163",
-#     "ipTags": [],
-#     "location": "westeurope",
-#     "name": "firewall-publicip",
-#     "provisioningState": "Succeeded",
-#     "publicIPAddressVersion": "IPv4",
-#     "publicIPAllocationMethod": "Static",
-#     "resourceGroup": "rg-aks-cluster-egress",
-#     "resourceGuid": "172c3fde-50a4-4059-a84c-4280446b19b5",
-#     "sku": {
-#       "name": "Standard",
-#       "tier": "Regional"
-#     },
-#     "type": "Microsoft.Network/publicIPAddresses"
-#   }
-# }
 
 # Install Azure Firewall preview CLI extension
 
 az extension add --name azure-firewall --upgrade
-# Extension 'azure-firewall' 0.14.5 is already installed.
-# Latest version of 'azure-firewall' is already installed.
 
 # Deploy Azure Firewall
 
 az network firewall create -g $RG -n $FWNAME -l $LOC --enable-dns-proxy true
-# {
-#   "Network.DNS.EnableProxy": "true",
-#   "applicationRuleCollections": [],
-#   "etag": "W/\"e82bc7c8-8144-45c9-8b8b-c3a21ecee7c0\"",
-#   "firewallPolicy": null,
-#   "hubIpAddresses": null,
-#   "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/azureFirewalls/hub-firewall",
-#   "ipConfigurations": [],
-#   "ipGroups": null,
-#   "location": "westeurope",
-#   "managementIpConfiguration": null,
-#   "name": "hub-firewall",
-#   "natRuleCollections": [],
-#   "networkRuleCollections": [],
-#   "provisioningState": "Succeeded",
-#   "resourceGroup": "rg-aks-cluster-egress",
-#   "sku": {
-#     "name": "AZFW_VNet",
-#     "tier": "Standard"
-#   },
-#   "tags": null,
-#   "threatIntelMode": "Alert",
-#   "type": "Microsoft.Network/azureFirewalls",
-#   "virtualHub": null,
-#   "zones": null
-# }
 
 # Configure Firewall IP Config
 
 az network firewall ip-config create -g $RG -f $FWNAME -n $FWIPCONFIG_NAME --public-ip-address $FWPUBLICIP_NAME --vnet-name $VNET_NAME
-# {
-#   "etag": "W/\"98218133-d92b-4a8b-a9f2-66bc8821dab0\"",
-#   "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/azureFirewalls/hub-firewall/azureFirewallIpConfigurations/firewall-config",
-#   "name": "firewall-config",
-#   "privateIpAddress": "10.42.2.4",
-#   "provisioningState": "Succeeded",
-#   "publicIpAddress": {
-#     "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/publicIPAddresses/firewall-publicip",
-#     "resourceGroup": "rg-aks-cluster-egress"
-#   },
-#   "resourceGroup": "rg-aks-cluster-egress",
-#   "subnet": {
-#     "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/virtualNetworks/aks-vnet/subnets/AzureFirewallSubnet",
-#     "resourceGroup": "rg-aks-cluster-egress"
-#   },
-#   "type": "Microsoft.Network/azureFirewalls/azureFirewallIpConfigurations"
-# }
 
 # Capture Firewall IP Address for Later Use
 
 $FWPUBLIC_IP=$(az network public-ip show -g $RG -n $FWPUBLICIP_NAME --query "ipAddress" -o tsv)
 $FWPRIVATE_IP=$(az network firewall show -g $RG -n $FWNAME --query "ipConfigurations[0].privateIpAddress" -o tsv)
 echo $FWPRIVATE_IP
-# 10.42.2.4
 
 # Create UDR and add a route for Azure Firewall
 
 az network route-table create -g $RG -l $LOC --name $FWROUTE_TABLE_NAME
-# {
-#   "disableBgpRoutePropagation": false,
-#   "etag": "W/\"d5766c17-ef48-4f5d-b153-765118656819\"",
-#   "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/routeTables/firewall-routetable",
-#   "location": "westeurope",
-#   "name": "firewall-routetable",
-#   "provisioningState": "Succeeded",
-#   "resourceGroup": "rg-aks-cluster-egress",
-#   "resourceGuid": "947c193e-ed88-40f8-9b9b-0f34a151e7a5",
-#   "routes": [],
-#   "type": "Microsoft.Network/routeTables"
-# }
 
 az network route-table route create -g $RG --name $FWROUTE_NAME --route-table-name $FWROUTE_TABLE_NAME --address-prefix 0.0.0.0/0 --next-hop-type VirtualAppliance --next-hop-ip-address $FWPRIVATE_IP
-# {
-#   "addressPrefix": "0.0.0.0/0",
-#   "etag": "W/\"a575328c-b28b-4f05-9b9e-a58e9ee68d31\"",
-#   "hasBgpOverride": false,
-#   "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/routeTables/firewall-routetable/routes/firewall-route",
-#   "name": "firewall-route",
-#   "nextHopIpAddress": "10.42.2.4",
-#   "nextHopType": "VirtualAppliance",
-#   "provisioningState": "Succeeded",
-#   "resourceGroup": "rg-aks-cluster-egress",
-#   "type": "Microsoft.Network/routeTables/routes"
-# }
 
 az network route-table route create -g $RG --name $FWROUTE_NAME_INTERNET --route-table-name $FWROUTE_TABLE_NAME --address-prefix $FWPUBLIC_IP/32 --next-hop-type Internet
-# {
-#   "addressPrefix": "20.229.246.163/32",
-#   "etag": "W/\"ade51b62-5fc1-458a-b989-2f8e754f0b5f\"",
-#   "hasBgpOverride": false,
-#   "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/routeTables/firewall-routetable/routes/firewall-route-internet",
-#   "name": "firewall-route-internet",
-#   "nextHopType": "Internet",
-#   "provisioningState": "Succeeded",
-#   "resourceGroup": "rg-aks-cluster-egress",
-#   "type": "Microsoft.Network/routeTables/routes"
-# }
 
 # 4. Adding firewall rules
 
 # Add FW Network Rules
 
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr' -n 'apiudp' --protocols 'UDP' --source-addresses '*' --destination-addresses "AzureCloud.$LOC" --destination-ports 1194 --action allow --priority 100
-# Creating rule collection 'aksfwnr'.
-# {
-#   "description": null,
-#   "destinationAddresses": [
-#     "AzureCloud.westeurope"
-#   ],
-#   "destinationFqdns": [],
-#   "destinationIpGroups": [],
-#   "destinationPorts": [
-#     "1194"
-#   ],
-#   "name": "apiudp",
-#   "protocols": [
-#     "UDP"
-#   ],
-#   "sourceAddresses": [
-#     "*"
-#   ],
-#   "sourceIpGroups": []
-# }
 
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr' -n 'apitcp' --protocols 'TCP' --source-addresses '*' --destination-addresses "AzureCloud.$LOC" --destination-ports 9000
-# {
-#   "description": null,
-#   "destinationAddresses": [
-#     "AzureCloud.westeurope"
-#   ],
-#   "destinationFqdns": [],
-#   "destinationIpGroups": [],
-#   "destinationPorts": [
-#     "9000"
-#   ],
-#   "name": "apitcp",
-#   "protocols": [
-#     "TCP"
-#   ],
-#   "sourceAddresses": [
-#     "*"
-#   ],
-#   "sourceIpGroups": []
-# }
 
 az network firewall network-rule create -g $RG -f $FWNAME --collection-name 'aksfwnr' -n 'time' --protocols 'UDP' --source-addresses '*' --destination-fqdns 'ntp.ubuntu.com' --destination-ports 123
-# {
-#   "description": null,
-#   "destinationAddresses": [],
-#   "destinationFqdns": [
-#     "ntp.ubuntu.com"
-#   ],
-#   "destinationIpGroups": [],
-#   "destinationPorts": [
-#     "123"
-#   ],
-#   "name": "time",
-#   "protocols": [
-#     "UDP"
-#   ],
-#   "sourceAddresses": [
-#     "*"
-#   ],
-#   "sourceIpGroups": []
-# }
 
 # Add FW Application Rules
 
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'aksfwar' -n 'fqdn' --source-addresses '*' --protocols 'http=80' 'https=443' --fqdn-tags "AzureKubernetesService" --action allow --priority 100
-# Creating rule collection 'aksfwar'.
-# {
-#   "actions": [],
-#   "description": null,
-#   "direction": "Inbound",
-#   "fqdnTags": [
-#     "AzureKubernetesService"
-#   ],
-#   "name": "fqdn",
-#   "priority": 0,
-#   "protocols": [
-#     {
-#       "port": 80,
-#       "protocolType": "Http"
-#     },
-#     {
-#       "port": 443,
-#       "protocolType": "Https"
-#     }
-#   ],
-#   "sourceAddresses": [
-#     "*"
-#   ],
-#   "sourceIpGroups": [],
-#   "targetFqdns": []
-# }
 
 # 5. Associate the route table to AKS
 
 # Associate route table with next hop to Firewall to the AKS subnet
 
 az network vnet subnet update -g $RG --vnet-name $VNET_NAME --name $AKSSUBNET_NAME --route-table $FWROUTE_TABLE_NAME
-# {
-#   "addressPrefix": "10.42.1.0/24",
-#   "delegations": [],
-#   "etag": "W/\"797dbbf7-1479-467a-852e-cb855a452070\"",
-#   "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/virtualNetworks/aks-vnet/subnets/aks-subnet",
-#   "name": "aks-subnet",
-#   "privateEndpointNetworkPolicies": "Disabled",
-#   "privateLinkServiceNetworkPolicies": "Enabled",
-#   "provisioningState": "Succeeded",
-#   "resourceGroup": "rg-aks-cluster-egress",
-#   "routeTable": {
-#     "id": "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/routeTables/firewall-routetable",
-#     "resourceGroup": "rg-aks-cluster-egress"
-#   },
-#   "type": "Microsoft.Network/virtualNetworks/subnets"
-# }
 
 # 6. Deploy AKS with outbound type of UDR to the existing network
 
 $SUBNETID=$(az network vnet subnet show -g $RG --vnet-name $VNET_NAME --name $AKSSUBNET_NAME --query id -o tsv)
 echo $SUBNETID
-# /subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourceGroups/rg-aks-cluster-egress/providers/Microsoft.Network/virtualNetworks/aks-vnet/subnets/aks-subnet
 
 az aks create -g $RG -n $AKSNAME -l $LOC `
   --node-count 3 `
@@ -478,7 +319,7 @@ az aks create -g $RG -n $AKSNAME -l $LOC `
   --api-server-authorized-ip-ranges $FWPUBLIC_IP
 ```
 
-## 4.7. Test the egress traffic is using the Firewall public IP
+## 4.7. Verify the egress traffic is using the Firewall public IP
 
 ```shell
 kubectl run nginx --image=nginx
