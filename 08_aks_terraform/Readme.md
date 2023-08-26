@@ -90,6 +90,7 @@ resource "azurerm_container_registry" "acr" {
 ```
 
 The following is a role assignment providing AKS's Identity the role `AcrPull` over the ACR registry's images.
+This role assignment authorize AKS to authenticate, authorize and pull images from ACR.
 
 ```yaml
 resource "azurerm_role_assignment" "role_acrpull" {
