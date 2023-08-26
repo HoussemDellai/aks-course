@@ -25,12 +25,12 @@ We will perform the following steps:
 5) Remove the old node pool (blue)
 
 ## 1. setup demo environment
-```bash
+```sh
 # variables
 $AKS_NAME="aks-dev-02"
 $AKS_RG="rg-aks-dev-02"
 ```
-```bash
+```sh
 az aks get-versions -l westeurope -o table
 # KubernetesVersion    Upgrades
 # -------------------  ------------------------
@@ -46,7 +46,7 @@ $VERSION_OLD="1.21.7"
 $VERSION_NEW="1.22.4"
 ```
 
-```bash
+```sh
 # create and connect to cluster
 az group create --name $AKS_RG `
                 --location westeurope
@@ -65,7 +65,7 @@ kubectl get nodes
 # aks-nodepool1-34806685-vmss000001   Ready    agent   82s   v1.21.7   
 ```
 
-```bash
+```sh
 # (optional) add system nodepool with taints
 az aks nodepool add --name systempool `
                     --cluster-name $AKS_NAME `
@@ -103,7 +103,7 @@ az aks nodepool list --cluster-name $AKS_NAME --resource-group $AKS_RG -o table
 # systempool  Linux     Standard_D2s_v5  2        30         Succeeded            System
 ```
 
-```bash
+```sh
 # deploy stateless application
 kubectl create deployment nginx --image=nginx --replicas=10  -o yaml --dry-run=client
 # apiVersion: apps/v1
@@ -150,7 +150,7 @@ kubectl get pods -o wide
 ```
 
 ## 2. start the cluster upgrade
-```bash
+```sh
 az aks list -o table
 # Name         Location    ResourceGroup    KubernetesVersion    ProvisioningState    Fqdn
 # -----------  ----------  ---------------  -------------------  -------------------  -----------------------------------------------------------------
@@ -168,7 +168,7 @@ az aks upgrade --kubernetes-version $VERSION_NEW `
 # Since control-plane-only argument is specified, this will upgrade only the control plane to 1.22.4. Node pool will not change. Continue? (y/N): y
 ```
 
-```bash
+```sh
 # add user Nodepool green
 echo $VERSION_NEW
 # 1.22.4
@@ -193,7 +193,7 @@ az aks nodepool list --cluster-name $AKS_NAME --resource-group $AKS_RG -o table
 # systempool  Linux     Standard_D2s_v5  2        30         Updating             System
 ```
 
-```bash
+```sh
 # cordon nodepool blue
 kubectl cordon -l agentpool=bluepool
 # node/aks-bluepool-36768833-vmss000000 cordoned
@@ -201,7 +201,7 @@ kubectl cordon -l agentpool=bluepool
 # node/aks-bluepool-36768833-vmss000002 cordoned
 ```
 
-```bash
+```sh
 # drain nodepool blue
 kubectl drain -l agentpool=bluepool --ignore-daemonsets --delete-local-data
 # Flag --delete-local-data has been deprecated, This option is deprecated and will be deleted. Use --delete-emptydir-data.
@@ -238,7 +238,7 @@ kubectl drain -l agentpool=bluepool --ignore-daemonsets --delete-local-data
 # node/aks-bluepool-36768833-vmss000002 drained
 ```
 
-```bash
+```sh
 # check nginx pods are rescheduled to green nodepool
 kubectl get pods -o wide
 # NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE                             
@@ -254,7 +254,7 @@ kubectl get pods -o wide
 # nginx-6799fc88d8-zl2pk   1/1     Running   0          58s   10.244.0.11   aks-greenpool-45772455-vmss000001
 ```
 
-```bash
+```sh
 # delete nodepool blue
 az aks nodepool delete --name bluepool `
                        --cluster-name $AKS_NAME `

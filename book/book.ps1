@@ -111,3 +111,29 @@ $readmeFiles = $(Get-ChildItem –Path ../ -Recurse -Include Readme.md).FullName
 
 # generate book
 pandoc -s --toc -o book.docx -V geometry:a4paper,margin=2cm $readmeFiles 
+
+
+
+
+# close word process
+Stop-Process -processname "WINWORD"
+
+# rmove docx file
+sleep 1
+rm chapter.docx
+
+# --highlight-style
+pandoc -s --toc -o chapter.docx -V geometry:a4paper,margin=1cm Readme.md --highlight-style breezeDark
+
+# start word process to open docx file
+Start-Process 'C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE' .\chapter.docx
+
+
+# print the theme
+pandoc --print-highlight-style breezedark > breezedark.theme 
+
+
+pandoc -s --toc -o chapter.docx -V geometry:a4paper,margin=1cm Readme.md --highlight-style ..\book\github-light.theme
+
+
+pandoc -s --toc -o chapter.docx -V geometry:a4paper,margin=1cm Readme.md --syntax-definition bash.xml

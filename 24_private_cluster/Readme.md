@@ -26,7 +26,7 @@ This does not cover scenarios where a user accesses an application through publi
 
 Let us start with the default access mode for an AKS cluster's control plane: public access. We will create a new public cluster and explore its configuration.
 
-```bash
+```sh
 # create public cluster
 az group create -n rg-aks-public -l westeurope
 az aks create -n aks-cluster -g rg-aks-public
@@ -34,7 +34,7 @@ az aks create -n aks-cluster -g rg-aks-public
 
 A public cluster will have a public endpoint for the control plane called `fqdn`. It is in form of: <unique_id>.hcp.<region>.azmk8s.io. And it resolves to a public IP.
 
-```bash
+```sh
 # get the public FQDN
 az aks show -n aks-cluster -g rg-aks-public --query fqdn
 # output: "aks-cluste-rg-aks-private-17b128-93acc102.hcp.westeurope.azmk8s.io"
@@ -46,7 +46,7 @@ nslookup aks-cluste-rg-aks-public-17b128-93acc102.hcp.westeurope.azmk8s.io
 
 AKS Rest API defines a property called `privateFqdn`. Its value is null because this is a public cluster.
 
-```bash
+```sh
 az aks show -n aks-cluster -g rg-aks-public --query privateFqdn
 # output: null
 ```
@@ -55,7 +55,7 @@ Now the question is how cluster operators and `worker nodes` connect to the `con
 Well, they both use the public endpoint (public IP).
 We can check that if we look at the `kubernetes` service inside the cluster. We will see an endpoint with a public IP address. Note that it is the same IP address from the public endpoint.
 
-```bash
+```sh
 az aks get-credentials --resource-group rg-aks-public --name aks-cluster
 kubectl get svc
 # NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
@@ -101,13 +101,13 @@ A [private AKS cluster](https://learn.microsoft.com/en-us/azure/aks/private-clus
 
 Let us see how that works.
 
-```bash
+```sh
 # create private cluster
 az group create -n rg-aks-private -l westeurope
 az aks create -n aks-cluster -g rg-aks-private --enable-private-cluster
 ```
 
-```bash
+```sh
 # get the public FQDN
 az aks show -n aks-cluster -g rg-aks-private --query fqdn
 # output: "aks-cluste-rg-aks-private-17b128-32f70f3f.hcp.westeurope.azmk8s.io"
@@ -123,7 +123,7 @@ The private IP address `10.224.0.4` is the address used by Private Endpoint to a
 The private cluster still (by default) exposes a public FQDN resolving the private endpoint IP address.
 
 > In private cluster, the exposed [public FQDN could be disabled](https://learn.microsoft.com/en-us/azure/aks/private-clusters#disable-public-fqdn-on-an-existing-cluster).
-> ```bash
+> ```sh
 > # disable public FQDN
 > az aks update -n aks-cluster -g rg-aks-private --disable-public-fqdn
 > # resolve the public (disabled) FQDN
@@ -141,7 +141,7 @@ Let us take a closer look at the Private DNS Zone. Note how it adds an `A` recor
 
 ![](images\24_private_cluster__resources_private_cluster_dns.png)
 
-```bash
+```sh
 # get the private FQDN
 az aks show -n aks-cluster -g rg-aks-private --query privateFqdn
 # output: "aks-cluste-rg-aks-private-17b128-6d8d6675.628fd8ef-83fc-49d4-975e-c765c36407d7.privatelink.westeurope.azmk8s.io"
@@ -153,7 +153,7 @@ nslookup aks-cluste-rg-aks-private-17b128-6d8d6675.628fd8ef-83fc-49d4-975e-c765c
 
 Private FQDN is resolvable only through Private DNS Zone.
 
-```bash
+```sh
 az aks get-credentials --resource-group rg-aks-private --name aks-cluster
 az aks command invoke --resource-group rg-aks-private --name aks-cluster --command "kubectl describe svc kubernetes"
 # command started at 2022-10-30 21:41:50+00:00, finished at 2022-10-30 21:41:50+00:00 with exitcode=0
@@ -198,7 +198,7 @@ Following is the simplified architecture.
 
 Let us see how that works.
 
-```bash
+```sh
 # create public cluster with VNET Integration
 az group create -n rg-aks-public-vnet-integration -l eastus2
 az aks create -n aks-cluster -g rg-aks-public-vnet-integration --enable-apiserver-vnet-integration
@@ -218,7 +218,7 @@ Note the private IP address used in the internal Load Balancer.
 
 Let us retrieve the public endpoint which will resolve into public IP.
 
-```bash
+```sh
 # get the public FQDN
 az aks show -n aks-cluster -g rg-aks-public-vnet-integration --query fqdn
 # output: "aks-cluste-rg-aks-public-vn-17b128-2ab6e274.hcp.eastus2.azmk8s.io"
@@ -230,7 +230,7 @@ nslookup aks-cluste-rg-aks-public-vn-17b128-2ab6e274.hcp.eastus2.azmk8s.io
 
 However, the private FQDN does not resolve anything. That is because the `privateFQDN` attribute is used only for Private Endpoint and not for VNET Integration.
 
-```bash
+```sh
 # get the private FQDN
 az aks show -n aks-cluster -g rg-aks-public-vnet-integration --query privateFqdn
 # output: not found
@@ -238,7 +238,7 @@ az aks show -n aks-cluster -g rg-aks-public-vnet-integration --query privateFqdn
 
 If we take a look at the kubernetes service endpoint within the cluster, we can see the same private IP as in the internal Load Balancer.
 
-```bash
+```sh
 az aks get-credentials --resource-group rg-aks-public-vnet-integration --name aks-cluster
 kubectl get svc
 # NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
@@ -273,7 +273,7 @@ But it keeps the public endpoint. We can [disable or enable that public endpoint
 
 Let us see how that works.
 
-```bash
+```sh
 # create private cluster with VNET Integration
 az group create -n rg-aks-private-vnet-integration -l eastus2
 az aks create -n aks-cluster -g rg-aks-private-vnet-integration --enable-apiserver-vnet-integration --enable-private-cluster
@@ -289,7 +289,7 @@ The Private DNS Zone will privately resolve the private FQDN to the private IP o
 
 Note here how the public FQDN (could be disabled) resolves to the private IP.
 
-```bash
+```sh
 # get the public FQDN
 az aks show -n aks-cluster -g rg-aks-private-vnet-integration --query fqdn
 # output: "aks-cluste-rg-aks-private-v-17b128-4948be0c.hcp.eastus2.azmk8s.io"
@@ -301,7 +301,7 @@ nslookup aks-cluste-rg-aks-private-v-17b128-4948be0c.hcp.eastus2.azmk8s.io
 
 Sure enough, the private FQDN could not be resolved outside the AKS network.
 
-```bash
+```sh
 # get the private FQDN
 az aks show -n aks-cluster -g rg-aks-private-vnet-integration --query privateFqdn
 # output: "aks-cluste-rg-aks-private-v-17b128-38360d0d.2788811a-873a-450d-811f-b7c7cf918694.private.eastus2.azmk8s.io""

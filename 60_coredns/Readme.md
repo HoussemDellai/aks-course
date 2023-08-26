@@ -11,7 +11,7 @@ CoreDNS is pre-installed in `kube-system` namespace.
 The objective of this lab is to use CoreDNS to provide custom domain names inside the cluster.
 We can replace the service named `myapp.default.svc.cluster.local` to something like `mayapp.aks.com`.
 
-```shell
+```sh
 kubectl get pods,service,configmap -n kube-system -l=k8s-app=kube-dns
 # NAME                           READY   STATUS    RESTARTS   AGE
 # pod/coredns-77f75ff65d-jzhl4   1/1     Running   0          98m
@@ -27,7 +27,7 @@ kubectl get pods,service,configmap -n kube-system -l=k8s-app=kube-dns
 
 CoreDNS configuration is saved into a configmap.
 
-```shell
+```sh
 kubectl describe configmap coredns -n kube-system  
 # Name:         coredns
 # Namespace:    kube-system
@@ -67,7 +67,7 @@ kubectl describe configmap coredns -n kube-system
 
 To provide a custom confiuration, we can use the coredns-custom confgmap which is already empty.
 
-```shell
+```sh
 kubectl describe configmap coredns-custom -n kube-system
 # Name:         coredns-custom
 # Namespace:    kube-system
@@ -87,7 +87,7 @@ kubectl describe configmap coredns-custom -n kube-system
 
 Let us start by creating a demo app: a deployment and a service called nginx.
 
-```shell
+```sh
 kubectl create deployment nginx --image=nginx --replicas=3
 # deployment.apps/nginx created
 
@@ -105,14 +105,14 @@ kubectl get deploy,svc
 
 Now let us create and deploy a custom domain name resolvable inside kubernetes.
 
-```shell
+```sh
 kubectl apply -f custom-coredns.yaml
 # configmap/coredns-custom configured
 ```
 
 Let us try to resolve the service name from a test pod inside kubernetes.
 
-```shell
+```sh
 kubectl run nginx --image=nginx
 # pod/nginx created
 
@@ -133,7 +133,7 @@ kubectl exec -it nginx -- curl http://nginx.default.svc.cluster.local
 
 Let us now try to resolve using the custom domain `*.aks.com`
 
-```shell
+```sh
 kubectl exec -it nginx -- curl http://nginx.default.aks.com 
 # <!DOCTYPE html>
 # <html>
@@ -146,7 +146,7 @@ Let us resolve the custom service name but without a namespace prefix.
 
 Replace `rewrite stop` block in configmap with the following:
 
-```shell
+```sh
 rewrite stop {
   name regex (.*)\.aks\.com\.$ {1}.default.svc.cluster.local.
   answer name (.*).\default\.svc\.cluster\.local\.$ {1}.aks.com.
@@ -155,7 +155,7 @@ rewrite stop {
 
 Let us apply the new custom CoreDNS configmap
 
-```shell
+```sh
 kubectl apply -f custom-coredns.yaml
 
 # delete CoreDNS pods after updating the custom configmap to reload the new configmap
@@ -164,7 +164,7 @@ kubectl delete pod --namespace kube-system -l k8s-app=kube-dns
 
 Let us try resolving with '.aks.com'
 
-```shell
+```sh
 kubectl exec -it nginx -- curl http://nginx.aks.com
 # <!DOCTYPE html>
 # <html>
@@ -176,7 +176,7 @@ And it works !
 
 Let us understand how that works.
 
-```shell
+```sh
 kubectl exec -it nginx -- apt-get update
 kubectl exec -it nginx -- apt-get install dnsutils -y
 

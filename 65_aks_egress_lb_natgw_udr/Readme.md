@@ -31,13 +31,13 @@ For each type, you will learn how to configure it, their features and the IP add
 
 Let's create an AKS cluster with default LoadBalancer outboundType and let's see how it works.
 
-```shell
+```sh
 az group create -n rg-aks-lb -l westeurope
 
 az aks create -g rg-aks-lb -n aks-lb `
               --outbound-type loadBalancer # default
 
-az aks get-credentials -g rg-aks-lb -n aks-lb --overwrite-existing
+az aks get-credentials -g rg-aks-lb -n aks-lb
 ```
 
 Check the created resurces in the node resource group. 
@@ -48,7 +48,7 @@ These resources will be used for egress traffic.
 
 Verify that outbound egress traffic uses Load Balancer public IP address.
 
-```shell
+```sh
 kubectl run nginx --image=nginx
 kubectl exec nginx -it -- curl http://ifconfig.me
 # 20.126.14.246
@@ -61,7 +61,7 @@ This is the default behavior of AKS clusters.
 
 When user creates a kubernetes public service object or an ingress controller, a new public IP address will be created and attached to the Load Balancer for ingress traffic.
 
-```shell
+```sh
 kubectl expose deployment nginx --name nginx --port=80 --type LoadBalancer 
 kubectl get svc
 # NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
@@ -99,7 +99,7 @@ There are two solutions for this issue.
 We can scale the number of managed outbound public IPs.
 Each IP address provides 64k ephemeral ports to use as SNAT ports.
 
-```shell
+```sh
 az aks update -g rg-aks-lb -n aks-lb --load-balancer-managed-outbound-ip-count 3
 ```
 
@@ -124,7 +124,7 @@ And it reduces the risk of SNAT port exhaustion.
 
 Let's create an AKS cluster that uses managed NAT Gateway.
 
-```shell
+```sh
 az group create -n rg-aks-natgateway -l westeurope
 
 az aks create -g rg-aks-natgateway -n aks-natgateway `
@@ -132,7 +132,7 @@ az aks create -g rg-aks-natgateway -n aks-natgateway `
     --nat-gateway-managed-outbound-ip-count 2 `
     --nat-gateway-idle-timeout 4
 
-az aks get-credentials -g rg-aks-natgateway -n aks-natgateway --overwrite-existing
+az aks get-credentials -g rg-aks-natgateway -n aks-natgateway
 ```
 
 NAT Gateway and Public IPs are created.
@@ -142,7 +142,7 @@ There are no Load Balancer.
 
 Note the egress traffic uses the two public IPs of the NAT Gateway.
 
-```shell
+```sh
 kubectl run nginx --image=nginx
 kubectl exec nginx -it -- curl http://ifconfig.me
 # 20.101.4.185
@@ -166,7 +166,7 @@ So how to handle ingress traffic ?
 
 If we create a service of type LoadBalancer, AKS will create a new Load Balancer and public IP.
 
-```shell
+```sh
 kubectl expose deployment nginx --name nginx --port=80 --type LoadBalancer
 kubectl get svc
 # NAME         TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
@@ -184,7 +184,7 @@ You create it and configure it yourself instead of letting AKS to create it for 
 
 Here is a sample script to create a NAT Gateway and configure it with AKS.
 
-```shell
+```sh
 az group create -n rg-aks-usernatgateway -l westeurope
 
 # Create a managed identity for network permissions and store the ID to $IDENTITY_ID for later use.
@@ -242,12 +242,12 @@ az aks create `
     --enable-managed-identity `
     --assign-identity $IDENTITY_ID
 
-az aks get-credentials -g rg-aks-usernatgateway -n natCluster --overwrite-existing
+az aks get-credentials -g rg-aks-usernatgateway -n natCluster
 ```
 
 Note the egress traffic uses public IP address of the `NAT Gateway`.
 
-```shell
+```sh
 kubectl run nginx --image=nginx
 kubectl exec nginx -it -- curl http://ifconfig.me
 # 20.16.100.134
@@ -263,7 +263,7 @@ How it works ?
 Simply you enable the `UDR` mode in AKS to not create or use a Load Balancer for egress traffic.
 Then you create a `Route Table` and attach it to the cluster Subnet with a routing rule from `0.0.0.0/0` to the `Firewall` private IP address.
 
-```shell
+```sh
 # 4.1. Set configuration via environment variables
 
 $RG="rg-aks-udr"
@@ -391,7 +391,7 @@ Check that configuration in the following picture.
 
 Verify the egress traffic is using the Firewall public IP.
 
-```shell
+```sh
 kubectl run nginx --image=nginx
 # pod/nginx created
 
@@ -406,7 +406,7 @@ kubectl get pods
 The above error is because Azure Firewall blocks access to non allowed endpoints.
 Let's create an application rule to allow access to `Docker Hub` to pull the `nginx` container image.
 
-```shell
+```sh
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'dockerhub-registry' -n 'dockerhub-registry' --action allow --priority 200 --source-addresses '*' --protocols 'https=443' --target-fqdns hub.docker.com registry-1.docker.io production.cloudflare.docker.com auth.docker.io cdn.auth0.com login.docker.com
 # Creating rule collection 'dockerhub-registry'.
 # {
@@ -440,7 +440,7 @@ az network firewall application-rule create -g $RG -f $FWNAME --collection-name 
 Let's retry now. 
 The image should be pulled and pod works just fine.
 
-```shell
+```sh
 kubectl get pods
 # NAME    READY   STATUS    RESTARTS   AGE
 # nginx   1/1     Running   0          21m
@@ -449,7 +449,7 @@ kubectl get pods
 Let's see what IP address is used by the pod to access external services. 
 We use `ifconfig.me` to view the IP address on the remote server.
 
-```shell
+```sh
 kubectl exec nginx -it -- curl http://ifconfig.me
 # Action: Deny. Reason: No rule matched. Proceeding with default action.
 ```
@@ -457,14 +457,14 @@ kubectl exec nginx -it -- curl http://ifconfig.me
 Again, access is blocked by the Firewall.
 Create an application rule to allow access to `ifconfig.me`.
 
-```shell
+```sh
 az network firewall application-rule create -g $RG -f $FWNAME --collection-name 'ifconfig' -n 'ifconfig' --action allow --priority 300 --source-addresses '*' --protocols 'http=80' --target-fqdns ifconfig.me
 ```
 
 Let's retry again now. 
 We should see the Pod outbound traffic uses the Firewall public IP address.
 
-```shell
+```sh
 kubectl exec nginx -it -- curl http://ifconfig.me
 # 20.229.246.163
 ```
@@ -498,14 +498,14 @@ Again, the Firewall will not control that traffic.
 
 ### 4.8. [Optional] Deploy the Azure Application Gateway Ingress Controller
 
-```shell
+```sh
 az aks enable-addons -n $AKSNAME -g $RG -a ingress-appgw --appgw-name azure-appgateway --appgw-subnet-cidr '10.42.3.0/24'
 #  \ Running ..
 ```
 
 ### 4.8.1. Deploy an application
 
-```shell
+```sh
 kubectl apply -f pod-svc-ingress.yaml
 # pod/aspnetapp created
 # service/aspnetapp created
@@ -514,18 +514,18 @@ kubectl apply -f pod-svc-ingress.yaml
 
 ### 4.8.2. Test the application
 
-```shell
+```sh
 kubectl get pod,svc,ingress
 # NAME            READY   STATUS    RESTARTS   AGE
 # pod/aspnetapp   1/1     Running   0          21s
 # pod/nginx       1/1     Running   0          98m
 
-# NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-# service/aspnetapp    ClusterIP   10.0.8.241   <none>        80/TCP    21s
-# service/kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   6h9m
+# NAME                 TYPE        CLUSTER-IP   PORT(S)   AGE
+# service/aspnetapp    ClusterIP   10.0.8.241   80/TCP    21s
+# service/kubernetes   ClusterIP   10.0.0.1     443/TCP   6h9m
 
-# NAME                                  CLASS    HOSTS   ADDRESS        PORTS   AGE
-# ingress.networking.k8s.io/aspnetapp   <none>   *       20.13.91.180   80      21s
+# NAME                                  HOSTS   ADDRESS        PORTS
+# ingress.networking.k8s.io/aspnetapp   *       20.13.91.180   80   
 ```
 
 View the application in the browser: `http://20.13.91.180`. 

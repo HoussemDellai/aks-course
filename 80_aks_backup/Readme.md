@@ -7,14 +7,14 @@
 
 ## 0. Prerequisites
 
-```shell
+```sh
 az provider register --namespace Microsoft.KubernetesConfiguration
 az feature register --namespace "Microsoft.ContainerService" --name "TrustedAccessPreview"
 ```
 
 ## 1. Setup environment variables
 
-```shell
+```sh
 $AKS_NAME_01="aks-cluster-01"
 $AKS_RG_01="rg-aks-cluster-01"
 
@@ -32,7 +32,7 @@ $SUBSCRIPTION_ID=$(az account list --query [?isDefault].id -o tsv)
 
 ## 2. Create Backup Vault resource group and Backup Vault
 
-```shell
+```sh
 az group create --name $VAULT_RG --location westeurope
 
 az dataprotection backup-vault create `
@@ -43,7 +43,7 @@ az dataprotection backup-vault create `
 
 ## 3. Create storage acount and Blob container for storing Backup data
 
-```shell
+```sh
 az group create --name $SA_RG --location westeurope
 
 az storage account create `
@@ -61,7 +61,7 @@ az storage container create `
 
 ## 4. Create first AKS cluster with CSI Disk Driver and Snapshot Controller
 
-```shell
+```sh
 az group create --name $AKS_RG_01 --location westeurope
 
 az aks create -g $AKS_RG_01 -n $AKS_NAME_01 -k "1.25.5" --zones 1 2 3
@@ -88,7 +88,7 @@ az aks update -g $AKS_RG_01 -n $AKS_NAME_01 --enable-disk-driver --enable-snapsh
 
 ## 5. Create second AKS cluster with CSI Disk Driver and Snapshot Controller
 
-```shell
+```sh
 az group create --name $AKS_RG_02 --location westeurope
 
 az aks create -g $AKS_RG_02 -n $AKS_NAME_02 -k "1.25.5" --zones 1 2 3

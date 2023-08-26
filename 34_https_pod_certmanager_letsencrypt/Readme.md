@@ -21,7 +21,7 @@ The steps for the lab:
 
 ## 1. Create an AKS cluster
 
-```shell
+```sh
 $AKS_RG="rg-aks-cluster"
 $AKS_NAME="aks-cluster"
 
@@ -44,7 +44,7 @@ kubectl get nodes
 
 ## 2. Install Cert Manager into AKS
 
-```shell
+```sh
 # Add the Jetstack Helm repository
 helm repo add jetstack https://charts.jetstack.io
 
@@ -75,7 +75,7 @@ helm upgrade cert-manager jetstack/cert-manager `
 
 You can view some of the resources that have been installed as follows:
 
-```shell
+```sh
 kubectl get all -n cert-manager 
 # NAME                                           READY   STATUS    RESTARTS   AGE
 # pod/cert-manager-59bf757d77-78tjl              1/1     Running   0          36s
@@ -99,7 +99,7 @@ kubectl get all -n cert-manager
 
 ## 3. Create a ClusterIssuer and a self-signed Certificate
 
-```shell
+```sh
 kubectl apply -f clusterissuer-selfsigned.yaml
 # clusterissuer.cert-manager.io/selfsigned created
 
@@ -117,7 +117,7 @@ kubectl get certificate,secret,ClusterIssuer
 # clusterissuer.cert-manager.io/selfsigned   True    33m
 ```
 
-```shell
+```sh
 kubectl describe secret app01-tls-cert-secret
 # Name:         app01-tls-cert-secret
 # Namespace:    default
@@ -146,7 +146,7 @@ We will use a pod that is configured to access TLS certificate through environme
 
 https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/tree/main/hello-app-tls
 
-```shell
+```sh
 kubectl apply -f app-deploy-svc.yaml
 kubectl get pod,svc
 # NAME                                                        READY   STATUS    RESTARTS   AGE
@@ -161,7 +161,7 @@ kubectl get pod,svc
 
 ## 5. Verify the TLS configuration
 
-```shell
+```sh
 kubectl run nginx --image=nginx
 kubectl exec -it nginx -- curl --insecure https://app01.default.svc.cluster.local
 # Hello, world!
@@ -171,7 +171,7 @@ kubectl exec -it nginx -- curl --insecure https://app01.default.svc.cluster.loca
 
 Verify TLS certificate
 
-```shell
+```sh
 kubectl exec -it nginx -- curl --insecure -v https://app01.default.svc.cluster.local
 # *   Trying 10.0.15.0:443...
 # * Connected to app01.default.svc.cluster.local (10.0.15.0) port 443 (#0)

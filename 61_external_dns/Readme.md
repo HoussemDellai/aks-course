@@ -30,7 +30,7 @@ In this tutorial You will work with Service Principal.
 
 Create AKS cluster
 
-```shell
+```sh
 $AKS_RG="rg-aks-cluster"
 $AKS_NAME="aks-cluster"
 
@@ -46,7 +46,7 @@ az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 
 Install nginx ingress controller
 
-```shell
+```sh
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
 helm repo update
@@ -65,7 +65,7 @@ But you will still see the created DNS records.
 
 In this lab, I use a delegated domain name: houssem.cloud.
 
-```shell
+```sh
 $DNS_ZONE_NAME="houssem.cloud"
 $DNS_ZONE_RG="rg-azure-dns"
 
@@ -78,7 +78,7 @@ az network dns zone create -g $DNS_ZONE_RG -n $DNS_ZONE_NAME
 
 ExternalDNS will connect to Azure DNS to change its configuration. So, it needs to be authenticated. As mentioned before, You will be using a Service Principal.
 
-```shell
+```sh
 $EXTERNALDNS_SPN_NAME="spn-external-dns-aks"
 
 # Create the service principal
@@ -91,7 +91,7 @@ $EXTERNALDNS_SPN_PASSWORD=$(echo $DNS_SPN | jq -r '.password')
 
 Grant access to Azure DNS zone for the service principal.
 
-```shell
+```sh
 # fetch DNS id and RG used to grant access to the service principal
 $DNS_ZONE_ID=$(az network dns zone show -n $DNS_ZONE_NAME -g $DNS_ZONE_RG --query "id" -o tsv)
 $DNS_ZONE_RG_ID=$(az group show -g $DNS_ZONE_RG --query "id" -o tsv)
@@ -105,7 +105,7 @@ az role assignment create --role "DNS Zone Contributor" --assignee $EXTERNALDNS_
 
 Verify role assignments
 
-```shell
+```sh
 az role assignment list --all --assignee $EXTERNALDNS_SPN_APP_ID -o table
 # Principal                             Role                  Scope
 # ------------------------------------  --------------------  ----------------------------------------------------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ az role assignment list --all --assignee $EXTERNALDNS_SPN_APP_ID -o table
 
 ExternalDNS expects to find the Service Principal credentials in a JSON file called azure.json saved as a Kubernetes secret. Let's create the file.
 
-```shell
+```sh
 @"
 {
   "tenantId": "$(az account show --query tenantId -o tsv)",
@@ -140,7 +140,7 @@ cat azure.json
 
 Deploy the credentials as a Kubernetes secret.
 
-```shell
+```sh
 kubectl create namespace external-dns
 # namespace/external-dns created
 
@@ -150,7 +150,7 @@ kubectl create secret generic azure-config-file -n external-dns --from-file azur
 
 Verify secret created
 
-```shell
+```sh
 kubectl describe secret azure-config-file -n external-dns
 # Name:         azure-config-file
 # Namespace:    external-dns
@@ -170,7 +170,7 @@ ExternalDNS could be deployed through raw YAML manifest, Helm chart or as an ope
 
 Before deploying the yaml, change the namespace name in ClusterRoleBinding in external-dns.yaml file
 
-```shell
+```sh
 kubectl apply -f external-dns.yaml -n external-dns
 # serviceaccount/external-dns created
 # clusterrole.rbac.authorization.k8s.io/external-dns created
@@ -185,7 +185,7 @@ https://github.com/bitnami/charts/tree/main/bitnami/external-dns/#installing-the
 
 Verify deployment
 
-```shell
+```sh
 kubectl get pods,sa -n external-dns
 NAME                               READY   STATUS    RESTARTS   AGE
 pod/external-dns-5fd5797df-xklxn   1/1     Running   0          96s
@@ -196,7 +196,7 @@ serviceaccount/external-d
 
 ## 7. Using ExternalDNS with Kubernetes services
 
-```shell
+```sh
 kubectl apply -f app-lb.yaml 
 # deployment.apps/nginx created
 # service/nginx-svc created
@@ -212,7 +212,7 @@ kubectl get pods,svc
 
 Check what is happening in the external DNS pod
 
-```shell
+```sh
 kubectl logs external-dns-5fd5797df-xklxn -n external-dns
 # time="2023-03-06T09:01:15Z" level=info msg="Updating A record named 'app01' to '20.103.4.205' for Azure DNS zone 'houssem.cloud'."
 # time="2023-03-06T09:01:16Z" level=info msg="Updating TXT record named 'externaldns-app01' to '\"heritage=external-dns,external-dns/owner=default,external-dns/resource=service/default/app01-svc\"' for Azure DNS zone 'houssem.cloud'."
@@ -221,7 +221,7 @@ kubectl logs external-dns-5fd5797df-xklxn -n external-dns
 
 Check the DNS record is created by external DNS
 
-```shell
+```sh
 az network dns record-set a list -g $DNS_ZONE_RG --zone-name $DNS_ZONE_NAME
 # [{
 #     "aRecords": [
@@ -257,7 +257,7 @@ az network dns record-set a list -g $DNS_ZONE_RG --zone-name $DNS_ZONE_NAME
 
 ## 8. Create a sample app exposed through ingress
 
-```shell
+```sh
 kubectl apply -f app-ingress.yaml
 # deployment.apps/app02 created
 # service/app02-svc created
@@ -277,7 +277,7 @@ kubectl get pods,svc,ingress
 
 Check the DNS record is created by external DNS
 
-```shell
+```sh
 az network dns record-set a list -g $DNS_ZONE_RG --zone-name $DNS_ZONE_NAME
 # [
 # {

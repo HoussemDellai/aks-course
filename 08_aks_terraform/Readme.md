@@ -38,7 +38,7 @@ Take a look at the `main.tf` file.
 
 The following creates an Azure resource group by using Terraform's `azurerm_resource_group` resource.
 
-```hcl
+```yaml
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
@@ -48,7 +48,7 @@ resource "azurerm_resource_group" "rg" {
 The following configuration creates an AKS cluster using `azurerm_kubernetes_cluster` resource. 
 Note how variables are provided as input for the cluster name, location, resource group name, node count, node size, network plugin, etc.
 
-```hcl
+```yaml
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.cluster_name
   kubernetes_version  = null # var.kubernetes_version
@@ -75,9 +75,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 ```
 
+The official documentation for `azurerm_kubernetes_cluster` is available here with all the supported features: [registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster).
+
 The following creates an Azure Container Registry (ACR).
 
-```hcl
+```yaml
 resource "azurerm_container_registry" "acr" {
   name                = var.acr_name
   resource_group_name = azurerm_resource_group.rg.name
@@ -89,7 +91,7 @@ resource "azurerm_container_registry" "acr" {
 
 The following is a role assignment providing AKS's Identity the role `AcrPull` over the ACR registry's images.
 
-```hcl
+```yaml
 resource "azurerm_role_assignment" "role_acrpull" {
   scope                            = azurerm_container_registry.acr.id
   role_definition_name             = "AcrPull"
@@ -127,10 +129,17 @@ terraform apply tfplan
 # azurerm_kubernetes_cluster.aks: Creating...
 # azurerm_container_registry.acr: Creation complete after 28s
 # azurerm_kubernetes_cluster.aks: Creation complete after 3m49s
+# azurerm_role_assignment.role_acrpull: Creating...
 # azurerm_role_assignment.role_acrpull: Creation complete after 25s
 ```
+
+Note how terraform starts creating the resource and then updates the status until it is created successfully.
+
+View the created resources in Azure portal.
+
+![](images/08_aks_terraform__resources.png)
 
 ## Conclusion
 
 You learned how to use terraform to create resources in Azure.
-To go deeper in this topic, check out the AKS Landing Zone implementation: [github.com/Azure/AKS-Landing-Zone-Accelerator/tree/main/Scenarios/AKS-Secure-Baseline-PrivateCluster/Terraform]().
+To go deeper in this topic, check out the AKS Landing Zone implementation: [github.com/Azure/AKS-Landing-Zone-Accelerator/tree/main/Scenarios/AKS-Secure-Baseline-PrivateCluster/Terraform](https://github.com/Azure/AKS-Landing-Zone-Accelerator/tree/main/Scenarios/AKS-Secure-Baseline-PrivateCluster/Terraform).

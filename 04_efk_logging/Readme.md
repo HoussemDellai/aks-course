@@ -4,22 +4,22 @@ This workshop shows how to install the EFK (Elasticsearch, Fluentd and Kibana) s
 
 These are the amin commands used to install EFK:
 
-```bash
-$ helm install elasticsearch stable/elasticsearch
+```sh
+helm install elasticsearch stable/elasticsearch
 ```
 
 wait for few minutes..
 
-```bash
-$ kubectl apply -f .\fluentd-daemonset-elasticsearch.yaml
+```sh
+kubectl apply -f .\fluentd-daemonset-elasticsearch.yaml
 ```
 
-```bash
-$ helm install kibana stable/kibana -f kibana-values.yaml
+```sh
+helm install kibana stable/kibana -f kibana-values.yaml
 ```
 
-```bash
-$ kubectl apply -f .\counter.yaml
+```sh
+kubectl apply -f .\counter.yaml
 ```
 
 Open Kibana dashboard.

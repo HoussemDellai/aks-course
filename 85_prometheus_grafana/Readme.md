@@ -21,7 +21,7 @@ AKS, Grafana and Log Analytics are suported with ARM templates and Terraform.
 
 To deploy the Terraform configuration files, run the following commands:
 
-```shell
+```sh
 terraform init
 
 terraform plan -out tfplan
@@ -33,7 +33,7 @@ terraform apply tfplan
 
 To delete the creates resources, run the following command:
 
-```shell
+```sh
 terraform destroy
 ```
 

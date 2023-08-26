@@ -5,7 +5,7 @@
 To login to Kubernetes, we used to use the `az aks get-credentials` command which will donwload the credentials into `.kube\config` file and set up the command line to connect to the AKS cluster. But, when using Azure AD authentication, we get the following experience. We are asked to intercatively authenticate using the browser and code. This is not any good for DevOps pipelines which requires non-intercative mode. In addition to that, we get a warning about the deprecation of authentication using Azure CLI. Now we should use `kubelogin`.  
 Kubelogin for AKS is available as open source project: https://github.com/Azure/kubelogin.  
 
-```bash
+```sh
  $ az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
 Merged "aks-cluster" as current context in C:\Users\hodellai\.kube\config
  $
@@ -19,7 +19,7 @@ Let's now see how to use `kubelogin` to authenticate to AKS.
 First, we should install the command line. Setup is described here: https://github.com/Azure/kubelogin#setup  
 Then, we should perform the following steps:
 
-```bash
+```sh
 # authenticate to Azure
 az login
 
@@ -38,7 +38,7 @@ kubectl get nodes
 
 `kubelogin convert-kubeconfig -l azurecli` will change configuration in kubeconfig file.
 
-```bash
+```sh
 # view kubeconfig changes
 cat \PATH\TO\.kube\config
 apiVersion: v1
@@ -75,7 +75,7 @@ In the example above, we used the credentials from the current Azure CLI user. B
 
 For example, to connect using SPN:
 
-```bash
+```sh
 kubelogin convert-kubeconfig -l spn
 
 export AAD_SERVICE_PRINCIPAL_CLIENT_ID=<spn client id>
@@ -86,7 +86,7 @@ kubectl get nodes
 
 And to connect using Managed Identity:
 
-```bash
+```sh
 kubelogin convert-kubeconfig -l msi --client-id msi-client-id
 kubectl get nodes
 ```

@@ -166,7 +166,7 @@ az network firewall ip-config create -g $RG -f $FWNAME -n $FWIPCONFIG_NAME --pub
 # Capture Firewall IP Address for Later Use
 
 $FWPUBLIC_IP=$(az network public-ip show -g $RG -n $FWPUBLICIP_NAME --query "ipAddress" -o tsv)
-$FWPRIVATE_IP=$(az network firewall show -g $RG -n $FWNAME --query "ipConfigurations[0].privateIpAddress" -o tsv)
+$FWPRIVATE_IP=$(az network firewall show -g $RG -n $FWNAME --query "ipConfigurations[0].privateIPAddress" -o tsv)
 echo $FWPRIVATE_IP
 
 # Create UDR and add a route for Azure Firewall

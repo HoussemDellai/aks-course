@@ -45,7 +45,7 @@ More details here: https://azure.github.io/application-gateway-kubernetes-ingres
 
 App Gateway works with both Azure CNI and Kubenet plugins.
 
-```shell
+```sh
 az group create -n rg-aks-cluster -l westeurope
 
 az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure
@@ -67,7 +67,7 @@ App Gateway will be deployed into its own subnet. Provide a subnet CIDR range. `
 
 If you prefer using the command line, here is the command.
 
-```shell
+```sh
 az aks addon enable -n aks-cluster -g rg-aks-cluster `
        --addon ingress-appgw `
        --appgw-subnet-cidr 10.225.0.0/16 `
@@ -86,7 +86,7 @@ AGIC will create the following resources:
 
 Check the created ingress class.
 
-```shell
+```sh
 az aks get-credentials -n aks-cluster -g rg-aks-cluster
 
 kubectl get ingressclass
@@ -96,7 +96,7 @@ kubectl get ingressclass
 
 Check the created AGIC pod inside kube-system namespace.
 
-```shell
+```sh
 kubectl get pods -n kube-system -l app=ingress-appgw
 # NAME                                       READY   STATUS    RESTARTS   AGE
 # ingress-appgw-deployment-8c6db6f79-vzf5x   1/1     Running   0          43m
@@ -140,7 +140,7 @@ spec:
 
 Let's deploy the resources into AKS.
 
-```shell
+```sh
 kubectl apply -f ingress_appgw.yaml
 # deployment.apps/aspnetapp created
 # service/aspnetapp created
@@ -179,7 +179,7 @@ AGIC will use this private IP to expose private services.
 Let's enable Application Gateway private IP using command line. This could be done also using Azure portal.
 Change the values accordingly and choose an IP within the range of the App Gateway Subnet (avoid 3 first IPs).
 
-```shell
+```sh
 az network application-gateway frontend-ip create `
            --name frontendIp `
            --gateway-name gateway `
@@ -215,7 +215,7 @@ spec:
         pathType: Exact
 ```
 
-```shell
+```sh
 kubectl apply -f ingress_private.yaml
 # ingress.networking.k8s.io/aspnetapp-internal created
 

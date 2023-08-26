@@ -1,18 +1,20 @@
-# Getting started with Docker containers
+# Getting started with container images
 
+To start learning `Kubernetes`, you need first to understand how to work with containers.
 In this tutorial, we have a .NET application and we want to dockerize it. This module will walk through that process.
 
-You'll learn how to:  
-1. Create a Dockerfile  
-2. Build docker image  
-3. Run a docker image  
-3. Run a command inside a docker container  
-5. Stop a container  
-6. Remove a container  
-7. Remove an image  
-8. Working with Docker Compose  
-9. Working with Container Registry (Docker Hub)  
-10. Working with Container Registry (Azure Container Registry)  
+You'll learn how to:
+
+1. Create a Dockerfile
+2. Build docker image
+3. Run a docker image
+3. Run a command inside a docker container
+5. Stop a container
+6. Remove a container
+7. Remove an image 
+8. Working with Docker Compose
+9. Working with Container Registry (Docker Hub)
+10. Working with Container Registry (Azure Container Registry)
 
 ## Prerequisites
 
@@ -48,13 +50,14 @@ Here is the structure of the project.
 
 We can run this application through the .NET cli tool. We build it first, then we run it.
 
-```dotnetcli
+```sh
 cd app-dotnet
 dotnet build
 dotnet run
 ```
 
 Now we want to run this same application in a Docker container. The process is similar to running the application inside a virtual machine:
+
 1. Choose a base VM running Linux or Windows.
 2. Install the application dependencies and libraries (typically app SDK and Runtime). 
 3. Build the application. 
@@ -67,7 +70,6 @@ With containers, the process will be:
 3. Deploy the application into the image.
 
 This process will be described into a file called `Dockerfile`. Let's see the following example:
-
 
 ```dockerfile
 # Dockerfile
@@ -93,6 +95,7 @@ ENTRYPOINT ["dotnet", "WebApp.dll"]
 ```
 
 Note that in this Dockerfile, we are using two different docker images.
+
 1. SDK image is used to build the application (sdk). The commands `dotnet restore`, `dotnet build` and `dotnet publish` will run inside this container. This will generate the application package.
 2. Dotnet image is used to run the application when it is deployed. It contains the dotnet runtime (but not the SDK) in addition to the application package. The application package generated in the SDK image, will be copied to the dotnet image. That is why you see the `COPY` operation.
 
@@ -104,74 +107,74 @@ Note that in this Dockerfile, we are using two different docker images.
 
 Let's first make sure that we have Docker up and running:
 
-```bash
-$ docker run hello-world
+```sh
+docker run hello-world
 ```
 
 Then we go to the application folder (app-dotnet) and run the following command to build the image (don't forget the dot "." at the end which referes to the current folder):
 
-```bash
-$ docker build .
+```sh
+docker build .
 ```
 
 Run the same command and assign a name to the image:
 
-```bash
-$ docker build --rm -t webapp:1.0 .
+```sh
+docker build --rm -t webapp:1.0 .
 ```
 
 Check the images exists:
 
-```bash
-$ docker images
+```sh
+docker images
 ```
 
 ## 3. Run a docker image
 
 Let's run a container based on the image created earlier:
 
-```bash
-$ docker run --rm -d -p 5000:80/tcp webapp:1.0
+```sh
+docker run --rm -d -p 5000:80/tcp webapp:1.0
 ```
 
 Open web browser on `localhost:5000` to see the application running.
 
 List the running docker containers:
 
-```bash
-$ docker ps
+```sh
+docker ps
 ```
 
 ## 3. Run a command inside a docker container
 
 Explore the command docker exec.
 
-```bash
-$ docker exec <CONTAINER_ID> -- ls
+```sh
+docker exec <CONTAINER_ID> -- ls
 ```
 
 ## 5. Stop a container
 
 Explore the command docker stop.
 
-```bash
-$ docker stop <CONTAINER_ID>
+```sh
+docker stop <CONTAINER_ID>
 ```
 
 ## 6. Remove a container
 
 Explore the command docker rm.
 
-```bash
-$ docker rm <CONTAINER_ID>
+```sh
+docker rm <CONTAINER_ID>
 ```
 
 ## 7. Remove an image
 
 Explore the command docker rmi.
 
-```bash
-$ docker rmi <IMAGE_ID_OR_NAME>
+```sh
+docker rmi <IMAGE_ID_OR_NAME>
 ```
 
 ## 8. Working with Docker Compose
@@ -210,9 +213,9 @@ services:
 
 Let's build and run the compose file:
 
-```bash
-$ docker-compose build
-$ docker-compose up
+```sh
+docker-compose build
+docker-compose up
 ```
 
 Verify the application is running in your browser: `localhost:8080`.
@@ -230,20 +233,20 @@ In this lab, we will work with Docker Hub container registry.
 Create a Docker Hub account at: [https://hub.docker.com/](https://hub.docker.com/).
 Login to Docker Hub registry:
 
-```bash
-$ docker login
+```sh
+docker login
 ```
 
 Tag the image with your Docker Hub ID (for me it is `houssemdocker`):
 
-```bash
-$ docker tag webapp:1.0 <houssemdocker>/webapp:1.0
+```sh
+docker tag webapp:1.0 <houssemdocker>/webapp:1.0
 ```
 
 Push the image to the registry:
 
-```bash
-$ docker push <houssemdocker>/webapp:1.0
+```sh
+docker push <houssemdocker>/webapp:1.0
 ```
 
 Now, verify the image is stored in the registry.
@@ -258,14 +261,14 @@ Enable *Admin* credentials from ACR.
 
 Login to ACR:
 
-```bash
+```sh
 $acrName="myacr" # change with your own value
 az acr login -n $acrName --expose-token
 ```
 
 Build the image on ACR (Optional):
 
-```bash
+```sh
 az acr build -t "$acrName.azurecr.io/webapp:1.0" -r $acrName .
 ```
 

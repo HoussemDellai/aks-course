@@ -17,7 +17,7 @@ This workshop will guide you through the process of creating and installing a He
  
 Helm is a package manager for Kubernetes that simplifies the process of installing and managing applications on a Kubernetes cluster. Follow the guide at [helm.sh/docs/intro/install/](https://helm.sh/docs/intro/install/) to install Helm on your machine. Once installed, verify the version by running:
 
-```shell
+```sh
 helm version  
 ```
 
@@ -28,13 +28,13 @@ This should output the version of Helm that you have installed.
 A Helm chart is a collection of files that describe a set of Kubernetes resources that can be deployed together as a single unit.
 Create a sample Helm chart by running the following command:
 
-```shell
+```sh
 helm create firstchart  
 ```
 
 This will create a basic Helm chart in a folder named firstchart.
 
-```shell
+```sh
 firstchart
 │   .helmignore
 │   Chart.yaml
@@ -58,7 +58,7 @@ firstchart
 Before installing a Helm chart, it's a good idea to check the syntax of the chart to ensure that it is valid. 
 Check the syntax of the Helm chart by running the following command:
 
-```shell
+```sh
 helm lint firstchart
 ```
  
@@ -69,7 +69,7 @@ This will check the syntax of the chart and ensure that it is valid.
 Once you have created a Helm chart, you can install it on your Kubernetes cluster.
 Install the Helm chart by running the following command:
 
-```shell
+```sh
 helm install my-app firstchart  
 ```
 
@@ -77,7 +77,7 @@ This will install the Helm chart with the release name my-app.
 
 Verify the created resources. You should see a Deployment, Service, HPA and Ingress resources.
 
-```shell
+```sh
 kubectl get deploy,svc,hpa,ingress
 ```
 
@@ -87,7 +87,7 @@ Helm charts can include default values that are used when the chart is installed
 You can override these default values by specifying them on the command line when you install the chart.
 Override the default chart values by running the following command.
 
-```shell
+```sh
 helm install --set image.tag="1.21.0" my-app firstchart  
 ```
 
@@ -115,7 +115,7 @@ ingress:
 
 Then install the chart with the following command:
 
-```shell
+```sh
 helm install -f values.yaml my-app firstchart  
 ```
 
@@ -130,13 +130,13 @@ And `values.prod.yaml` file contain values for the `production` environment.
 
 To deploy the chart to a dev cluster, you can run the following command:
 
-```shell
+```sh
 helm install -f values.dev.yaml my-app firstchart  
 ```
 
 To deploy the chart to a prod cluster, you can run the following command:
 
-```shell
+```sh
 helm install -f values.prod.yaml my-app firstchart  
 ```
 
@@ -146,7 +146,7 @@ You can also install a chart with both overrides and a custom values.yaml file. 
 
 the specified image tag and the values specified in the values.yaml file, run the following command:
 
-```shell
+```sh
 helm install -f values.yaml --set image.tag="1.19.0" my-app firstchart  
 ```
 
@@ -154,7 +154,7 @@ helm install -f values.yaml --set image.tag="1.19.0" my-app firstchart
  
 You can list the installed charts by running the following command:
 
-```shell
+```sh
 helm list  
 ```
 
@@ -164,7 +164,7 @@ This will show the release names and status of all installed charts.
  
 You can upgrade a chart by running the following command:
 
-```shell
+```sh
 helm upgrade --install --set service.type=LoadBalancer my-app firstchart  
 ```
 
@@ -174,7 +174,7 @@ This will upgrade the chart with the specified values and install it if it doesn
  
 You can delete a chart by running the following command:
 
-```shell
+```sh
 helm uninstall my-app  
 ```
 
@@ -188,7 +188,7 @@ These helm charts are really helpful to install packaged applications like Ingre
 These helm charts are available in `helm repository` like the one provided by `Bitnami`. Here is the link: [github.com/bitnami/charts/tree/main/bitnami](https://github.com/bitnami/charts/tree/main/bitnami).
 You can download and add a Helm repository to your list of repositories in your machine by running the following command.
 
-```shell
+```sh
 helm repo add bitnami https://charts.bitnami.com/bitnami  
 ```
 
@@ -198,7 +198,7 @@ This will add the Bitnami Helm repository to your list of repositories.
  
 You can install a chart from a repository by running the following command:
 
-```shell
+```sh
 helm install my-release bitnami/jenkins  
 ```
 

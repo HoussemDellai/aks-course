@@ -22,7 +22,7 @@ https://kubernetes.io/docs/reference/labels-annotations-taints/#schedulerkuberne
 
 ## 0. Setup an AKS cluster with 2 user nodepools
 
-```shell
+```sh
 $AKS_RG="rg-aks-cluster"
 $AKS_NAME="aks-cluster"
 
@@ -38,7 +38,7 @@ az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 
 Add 2 user nodepools to the cluster
 
-```shell
+```sh
 az aks nodepool add --name nodepool01 `
        --resource-group $AKS_RG `
        --cluster-name $AKS_NAME `
@@ -64,7 +64,7 @@ az aks nodepool list -g $AKS_RG --cluster-name $AKS_NAME -o table
 
 ## 2. Get labels for nodes
 
-```shell
+```sh
 kubectl get nodes --show-labels
 Set-Alias -Name grep -Value select-string # only on powershell
 kubectl get nodes -o json | jq '.items[].metadata.labels' | grep agentpool
@@ -80,7 +80,7 @@ kubectl get nodes -o json | jq '.items[].metadata.labels' | grep agentpool
 
 ## 3. Create namespace with annotations
 
-```shell
+```sh
 kubectl create namespace ns01
 # namespace/ns01 created
 kubectl annotate namespace ns01 "scheduler.alpha.kubernetes.io/node-selector=agentpool=nodepool01"
@@ -97,7 +97,7 @@ kubectl describe namespace ns01
 
 ## 4. Deploy sample application
 
-```shell
+```sh
 kubectl create deployment nginx01 --image=nginx --replicas=5 -n ns01
 # deployment.apps/nginx01 created
 
@@ -112,7 +112,7 @@ kubectl get pods -n ns01 -o wide
 
 Note how the annotation was added into all pods deployed into the namespace
 
-```shell
+```sh
 $POD_NAME=$(kubectl get pods -n ns01 -o jsonpath='{.items[0].metadata.name}')
 $POD_NAME
 # nginx01-8b5fdc7f8-nfhbp
@@ -123,7 +123,7 @@ kubectl describe pod $POD_NAME -n ns01
 
 ## 5. Create another namespace with annotations
 
-```shell
+```sh
 kubectl create namespace ns02
 # namespace/ns02 created
 
@@ -141,7 +141,7 @@ kubectl describe namespace ns02
 
 ## 6. Deploy a sample app targeting a namespace and a nodepool
 
-```shell
+```sh
 kubectl create deployment nginx02 --image=nginx --replicas=5 -n ns02
 # deployment.apps/nginx02 created
 
