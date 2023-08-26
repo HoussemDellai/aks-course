@@ -37,6 +37,7 @@ steps:
     enableTelemetry: true
 
 - script: cat 02_kubernetes_aks/app-deploy.yaml
+  displayName: View app-deploy.yaml
 
 - task: Kubernetes@1
   displayName: Kubernetes Deploy
@@ -51,3 +52,8 @@ steps:
     configuration: '02_kubernetes_aks'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
+
+- script: |
+    az aks get credentials -g rg-aks -n aks-cluster-dev
+    kubectl get deployment,service,secret,configmap,pv,pvc
+  displayName: Verify deployment
