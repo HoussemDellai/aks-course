@@ -43,8 +43,8 @@ steps:
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'Microsoft-Azure-NonProd'
-    azureResourceGroup: 'rg-aks-cluster'
-    kubernetesCluster: 'aks-cluster'
+    azureResourceGroup: 'rg-aks'
+    kubernetesCluster: 'aks-cluster-dev'
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
