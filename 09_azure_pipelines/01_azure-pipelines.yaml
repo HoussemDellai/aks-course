@@ -5,7 +5,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  acr_name: contosoteam7
+  acr_name: acr4aks13579
   tag: 1.0.0-$(Build.BuildId)
 
 steps:
@@ -13,7 +13,7 @@ steps:
 - task: AzureCLI@2
   displayName: Docker Build & Push
   inputs:
-    azureSubscription: 'spn-team7'
+    azureSubscription: 'Microsoft-Azure-NonProd'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
@@ -37,17 +37,23 @@ steps:
     enableTelemetry: true
 
 - script: cat 02_kubernetes_aks/app-deploy.yaml
+  displayName: View app-deploy.yaml
 
 - task: Kubernetes@1
   displayName: Kubernetes Deploy
   inputs:
     connectionType: 'Azure Resource Manager'
-    azureSubscriptionEndpoint: 'aks-spn-ca'
-    azureResourceGroup: 'rg-aks-cluster'
-    kubernetesCluster: 'aks-cluster'
+    azureSubscriptionEndpoint: 'Microsoft-Azure-NonProd'
+    azureResourceGroup: 'rg-aks'
+    kubernetesCluster: 'aks-cluster-dev'
     namespace: 'default'
     command: 'apply'
     useConfigurationFile: true
     configuration: '02_kubernetes_aks'
     secretType: 'dockerRegistry'
     containerRegistryType: 'Azure Container Registry'
+
+- script: |
+    az aks get credentials -g rg-aks -n aks-cluster-dev
+    kubectl get deployment,service,secret,configmap,pv,pvc
+  displayName: Verify deployment
