@@ -1,4 +1,4 @@
-name: Maintenance - Check Markdown Quality
+name: Check Markdown Quality
 
 on:
   pull_request:
