@@ -92,6 +92,7 @@ jobs:
 
       - run: |
           echo ${{ steps.spellcheck.outputs.results }}
+          cat ${{ steps.spellcheck.outputs.results }}
           echo ${{ steps.spellcheck.outputs.number_of_files_checked }}
           echo ${{ steps.spellcheck.outputs.number_of_files_with_issues }}
           echo ${{ steps.spellcheck.outputs.files_with_issues }}
