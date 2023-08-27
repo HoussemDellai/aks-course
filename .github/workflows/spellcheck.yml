@@ -30,6 +30,6 @@ jobs:
       - uses: rojopolis/spellcheck-github-actions@v0
         name: Spellcheck
         with:
-          source_files: '**/*.md'
+          source_files: "**/*.md"
           task_name: Markdown
           config_path: .spell_check/spellcheck.yml
