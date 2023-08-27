@@ -20,7 +20,7 @@ jobs:
           inline: warning
           root: '.'
           files: |
-            **/*.{ts,js}
+            **/*.md
             !dist/**/*.{ts,js}
           # Limit the files checked to the ones in the pull request or push.
           incremental_files_only: true
