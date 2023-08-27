@@ -25,3 +25,9 @@ jobs:
           # Limit the files checked to the ones in the pull request or push.
           incremental_files_only: true
           strict: true #setting to false allows the build to continue even if spelling mistakes are detected
+
+      - uses: rojopolis/spellcheck-github-actions@v0
+        name: Spellcheck
+        with:
+          source_files: README.md
+          task_name: Markdown
