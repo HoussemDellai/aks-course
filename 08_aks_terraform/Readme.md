@@ -9,10 +9,10 @@ However, for production environments, it is important to use `Infrastructure as 
 Infra as Code is the principle of using configuration files like YAML, HCL to describe the infrastructure using the declarative model.
 It has the following advantages.
 
-1. Acts as the infra documentation as the config files are human readabe
+1. Acts as the infra documentation as the config files are human readable
 2. The configuration files could be pushed to a Git repository which enables versioning of the infra
 3. Enable team collaboration by submitting `Pull Request` whenever an update should be made
-4. Idempotency. The same infra config could be redeployed multiple times and always have the same result
+4. Idempotence. The same infra config could be redeployed multiple times and always have the same result
 
 In this lab, you will learn how to use Terraform to create an AKS cluster connected to ACR.
 You will work with the very basic configuration to keep the demo sample.

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-When learning and testing, deployment to Kubernetes is done through the `kubectl` command line from the personal machine. However, for production systems, the recommended way is to use DevOps CI/CD pipelines with tools like Azure DevOps, Github Actions, Gitla, Jenkins, etc.
+When learning and testing, deployment to Kubernetes is done through the `kubectl` command line from the personal machine. However, for production systems, the recommended way is to use DevOps CI/CD pipelines with tools like Azure DevOps, Github Actions, Gitlab, Jenkins, etc.
 
 In this lab, you will create a new AKS cluster with attached ACR.
 Then create a CI/CD pipeline for deploying sample application (YAML files) using Azure DevOps.
