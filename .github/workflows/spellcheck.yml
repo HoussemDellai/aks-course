@@ -12,12 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3.6.0
 
-      - uses: streetsidesoftware/cspell-action@v2.26.1
+      - uses: streetsidesoftware/cspell-action@v3
         name: Spell Check
         with:
+          github_token: ${{ github.token }}
           config: './.vscode/cspell.json'
           inline: warning
           root: '.'
-          files: "**/*.md # {ts,js,md}" # You need to respecify this setting - even though it's in the cspell.json config :(
-          incremental_files_only: false
+          files: |
+            **/*.{ts,js}
+            !dist/**/*.{ts,js}
+          # Limit the files checked to the ones in the pull request or push.
+          incremental_files_only: true
           strict: true #setting to false allows the build to continue even if spelling mistakes are detected
