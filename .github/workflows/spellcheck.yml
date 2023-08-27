@@ -32,4 +32,4 @@ jobs:
         with:
           # source_files: "**/*.md"
           task_name: Markdown
-          config_path: .spell_check/spellcheck.yml
+          config_path: .spell_check/.spellcheck.yaml
