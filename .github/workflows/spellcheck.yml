@@ -22,7 +22,7 @@ jobs:
           # Github token used to fetch the list of changed files in the commit.
           # Default: ${{ github.token }}
           github_token: ${{ github.token }}
-          config: './.spell_check/cspell.json'
+          config: cspell.config.yaml
           
           # Notification level to use with inline reporting of spelling errors.
           # Allowed values are: warning, error, none
