@@ -40,7 +40,7 @@ az aks create -g rg-aks-lb -n aks-lb `
 az aks get-credentials -g rg-aks-lb -n aks-lb
 ```
 
-Check the created resurces in the node resource group. 
+Check the created resources in the node resource group. 
 Note the public Load Balancer (LB) and the public IP address (PIP). 
 These resources will be used for egress traffic.
 
@@ -111,7 +111,7 @@ This might be acceptable at a certain limit.
 ### 1.3. Solution 2: Replacing the Load Balancer with NAT Gateway.
 
 The NAT Gateway service was created to resolve this exact issue.
-Let's explore hoow it works in the next section.
+Let's explore how it works in the next section.
 
 ## 2. AKS cluster with outbound type managed NAT Gateway
 
@@ -478,7 +478,7 @@ This issue occurs when a subnet has a default route going to the firewall's priv
 In this case, the incoming load balancer traffic is received via its public IP address, but the return path goes through the firewall's private IP address. 
 Since the firewall is stateful, it drops the returning packet because the firewall isn't aware of such an established session.
 
-### 4.2. Solution 1 to the asymmetric routing isuue
+### 4.2. Solution 1 to the asymmetric routing issue
 
 The solution is simply to use the Firewall public IP address instead of the Load Balancer public IP.
 More details here: [learn.microsoft.com/en-us/azure/firewall/integrate-lb](https://learn.microsoft.com/en-us/azure/firewall/integrate-lb).

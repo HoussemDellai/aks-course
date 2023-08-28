@@ -10,5 +10,6 @@
         "!csharp",
         "!erlang",
         "!git-commit"
-    ]
+    ],
+    "dotnet.defaultSolution": "disable"
 }

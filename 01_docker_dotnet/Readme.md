@@ -101,7 +101,7 @@ Note that in this Dockerfile, we are using two different docker images.
 
 > SDK image is heavy because it contains the dotnet SDK tools required to build dotnet apps. SDK is required only during build-time, not during the run of the container.
 
-> It is highly recommended to keep only the minimum tools required to run the container. Youshould remove any unecessary features. That is better for security as it reduces the attack surface. And it keeps the image very lightweight which enhaces the pull or download time of the image from the registry.
+> It is highly recommended to keep only the minimum tools required to run the container. You should remove any unnecessary features. That is better for security as it reduces the attack surface. And it keeps the image very lightweight which enhances the pull or download time of the image from the registry.
 
 ## 2. Build docker image
 
@@ -111,7 +111,7 @@ Let's first make sure that we have Docker up and running:
 docker run hello-world
 ```
 
-Then we go to the application folder (app-dotnet) and run the following command to build the image (don't forget the dot "." at the end which referes to the current folder):
+Then we go to the application folder (app-dotnet) and run the following command to build the image (don't forget the dot "." at the end which references to the current folder):
 
 ```sh
 docker build .
@@ -179,7 +179,7 @@ docker rmi <IMAGE_ID_OR_NAME>
 
 ## 8. Working with Docker Compose
 
-When we want to run multiple applications together (for micro/multi services for example), working with the commands to build and run each image independently is time consuming. To solve this issue, Dcoker invented the Compose file. It can compose and configure multiple services in one single YAML file. Using docker compose, we can build and run multiple images, configure applications to connect to each other, configure docker networking, configure environment variables, etc.
+When we want to run multiple applications together (for micro/multi services for example), working with the commands to build and run each image independently is time consuming. To solve this issue, Docker enterprise invented the Compose file. It can compose and configure multiple services in one single YAML file. Using docker compose, we can build and run multiple images, configure applications to connect to each other, configure docker networking, configure environment variables, etc.
 
 Let's see the following `docker-compose.yml` file:
 
@@ -277,6 +277,6 @@ Note that image is already pushed to ACR by viewing the ACR resource in Azure po
 ## Conclusion
 
 In this lab, you learned how to create a container image from an existing application source code.
-Then you deployed the image in your machine. And you pushed the image into a container resgistry.
+Then you deployed the image in your machine. And you pushed the image into a container registry.
 You are ready now to deploy this image into Kubernetes cluster. 
 That is our next lab.

@@ -137,3 +137,17 @@ pandoc -s --toc -o chapter.docx -V geometry:a4paper,margin=1cm Readme.md --highl
 
 
 pandoc -s --toc -o chapter.docx -V geometry:a4paper,margin=1cm Readme.md --syntax-definition bash.xml
+
+
+# cspell
+
+choco install nodejs.install
+# restart terminal
+npm install -g cspell
+
+
+cspell --words-only --unique --config cspell.config.yaml .\07_calico_network_policy\README.md | sort --ignore-case >> project-words.txt
+# cspell --words-only --unique "**/*.md" | sort --ignore-case > .\.spell_check\project-words.txt
+
+cspell --no-progress --show-suggestions --show-context "**/*.md"
+

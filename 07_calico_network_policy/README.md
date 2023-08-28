@@ -88,7 +88,7 @@ kubectl apply -f 1-network-policy-deny-all.yaml
 ### 1.5. Test access to backend Pod
 
 
-We'll reuse the same Aplpine image to run the test:
+We'll reuse the same Alpine image to run the test:
 
 ```sh
 kubectl run --rm -it --image=alpine frontend --namespace development --generator=run-pod/v1  
