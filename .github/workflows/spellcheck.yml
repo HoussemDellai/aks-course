@@ -68,6 +68,6 @@ jobs:
 
       - name: 'View results'
         run: |
-          echo ${{ steps.spellcheck.outputs.number_of_files_checked }}
-          echo ${{ steps.spellcheck.outputs.number_of_files_with_issues }}
-          echo ${{ steps.spellcheck.outputs.files_with_issues }}
+          echo 'number_of_files_checked : ${{ steps.spellcheck.outputs.number_of_files_checked }}'
+          echo 'number_of_files_with_issues : ${{ steps.spellcheck.outputs.number_of_files_with_issues }}'
+          echo 'files_with_issues : ${{ steps.spellcheck.outputs.files_with_issues }}'
