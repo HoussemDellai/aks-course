@@ -14,26 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.6.0
-
       - uses: streetsidesoftware/cspell-action@v3
         name: Spell Check
         id: spellcheck
         continue-on-error: true
         with:
-          # Github token used to fetch the list of changed files in the commit.
-          # Default: ${{ github.token }}
-          github_token: ${{ github.token }}
+          github_token: ${{ github.token }} # Github token used to fetch the list of changed files in the commit
           config: cspell.config.yaml
-          
-          # Notification level to use with inline reporting of spelling errors.
-          # Allowed values are: warning, error, none
-          # Default: warning
-          inline: warning
-
-          # The point in the directory tree to start spell checking.
-          # Default: .
-          root: '.'
-          
+          inline: warning # Notification level to use with inline reporting of spelling errors.
+          root: '.' # The point in the directory tree to start spell checking.
+          check_dot_files: false # Check files and directories starting with `.`.
+          strict: true # Determines if the action should be failed if any spelling issues are found.
+          incremental_files_only: false # Limit the files checked to the ones in the pull request or push.
+          verbose: false # Log progress and other information during the action execution.
+          files: |
+            **/*.md
+            !dist/**/*.{ts,js}
           # Define glob patterns to filter the files to be checked. Use a new line between patterns to define multiple patterns.
           # The default is to check ALL files that were changed in in the pull_request or push.
           # Note: `ignorePaths` defined in cspell.json still apply.
@@ -48,27 +44,6 @@ jobs:
           # files: "**"
           #
           # Default: ALL files
-          files: |
-            **/*.md
-            !dist/**/*.{ts,js}
-
-          # Check files and directories starting with `.`.
-          # - "true" - glob searches will match against `.dot` files.
-          # - "false" - `.dot` files will NOT be checked.
-          # - "explicit" - glob patterns can match explicit `.dot` patterns.
-          check_dot_files: false
-
-          # Determines if the action should be failed if any spelling issues are found.
-          # Allowed values are: true, false
-          # Default: true
-          strict: true
-
-          # Limit the files checked to the ones in the pull request or push.
-          incremental_files_only: false
-
-          # Log progress and other information during the action execution.
-          # Default: false
-          verbose: false
 
           # outputs:
           #   success:
@@ -91,9 +66,8 @@ jobs:
           #     description: |
           #       The JSON encoded results.
 
-      - run: |
-          echo ${{ fromJSON(steps.spellcheck.outputs.results) }}
-          cat ${{ fromJSON(steps.spellcheck.outputs.results) }}
+      - name: 'View results'
+        run: |
           echo ${{ steps.spellcheck.outputs.number_of_files_checked }}
           echo ${{ steps.spellcheck.outputs.number_of_files_with_issues }}
           echo ${{ steps.spellcheck.outputs.files_with_issues }}
