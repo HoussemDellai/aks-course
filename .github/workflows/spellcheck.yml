@@ -5,6 +5,7 @@ on:
     branches: [main]
   push: 
     branches: [main]
+    paths: '**/*.md'
 
   workflow_dispatch:
 
