@@ -1,4 +1,6 @@
-## Restrict Egress/Outbound Layer 3 traffic using Calico Network Policy
+# Restrict Egress/Outbound Layer 3 traffic using Calico Network Policy
+
+![](images/architecture.png)
 
 ## 1. Create demo environment
 

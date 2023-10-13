@@ -10,8 +10,8 @@ spec:
     - action: Log
       destination:
         nets:
-          - 20.126.233.217/32
-    - action: Deny
+          - 20.31.106.104/32
+    - action: Allow
       destination:
         nets:
-          - 20.126.233.217/32
+          - 20.31.106.104/32

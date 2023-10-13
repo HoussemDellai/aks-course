@@ -2,8 +2,8 @@
 
 ## 1. Create demo environment
 
-$RG_NAME = "rg-aks-cluster-calico"
-$AKS_NAME = "aks-cluster-calico"
+$RG_NAME = "rg-aks-calico"
+$AKS_NAME = "aks-calico"
 
 # create an azure rsource group
 az group create -n $RG_NAME --location westeurope
@@ -80,7 +80,7 @@ kubectl get tigerastatus apiserver
 
 kubectl apply -f logging-traffic.yaml
 
-
+# enable cluster monitoring add-on
 
 az aks enable-addons -a monitoring --enable-syslog -g $RG_NAME -n $AKS_NAME
 

@@ -1,4 +1,6 @@
-## Restrict Egress/Outbound Layer 7 traffic using Cilium Network Policy
+# Restrict Egress/Outbound Layer 7 traffic using Cilium Network Policy
+
+![](images/architecture.png)
 
 ## 1. Create demo environment
 
