@@ -191,4 +191,4 @@ Syslog
 
 You should see the following result.
 
-[](images/logs.png)
+![](images/logs.png)
