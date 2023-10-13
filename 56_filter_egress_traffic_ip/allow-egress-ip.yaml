@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-ip
+spec:
+  podSelector:
+    matchLabels:
+      run: nginx
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 20.126.233.217/32
+# ---
+# apiVersion: projectcalico.org/v3
+# kind: NetworkPolicy
+# metadata:
+#   name: allow-egress-external
+#   namespace: production
+# spec:
+#   selector: run == 'nginx'
+#   types:
+#     - Egress
+#   egress:
+#     - action: Allow
+#       destination:
+#         nets:
+#           - 1.2.3.0/24

@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+# ---
+
+# apiVersion: projectcalico.org/v3
+# kind: GlobalNetworkPolicy
+# metadata:
+#   name: default-deny
+# spec:
+#   selector: projectcalico.org/namespace not in  {'kube-system', 'calico-system', 'calico-apiserver'}
+#   types:
+#   - Ingress
+#   - Egress
+
+# ---
+
+# apiVersion: projectcalico.org/v3
+# kind: GlobalNetworkPolicy
+# metadata:
+#   name: deny-app-policy
+# spec:
+#   namespaceSelector: has(projectcalico.org/name) && projectcalico.org/name not in {"kube-system", "calico-system", "calico-apiserver"}
+#   types:
+#   - Ingress
+#   - Egress
+#   egress:
+#   # allow all namespaces to communicate to DNS pods
+#   - action: Allow
+#     protocol: UDP
+#     destination:
+#       selector: 'k8s-app == "kube-dns"'
+#       ports:
+#       - 53

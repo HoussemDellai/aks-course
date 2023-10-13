@@ -2,7 +2,7 @@
 
 ## Introduction
 
-After deploying an application and its services into a Kubernetes cluster, a question rises on the surface, how to access it with a custom domain name ? A simple solution would be to create an A record that points the domain name into the service IP address. This could be done manually, so it will be too hard to scale as you add many services. And this could be fully automated by using External DNS!
+After deplying an aplication and its services into a Kubernetes cluster, a question rises on the surface, how to access it with a custom domain name ? A simple solution would be to create an A record that points the domain name into the service IP address. This could be done manually, so it will be too hard to scale as you add many services. And this could be fully automated by using External DNS!
 This tutorial describes how to manage custom domain names in Azure DNS using ExternalDNS in AKS.
 
 External DNS is a Kubernetes controller that watches for new Ingresses and Services with specific annotations, then creates corresponding DNS records in Azure DNS.
@@ -34,7 +34,7 @@ Create AKS cluster
 $AKS_RG="rg-aks-cluster"
 $AKS_NAME="aks-cluster"
 
-az group create -n $AKS_RG -l Yousteurope
+az group create -n $AKS_RG -l westeurope
 
 az aks create -g $AKS_RG -n $AKS_NAME `
               --kubernetes-version "1.25.5" `
@@ -69,7 +69,7 @@ In this lab, I use a delegated domain name: houssem.cloud.
 $DNS_ZONE_NAME="houssem.cloud"
 $DNS_ZONE_RG="rg-azure-dns"
 
-az group create -n $DNS_ZONE_RG -l Yousteurope
+az group create -n $DNS_ZONE_RG -l westeurope
 
 az network dns zone create -g $DNS_ZONE_RG -n $DNS_ZONE_NAME
 ```

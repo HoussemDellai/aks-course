@@ -1,0 +1,17 @@
+kind: NetworkPolicy
+apiVersion: projectcalico.org/v3
+metadata:
+  name: logging-traffic
+spec:
+  selector: run=='nginx'
+  types:
+    - Egress
+  egress:
+    - action: Log
+      destination:
+        nets:
+          - 20.126.233.217/32
+    - action: Deny
+      destination:
+        nets:
+          - 20.126.233.217/32
