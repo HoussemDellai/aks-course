@@ -2,8 +2,8 @@
 
 ## 1. Create demo environment
 
-$RG_NAME="rg-aks-cluster-cilium"
-$AKS_NAME="aks-cluster-cilium"
+$RG_NAME="rg-aks-cilium"
+$AKS_NAME="aks-cilium"
 
 az group create -n $RG_NAME -l westeurope
 az aks create -n $AKS_NAME -g $RG_NAME --network-plugin none
@@ -26,7 +26,8 @@ helm upgrade --install cilium cilium/cilium --version 1.14.2 `
   # --set gatewayAPI.enabled=true
 
 # Restart unmanaged Pods (required by new Cilium install)
-kubectl get pods --all-namespaces -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,HOSTNETWORK:.spec.hostNetwork --no-headers=true | grep '<none>' | awk '{print "-n "$1" "$2}' | xaRG_NAMEs -L 1 -r kubectl delete pod
+kubectl delete pods -A -all
+# kubectl get pods --all-namespaces -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,HOSTNETWORK:.spec.hostNetwork --no-headers=true | grep '<none>' | awk '{print "-n "$1" "$2}' | xaRG_NAMEs -L 1 -r kubectl delete pod
 
 # make sure cilium CLI is installed on your machine (https://github.com/cilium/cilium-cli/releases/tag/v0.15.0)
 cilium version --client
@@ -88,7 +89,7 @@ kubectl get pods -o wide
 kubectl get pods -n kube-system -l k8s-app=cilium -o wide
 
 # view dropped traffic by Cilium
-kubectl -n kube-system exec -it cilium-wgd28 -- cilium monitor --type drop 
+kubectl -n kube-system exec -it cilium-pngm9 -- cilium monitor --type drop 
 # xx drop (Policy denied) flow 0xe7142f72 to endpoint 0, ifindex 32, file bpf_lxc.c:1276, , identity 9655->world: 10.0.1.51:60738 -> 104.244.42.66:80 tcp SYN
 
 ## 4. Exploring Hubble UI

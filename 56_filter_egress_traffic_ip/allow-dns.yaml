@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: foo-deny-external-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: foo
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP

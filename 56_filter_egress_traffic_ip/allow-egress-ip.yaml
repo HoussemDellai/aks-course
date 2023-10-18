@@ -11,7 +11,7 @@ spec:
   egress:
   - to:
     - ipBlock:
-        cidr: 20.31.106.104/32
+        cidr: 4.245.117.182/32
 # ---
 # apiVersion: projectcalico.org/v3
 # kind: NetworkPolicy
