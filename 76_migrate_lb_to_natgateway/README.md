@@ -82,21 +82,7 @@ az network public-ip create -g $RG -n pip-natgateway --sku standard
 az network nat gateway create -g $RG -n nat-gateway --public-ip-addresses pip-natgateway
 ```
 
-### 2.2. Associate nat gateway with subnet where the workload is associated with.
-
-```bash
-az network vnet subnet update -g $RG --vnet-name vnet-aks --name subnet-aks --nat-gateway nat-gateway
-```
-
-### 2.3. Update cluster from loadBalancer to userAssignedNATGateway in BYO vnet scenario
-
-```bash
-az aks update -g $RG -n aks-cluster --outbound-type userAssignedNATGateway
-```
-
-Now the NAT Gateway is configured for your AKS cluster.
-
-![](images/resources.png)
+### 2.2. Watch for downtime for egress traffic
 
 Run this command in new powershell session for watch for the downtime of egress traffic.
 
@@ -116,7 +102,23 @@ for ($i = 0; $i -lt 30; $i++) {
 # 13.93.68.197
 ```
 
-It takes about 6 minutes to update the outboundType from LB to user NAT Gateway.
+### 2.3. Associate nat gateway with subnet where the workload is associated with.
+
+```bash
+az network vnet subnet update -g $RG --vnet-name vnet-aks --name subnet-aks --nat-gateway nat-gateway
+```
+
+### 2.4. Update cluster from loadBalancer to userAssignedNATGateway in BYO vnet scenario
+
+```bash
+az aks update -g $RG -n aks-cluster --outbound-type userAssignedNATGateway
+```
+
+Now the NAT Gateway is configured for your AKS cluster.
+
+![](images/resources.png)
+
+>It takes about 6 minutes to update the outboundType from Load Balancer to user NAT Gateway.
 
 Note the new IP address of the NAT Gateway used for egress/outbound traffic.
 
