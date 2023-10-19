@@ -118,7 +118,9 @@ Now the NAT Gateway is configured for your AKS cluster.
 
 ![](images/resources.png)
 
->It takes about 6 minutes to update the outboundType from Load Balancer to user NAT Gateway.
+>It takes about 6 minutes to update the KAS outboundType from Load Balancer to user NAT Gateway. The pods are able to egress traffic during this time.
+
+> It takes few seconds to update the Subnet. During this time, pods are not able to egress traffic.
 
 Note the new IP address of the NAT Gateway used for egress/outbound traffic.
 
