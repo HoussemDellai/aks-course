@@ -6,7 +6,7 @@ az provider register --namespace Microsoft.ContainerService
 
 # 1. AKS cluster with outbound type load balancer
 
-$RG = "rg-aks-cluster-weu"
+$RG = "rg-aks-cluster-dev"
 
 az group create -n $RG -l westeurope
 
@@ -51,10 +51,10 @@ az aks update -g $RG -n aks-cluster --outbound-type userAssignedNATGateway
 
 # run this in new powershell session
 
-for ($i = 0; $i -lt 600; $i++) {
+for ($i = 0; $i -lt 30; $i++) {
     date
     kubectl exec nginx -it -- curl http://ifconfig.me
-    sleep 1
+    sleep 10
 }
 
 # Wednesday, October 18, 2023 6:07:33 PM
@@ -73,4 +73,7 @@ for ($i = 0; $i -lt 600; $i++) {
 # note that the Load Balancer and its public IP was deleted
 
 # cleanup resources
-az group delete -n $RG --yes --no-wait
+az group delete -n $RG --yes --no-wait 
+
+# resources
+https://learn.microsoft.com/en-us/azure/aks/egress-outboundtype#update-cluster-from-managednatgateway-to-userdefinedrouting
