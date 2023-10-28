@@ -37,6 +37,9 @@ kubectl get pods -n kube-system
 # in the namespace "kube-system": User does not have access to the resource in Azure. 
 # Update role assignment to allow access.
 
+kubectl get deploy -n kube-system
+# no access to deployments
+
 $SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 $SUBSCRIPTION_ID
 
@@ -46,10 +49,17 @@ az role assignment create --role "AKS Deployment Reader" --assignee $USER_ID --s
 
 az role definition list --name "AKS Deployment Reader"
 
+# wait for about 5 minutes for role propagation
+
 kubectl get deploy -n kube-system
+# NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
+# coredns              2/2     2            2           43m
+# coredns-autoscaler   1/1     1            1           43m
+# konnectivity-agent   2/2     2            2           43m
+# metrics-server       2/2     2            2           43m
 
 ## cleanup resources
 
-az role definition delete -n "AKS Deployment Reader"
-
 az group delete -n $AKS_RG --yes --no-wait
+
+az role definition delete -n "AKS Deployment Reader"
