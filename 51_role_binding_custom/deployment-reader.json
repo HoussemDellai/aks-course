@@ -1,0 +1,13 @@
+{
+    "Name": "AKS Deployment Reader",
+    "Description": "Lets you view all deployments in cluster/namespace.",
+    "Actions": [],
+    "NotActions": [],
+    "DataActions": [
+        "Microsoft.ContainerService/managedClusters/apps/deployments/read"
+    ],
+    "NotDataActions": [],
+    "assignableScopes": [
+        "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+    ]
+}
