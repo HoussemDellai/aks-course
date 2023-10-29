@@ -9,7 +9,7 @@ $AKS_NAME="aks-cluster"
 # Create and connect to AKS cluster
 az group create --name $AKS_RG --location westeurope
 
-az aks create --name $AKS_NAME --resource-group $AKS_RG --enable-aad --enable-azure-rbac
+az aks create -n $AKS_NAME -g $AKS_RG --enable-aad --enable-azure-rbac
 
 az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 
@@ -28,6 +28,8 @@ $USER_ID=$(az ad signed-in-user show --query id -o tsv)
 
 az role assignment create --role "Azure Kubernetes Service RBAC Writer" --assignee $USER_ID --scope $AKS_ID/namespaces/default
 
+kubectl get nodes
+
 kubectl get pods
 # No resources found in default namespace.
 
@@ -40,14 +42,30 @@ kubectl get pods -n kube-system
 kubectl get deploy -n kube-system
 # no access to deployments
 
-$SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-$SUBSCRIPTION_ID
+# create Azure RBAC custom role for AKS
+# Here is an example:
+# {
+#     "Name": "AKS Deployment Reader",
+#     "Description": "Lets you view all deployments in cluster/namespace.",
+#     "Actions": [],
+#     "NotActions": [],
+#     "DataActions": [
+#         "Microsoft.ContainerService/managedClusters/apps/deployments/read"
+#     ],
+#     "NotDataActions": [],
+#     "assignableScopes": [
+#         "/subscriptions/82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+#     ]
+# }
 
 az role definition create --role-definition deployment-reader.json
 
-az role assignment create --role "AKS Deployment Reader" --assignee $USER_ID --scope $AKS_ID/namespaces/kube-system
-
 az role definition list --name "AKS Deployment Reader"
+
+$SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+$SUBSCRIPTION_ID
+
+az role assignment create --role "AKS Deployment Reader" --assignee $USER_ID --scope $AKS_ID/namespaces/kube-system
 
 # wait for about 5 minutes for role propagation
 
