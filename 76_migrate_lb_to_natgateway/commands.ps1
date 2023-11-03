@@ -31,7 +31,7 @@ az aks get-credentials -g $RG -n aks-cluster --overwrite-existing
 
 kubectl run nginx --image=nginx
 sleep 10
-kubectl exec nginx -it -- curl http://ifconfig.me
+kubectl exec nginx -it -- curl http://ifconf.me
 
 # Note that is the public IP of the Load Balancer. This is the default behavior of AKS clusters.
 
@@ -43,7 +43,7 @@ az network nat gateway create -g $RG -n nat-gateway --public-ip-addresses pip-na
 
 az network vnet subnet update -g $RG --vnet-name vnet-aks --name subnet-aks --nat-gateway nat-gateway
 
-kubectl exec nginx -it -- curl http://ifconfig.me
+kubectl exec nginx -it -- curl http://ifconf.me
 # timeout
 
 # Update cluster from loadbalancer to userAssignedNATGateway in BYO vnet scenario
@@ -53,7 +53,7 @@ az aks update -g $RG -n aks-cluster --outbound-type userAssignedNATGateway
 
 for ($i = 0; $i -lt 30; $i++) {
     date
-    kubectl exec nginx -it -- curl http://ifconfig.me
+    kubectl exec nginx -it -- curl http://ifconf.me
     sleep 10
 }
 
