@@ -1,135 +1,73 @@
-# Migrating OutboundType from Load Balancer to user NAT Gateway
+# AKS migration to Nat Gateway
 
 ## Introduction
 
-You will learn in this lab how to migrate `outboundType` of an AKS cluster from `LoadBalancer` to `user NAT Gateway`.
+You will learn here:
+* NAT Gateway will handle only the traffic outgoing to the internet.
+* AKS still can connect to resources within its own VNET or within peered VNETs.
 
-Why you might do that ?
+![](images/architecture.png)
 
-Mainly in case your apps are consuming multiple SNAT ports.
-The NAT Gateway manages more efficiently SNAT ports than Load Balancer.
-More details on the lab `65_aks_egress_lb_natgw_udr`.
+## 1. Deploy demo environment
 
-There are four options for configuring outbound type in AKS:
-1. Load Balancer (default mode)
-2. Managed NAT Gateway
-3. User NAT Gateway
-4. UserDefinedRouting (UDR)
+Use terraform to deploy :
+1. AKS cluster with outbound type load balancer 
+2. Azure Linux VM with web app deployed and Bastion
+3. Nat Gateway
+4. Two separate peered VNETs
 
-AKS supports migrating from one mode to another.
-
-| BYO VNet     | loadBalancer | managedNATGateway | userAssignedNATGateway | userDefinedRouting |
-| ------------ | ------------ | ----------------- | ---------------------- | ------------------ |
-| loadBalancer | N/A          | Not Supported     | Supported              | Supported          | 
-| managedNATGateway | Not Supported | N/A | Not Supported | Not Supported | 
-| userAssignedNATGateway | Supported | Not Supported | N/A | Supported | 
-| userDefinedRouting | Supported | Not Supported | Supported | N/A | 
-
-Check the following link for an updated information: https://learn.microsoft.com/en-us/azure/aks/egress-outboundtype#update-cluster-from-managednatgateway-to-userdefinedrouting
-
-## Prerequisites
-
-You need first to enable the migration feature.
-
-```bash
-az feature register --namespace "Microsoft.ContainerService" --name "AKS-OutBoundTypeMigrationPreview"
-az feature show --namespace "Microsoft.ContainerService" --name "AKS-OutBoundTypeMigrationPreview"
-az provider register --namespace Microsoft.ContainerService
+```sh
+terraform init
+terraform apply -auto-approve
 ```
 
-## 1. Creating an AKS cluster with outbound type load balancer
+Connect to AKS
 
-```bash
-$RG = "rg-aks-cluster-dev"
-
-az group create -n $RG -l westeurope
-
-az network vnet create -g $RG -n vnet-aks --address-prefixes 172.16.0.0/20 
-
-$SUBNET_ID = $(az network vnet subnet create -g $RG --vnet-name vnet-aks -n subnet-aks `
-        --address-prefixes 172.16.0.0/22 `
-        --query id --output tsv)
-
-$IDENTITY_ID = $(az identity create -g $RG -n identity-aks --query id --output tsv)
-
-az aks create -g $RG -n aks-cluster `
-    --network-plugin azure `
-    --vnet-subnet-id $SUBNET_ID `
-    --outbound-type loadBalancer `
-    --enable-managed-identity `
-    --assign-identity $IDENTITY_ID
-
+```sh
+$RG = "rg-aks-cluster"
 az aks get-credentials -g $RG -n aks-cluster --overwrite-existing
 ```
 
 Check outbound egress traffic uses Load Balancer public IP
 
-```bash
+```sh
 kubectl run nginx --image=nginx
 sleep 10
 kubectl exec nginx -it -- curl http://ifconf.me
+# 20.160.240.183
 ```
 
-Note that is the public IP of the Load Balancer. This is the default behavior of AKS clusters.
+## 2. Update AKS subnet to use Nat Gateway
 
-## 2. Migrate outbound type from load balancer to user NAT Gateway
-
-### 2.1. Create the user NAT GAteway with its IP address
-
-```bash
-az network public-ip create -g $RG -n pip-natgateway --sku standard
-
-az network nat gateway create -g $RG -n nat-gateway --public-ip-addresses pip-natgateway
-```
-
-### 2.2. Watch for downtime for egress traffic
-
-Run this command in new powershell session for watch for the downtime of egress traffic.
-
-```bash
-for ($i = 0; $i -lt 30; $i++) {
-    date
-    kubectl exec nginx -it -- curl http://ifconf.me
-    sleep 10 # 10 seconds
-}
-# Wednesday, October 18, 2023 6:07:33 PM
-# 20.31.59.30
-# Wednesday, October 18, 2023 6:07:34 PM
-# error: Timeout occurred
-# Wednesday, October 18, 2023 6:08:06 PM
-# Error from server: error dialing backend: EOF
-# Wednesday, October 18, 2023 6:13:09 PM
-# 13.93.68.197
-```
-
-### 2.3. Associate nat gateway with subnet where the workload is associated with.
-
-```bash
+```sh
 az network vnet subnet update -g $RG --vnet-name vnet-aks --name subnet-aks --nat-gateway nat-gateway
 ```
 
-### 2.4. Update cluster from loadBalancer to userAssignedNATGateway in BYO vnet scenario
+Update cluster from loadBalancer to userAssignedNATGateway in BYO vnet scenario<>
 
-```bash
+```sh
 az aks update -g $RG -n aks-cluster --outbound-type userAssignedNATGateway
 ```
 
-Now the NAT Gateway is configured for your AKS cluster.
+Check outbound egress traffic uses Nat Gateway public IP.
 
-![](images/resources.png)
+```sh
+kubectl exec nginx -it -- curl http://ifconf.me
+# 172.201.129.36
+```
 
->It takes about 6 minutes to update the KAS outboundType from Load Balancer to user NAT Gateway. The pods are able to egress traffic during this time.
+Test connection to web app hosted on the Azure VM within a peered VNET.
+First you need to get the VM's private IP.
+The VM hosts an Nginx web app displaying VM's name and private IP.
 
-> It takes few seconds to update the Subnet. During this time, pods are not able to egress traffic.
-
-Note the new IP address of the NAT Gateway used for egress/outbound traffic.
-
-Note that the Load Balancer and its public IP was deleted.
-
-![](images/deleted-lb.png)
+```sh
+kubectl exec nginx -it -- curl 10.0.1.4
+# Hello from virtual machine: vm-linux, with IP address: 10.0.1.4
+```
 
 ## Cleanup resources
 
-```bash
-az group delete -n $RG --yes --no-wait 
-```
+```sh
+az group delete -n $RG --yes --no-wait
+terraform destroy -auto-approve
+```sh

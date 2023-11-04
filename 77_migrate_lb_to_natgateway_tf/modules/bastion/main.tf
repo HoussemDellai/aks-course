@@ -10,11 +10,11 @@ resource "azurerm_bastion_host" "bastion" {
   name                   = "bastion-host"
   location               = var.location
   resource_group_name    = var.resource_group_name
-  sku                    = "Standard" # "Basic", Developer
+  sku                    = "Basic" # "Standard" # Developer
   copy_paste_enabled     = true
-  file_copy_enabled      = true
-  shareable_link_enabled = true
-  tunneling_enabled      = true
+  file_copy_enabled      = false
+  shareable_link_enabled = false
+  tunneling_enabled      = false
   ip_connect_enabled     = false
 
   ip_configuration {

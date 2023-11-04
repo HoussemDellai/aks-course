@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "rg-vm" {
-  name     = "rg-vm"
+  name     = "rg-vm-linux"
   location = "westeurope"
 }
 
@@ -58,4 +58,18 @@ resource "azurerm_virtual_network_peering" "vnet_peering_spoke_to_hub" {
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
   allow_gateway_transit        = false
+}
+
+resource "azurerm_resource_group" "rg-vm-in" {
+  name     = "rg-vm-linux-in"
+  location = "westeurope"
+}
+
+module "vm-linux-in" {
+  source              = "./modules/vm_linux"
+  vm_name             = "vm-linux-in"
+  resource_group_name = azurerm_resource_group.rg-vm-in.name
+  location            = azurerm_resource_group.rg-vm-in.location
+  subnet_id           = azurerm_subnet.subnet.id
+  install_webapp      = true
 }

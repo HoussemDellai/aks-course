@@ -15,14 +15,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count     = 3
     vm_size        = "Standard_B2s_v2"
     vnet_subnet_id = azurerm_subnet.subnet.id
-    # pod_subnet_id  = azurerm_subnet.subnet.id
     zones          = [1, 2, 3]
   }
 
   network_profile {
     network_plugin    = "azure"
     load_balancer_sku = "standard"
-    outbound_type     = "userAssignedNATGateway" # "loadBalancer"
+    outbound_type     = "loadBalancer" # "userAssignedNATGateway" # 
   }
 
   identity {
