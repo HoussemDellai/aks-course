@@ -25,7 +25,7 @@ az aks get-credentials -g $RG -n aks-cluster --overwrite-existing
 kubectl run nginx --image=nginx
 sleep 10
 kubectl exec nginx -it -- curl http://ifconf.me
-# 20.160.240.183
+# 51.124.10.228
 
 # Update AKS subnet to use Nat Gateway
 
@@ -38,7 +38,7 @@ az aks update -g $RG -n aks-cluster --outbound-type userAssignedNATGateway
 # check outbound egress traffic uses Nat Gateway public IP
 
 kubectl exec nginx -it -- curl http://ifconf.me
-# 172.201.129.36
+# 172.201.130.100
 
 # test connection to web app hosted on the Azure VM within a peered VNET
 
