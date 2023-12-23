@@ -20,3 +20,8 @@ resource "azurerm_nat_gateway_public_ip_association" "association" {
   nat_gateway_id       = azurerm_nat_gateway.nat-gateway.id
   public_ip_address_id = azurerm_public_ip.pip.id
 }
+
+# resource "azurerm_subnet_nat_gateway_association" "subnet_natgw" {
+#   subnet_id      = azurerm_subnet.subnet.id
+#   nat_gateway_id = azurerm_nat_gateway.nat-gateway.id
+# }

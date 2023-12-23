@@ -1,0 +1,10 @@
+# https://learn.microsoft.com/en-us/azure/aks/coredns-custom
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-custom
+  namespace: kube-system
+data:  
+  log.override: | # any name end with the .override extension
+    log

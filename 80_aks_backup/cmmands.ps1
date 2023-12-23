@@ -16,7 +16,7 @@ $AKS_RG_02="rg-aks-2"
 $VAULT_NAME="backup-vault"
 $VAULT_RG="rg-backup-vault"
 
-$SA_NAME="storage4aks1backup1357"
+$SA_NAME="storage4aks1backup13"
 $SA_RG="rg-backup-storage"
 $BLOB_CONTAINER_NAME="aks-backup"
 $SUBSCRIPTION_ID=$(az account list --query [?isDefault].id -o tsv)
@@ -48,9 +48,11 @@ az storage container create `
 
 # 4. Create first AKS cluster with CSI Disk Driver and Snapshot Controller
 
+az aks get-versions -l westeurope -o table
+
 az group create --name $AKS_RG_01 --location westeurope
 
-az aks create -g $AKS_RG_01 -n $AKS_NAME_01 -k "1.25.5" --zones 1 2 3
+az aks create -g $AKS_RG_01 -n $AKS_NAME_01 -k "1.27.3" --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
 
 # Verify that CSI Disk Driver and Snapshot Controller are installed
 
@@ -63,7 +65,7 @@ az aks show -g $AKS_RG_01 -n $AKS_NAME_01 --query storageProfile
 
 az group create --name $AKS_RG_02 --location westeurope
 
-az aks create -g $AKS_RG_02 -n $AKS_NAME_02 -k "1.25.5" --zones 1 2 3
+az aks create -g $AKS_RG_02 -n $AKS_NAME_02 -k "1.27.3" --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
 
 # Verify that CSI Disk Driver and Snapshot Controller are installed
 
