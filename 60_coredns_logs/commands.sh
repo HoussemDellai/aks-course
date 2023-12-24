@@ -1,3 +1,5 @@
+# Enable logging DNS queries in CoreDNS
+
 # create an AKS cluster
 
 $AKS_RG="rg-aks-cluster-dns-logs"
@@ -23,9 +25,6 @@ kubectl exec -it nginx -- nslookup microsoft.com
 # check CoreDNS logs
 
 kubectl get pods -n kube-system -l k8s-app=kube-dns
-# NAME                      READY   STATUS    RESTARTS   AGE
-# coredns-789789675-5mq2l   1/1     Running   0          5m11s
-# coredns-789789675-j55lz   1/1     Running   0          5m39s
 
 kubectl logs coredns-789789675-5mq2l -n kube-system
 
@@ -36,52 +35,10 @@ kubectl logs coredns-789789675-j55lz -n kube-system
 # Is logging enabled in CoreDNS ?
 
 kubectl get configmap -n kube-system -l k8s-app=kube-dns
-# NAME             DATA   AGE
-# coredns          1      4m18s
-# coredns-custom   0      4m25s
 
 kubectl describe configmap coredns -n kube-system
-# Name:         coredns
-# Namespace:    kube-system
-# Labels:       addonmanager.kubernetes.io/mode=Reconcile
-#               k8s-app=kube-dns
-#               kubernetes.io/cluster-service=true
-# Annotations:  <none>
-
-# Data
-# ====
-# Corefile:
-# ----
-# .:53 {
-#     errors
-#     ready
-#     health {
-#       lameduck 5s
-#     }
-#     kubernetes cluster.local in-addr.arpa ip6.arpa {
-#       pods insecure
-#       fallthrough in-addr.arpa ip6.arpa
-#       ttl 30
-#     }
-#     prometheus :9153
-#     forward . /etc/resolv.conf
-#     cache 30
-#     loop
-#     reload
-#     loadbalance
-#     import custom/*.override
-# }
-# import custom/*.server
-
-
-# BinaryData
-# ====
-
-# Events:  <none>
 
 kubectl describe cm coredns-custom -n kube-system
-# Data
-# ====
 
 # enable logging for CoreDNS
 

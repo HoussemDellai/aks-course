@@ -27,7 +27,7 @@ kubectl logs -n kube-system -l k8s-app=kube-dns
 
 kubectl get configmap container-azm-ms-aks-k8scluster -n kube-system -o yaml
 
-kubectl get configmap container-azm-ms-agentconfig -n kube-system -o yaml
+kubectl get configmap ama-logs-rs-config -n kube-system -o yaml
 
 # apply custom configuration for the log analytics agent
 
@@ -46,3 +46,4 @@ kubectl get pods -n kube-system -l component=ama-logs-agent
 
 # check the logs from kube-system namespace in Log Analytics
 
+kubectl get ds -n kube-system -l component=ama-logs-agent -o yaml
