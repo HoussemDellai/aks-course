@@ -1,22 +1,21 @@
 $AKS_NAME = "aks-cluster"
-$AKS_RG = "rg-aks-cluster"
+$AKS_RG = "rg-aks-cluster-egress-gw"
 $NODEPOOL_NAME = "npegress"
 $IDENTITY_NAME = "identity-egress-gateway"
 
 az group create --name $AKS_RG --location westeurope
 
-az aks create -g $AKS_RG -n $AKS_NAME --network-plugin azure -k "1.28.3" --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
+az aks create -g $AKS_RG -n $AKS_NAME --network-plugin azure -k "1.28.3" # --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
 
 az aks nodepool add -g $AKS_RG --cluster-name $AKS_NAME --name $NODEPOOL_NAME
 
-az aks get-credentials -g $AKS_RG -n $AKS_NAME
+az aks get-credentials -g $AKS_RG -n $AKS_NAME --overwrite-existing
 
 kubectl taint nodes -l agentpool=$NODEPOOL_NAME kubeegressgateway.azure.com/mode=true:NoSchedule
 
 kubectl label nodes -l agentpool=$NODEPOOL_NAME kubeegressgateway.azure.com/mode=true
 
 az aks nodepool update -g $AKS_RG --cluster-name $AKS_NAME --name $NODEPOOL_NAME --disable-cluster-autoscaler
-
 
 # Use UserAssigned Managed Identity
 
@@ -78,7 +77,7 @@ git clone https://github.com/Azure/kube-egress-gateway.git
 
 # To install kube-egress-gateway, you may run below helm command:
 
-helm install `
+helm upgrade --install `
   kube-egress-gateway ./kube-egress-gateway/helm/kube-egress-gateway `
   --namespace kube-egress-gateway-system `
   --create-namespace `
