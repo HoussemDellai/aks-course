@@ -1,5 +1,7 @@
 # Karpenter for AKS
 
+![](images/architecture.png)
+
 ```sh
 $AKS_RG="rg-aks-cluster-karpenter"
 $AKS_NAME="aks-cluster"
