@@ -1,16 +1,16 @@
 variable "resources_location" {
   type    = string
-  default = "westeurope"
+  default = "swedencentral"
 }
 
 variable "rg_aks_cluster" {
   type    = string
-  default = "rg-aks-cluster"
+  default = "rg-aks-cluster-swc"
 }
 
 variable "rg_monitoring" {
   type    = string
-  default = "rg-monitoring"
+  default = "rg-monitoring-swc"
 }
 
 variable "aks_name" {
@@ -20,7 +20,7 @@ variable "aks_name" {
 
 variable "grafana_name" {
   type    = string
-  default = "azure-grafana-13579"
+  default = "azure-grafana-aks"
 }
 
 variable "prometheus_name" {

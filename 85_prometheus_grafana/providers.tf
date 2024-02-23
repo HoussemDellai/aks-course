@@ -6,18 +6,18 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 3.50.0"
+      version = "= 3.93.0"
     }
 
     azuread = {
       source  = "hashicorp/azuread"
-      version = "= 2.36.0"
+      version = "= 2.47.0"
     }
 
-    azapi = {
-      source  = "Azure/azapi"
-      version = "1.4.0"
-    }
+    # azapi = {
+    #   source  = "Azure/azapi"
+    #   version = "1.12.1"
+    # }
   }
 }
 
@@ -29,6 +29,6 @@ provider "azurerm" {
 provider "azuread" { # default takes current user/identity tenant
 }
 
-provider "azapi" {
-  # Configuration options
-}
+# provider "azapi" {
+#   # Configuration options
+# }
