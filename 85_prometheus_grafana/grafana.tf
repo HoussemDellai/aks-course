@@ -14,9 +14,8 @@ resource "azurerm_dashboard_grafana" "grafana" {
   }
 
   identity {
-    type = "SystemAssigned"
-    # type = "UserAssigned"
-    # identity_ids = [azurerm_user_assigned_identity.grafana.id]
+    type         = "SystemAssigned" # "UserAssigned" # 
+    # identity_ids = [azurerm_user_assigned_identity.identity-grafana.id]
   }
 }
 
@@ -31,7 +30,7 @@ resource "azurerm_role_assignment" "role_grafana_admin" {
 resource "azurerm_role_assignment" "role_monitoring_data_reader" {
   scope                = azurerm_monitor_workspace.prometheus.id
   role_definition_name = "Monitoring Data Reader"
-  principal_id         = azurerm_dashboard_grafana.grafana.identity.0.principal_id
+  principal_id         = azurerm_dashboard_grafana.grafana.identity.0.principal_id # azurerm_user_assigned_identity.identity-grafana.principal_id # 
 }
 
 data "azurerm_subscription" "current" {}
@@ -39,5 +38,11 @@ data "azurerm_subscription" "current" {}
 resource "azurerm_role_assignment" "role_monitoring_reader" {
   scope                = data.azurerm_subscription.current.id
   role_definition_name = "Monitoring Reader"
-  principal_id         = azurerm_dashboard_grafana.grafana.identity.0.principal_id
+  principal_id         = azurerm_dashboard_grafana.grafana.identity.0.principal_id # azurerm_user_assigned_identity.identity-grafana.principal_id # 
 }
+
+# resource "azurerm_user_assigned_identity" "identity-grafana" {
+#   name                = "identity-grafana"
+#   resource_group_name = azurerm_resource_group.rg_monitoring.name
+#   location            = azurerm_resource_group.rg_monitoring.location
+# }

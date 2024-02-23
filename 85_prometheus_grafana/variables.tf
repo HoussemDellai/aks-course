@@ -20,7 +20,7 @@ variable "aks_name" {
 
 variable "grafana_name" {
   type    = string
-  default = "azure-grafana-aks"
+  default = "azure-grafana-swc"
 }
 
 variable "prometheus_name" {

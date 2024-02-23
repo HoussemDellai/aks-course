@@ -3,7 +3,7 @@
 
 #   provisioner "local-exec" {
 #     when        = create
-#     # interpreter = ["C:\\Program Files\\Git\\git-bash.exe", "-c"]
+#     interpreter = ["C:\\Program Files\\Git\\git-bash.exe", "-c"]
 #     command     = "az grafana dashboard import --name ${azurerm_dashboard_grafana.grafana.name} --resource-group ${azurerm_dashboard_grafana.grafana.resource_group_name} --definition \"https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/grafana/dashboards/nginx.json\""
 #   }
 # }
