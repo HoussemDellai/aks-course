@@ -2,7 +2,7 @@ resource "azurerm_monitor_workspace" "prometheus" {
   name                          = var.prometheus_name
   resource_group_name           = azurerm_resource_group.rg_monitoring.name
   location                      = azurerm_resource_group.rg_monitoring.location
-  public_network_access_enabled = true # false # true
+  public_network_access_enabled = false # false # true
 }
 
 resource "azurerm_role_assignment" "role_monitoring_data_reader_me" {

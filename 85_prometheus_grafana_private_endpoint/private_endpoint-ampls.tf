@@ -1,7 +1,7 @@
 resource "azurerm_private_endpoint" "pe-ampls" {
-  name                = "private-endpoint-ampls"
-  resource_group_name = azurerm_monitor_workspace.prometheus.resource_group_name
-  location            = azurerm_monitor_workspace.prometheus.location
+  name                = "pe-ampls"
+  resource_group_name = azurerm_virtual_network.vnet.resource_group_name
+  location            = azurerm_virtual_network.vnet.location
   subnet_id           = azurerm_subnet.snet-pe.id
 
   private_service_connection {

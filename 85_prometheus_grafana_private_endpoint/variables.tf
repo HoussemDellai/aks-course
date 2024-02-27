@@ -5,22 +5,22 @@ variable "resources_location" {
 
 variable "rg_aks_cluster" {
   type    = string
-  default = "rg-aks-cluster2"
+  default = "rg-aks-cluster"
 }
 
 variable "rg_monitoring" {
   type    = string
-  default = "rg-monitoring2"
+  default = "rg-monitoring"
 }
 
 variable "aks_name" {
   type    = string
-  default = "aks-cluster2"
+  default = "aks-cluster"
 }
 
 variable "grafana_name" {
   type    = string
-  default = "azure-grafana-15"
+  default = "azure-grafana-17"
 }
 
 variable "prometheus_name" {

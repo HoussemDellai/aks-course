@@ -1,8 +1,8 @@
-resource "azurerm_monitor_data_collection_rule" "dcr" {
+resource "azurerm_monitor_data_collection_rule" "dcr-prometheus" {
   name                        = "dcr-prometheus"
   resource_group_name         = azurerm_resource_group.rg_monitoring.name
   location                    = azurerm_resource_group.rg_monitoring.location
-  data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.dce.id
+  data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.dce-prometheus.id
   kind                        = "Linux"
 
   data_sources {
@@ -26,8 +26,8 @@ resource "azurerm_monitor_data_collection_rule" "dcr" {
 }
 
 # associate to a Data Collection Rule
-resource "azurerm_monitor_data_collection_rule_association" "dcr-aks" {
-  name                    = "dcr-aks"
+resource "azurerm_monitor_data_collection_rule_association" "dcr-aks-prometheus" {
+  name                    = "dcr-aks-prometheus"
   target_resource_id      = azurerm_kubernetes_cluster.aks.id
-  data_collection_rule_id = azurerm_monitor_data_collection_rule.dcr.id
+  data_collection_rule_id = azurerm_monitor_data_collection_rule.dcr-prometheus.id
 }
