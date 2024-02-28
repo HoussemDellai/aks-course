@@ -1,3 +1,13 @@
+locals {
+  dns_zones_ampls = [
+    "privatelink.monitor.azure.com",
+    "privatelink.oms.opinsights.azure.com",
+    "privatelink.ods.opinsights.azure.com",
+    "privatelink.agentsvc.azure-automation.net",
+    "privatelink.blob.core.windows.net"
+  ]
+}
+
 resource "azurerm_private_endpoint" "pe-ampls" {
   name                = "pe-ampls"
   resource_group_name = azurerm_virtual_network.vnet.resource_group_name
@@ -13,27 +23,12 @@ resource "azurerm_private_endpoint" "pe-ampls" {
 
   private_dns_zone_group {
     name                 = "private-dns-zone"
-    private_dns_zone_ids = [ for zone in azurerm_private_dns_zone.zones : zone.id ]
+    private_dns_zone_ids = [for zone in azurerm_private_dns_zone.zones : zone.id]
   }
 }
 
-output "zone_id" {
-  value = [ for zone in azurerm_private_dns_zone.zones : zone.id ]
-}
-
-variable "dns_zones_ampls" {
-  type = list(string)
-  default = [
-    "privatelink.monitor.azure.com",
-    "privatelink.oms.opinsights.azure.com",
-    "privatelink.ods.opinsights.azure.com",
-    "privatelink.agentsvc.azure-automation.net",
-    "privatelink.blob.core.windows.net"
-  ]
-}
-
 resource "azurerm_private_dns_zone" "zones" {
-  for_each            = toset(var.dns_zones_ampls)
+  for_each            = toset(local.dns_zones_ampls)
   name                = each.value
   resource_group_name = azurerm_resource_group.rg_monitoring.name
 }
