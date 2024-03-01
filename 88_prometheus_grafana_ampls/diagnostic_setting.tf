@@ -24,7 +24,7 @@ resource "azurerm_monitor_diagnostic_setting" "rule" {
   name                           = "diagnostic-setting"
   target_resource_id             = each.value.id
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.id
-  log_analytics_destination_type = "AzureDiagnostics"
+  log_analytics_destination_type = "Dedicated" # "AzureDiagnostics"
 
   dynamic "enabled_log" {
     iterator = entry

@@ -1,11 +1,11 @@
 resource "azurerm_log_analytics_workspace" "workspace" {
   name                       = "log-analytics-workspace"
-  resource_group_name        = azurerm_resource_group.rg_monitoring.name
-  location                   = var.resources_location
+  resource_group_name        = azurerm_resource_group.rg.name
+  location                   = azurerm_resource_group.rg.location
   sku                        = "PerGB2018" # PerGB2018, Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation
   retention_in_days          = 30          # possible values are either 7 (Free Tier only) or range between 30 and 730
   internet_ingestion_enabled = false
-  internet_query_enabled     = true
+  internet_query_enabled     = false
 }
 
 # resource "azurerm_log_analytics_solution" "solution" {

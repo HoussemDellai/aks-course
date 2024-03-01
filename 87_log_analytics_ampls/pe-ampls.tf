@@ -10,8 +10,8 @@ locals {
 
 resource "azurerm_private_endpoint" "pe-ampls" {
   name                = "pe-ampls"
-  resource_group_name = azurerm_virtual_network.vnet.resource_group_name
-  location            = azurerm_virtual_network.vnet.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   subnet_id           = azurerm_subnet.snet-pe.id
 
   private_service_connection {
@@ -30,7 +30,7 @@ resource "azurerm_private_endpoint" "pe-ampls" {
 resource "azurerm_private_dns_zone" "zones" {
   for_each            = toset(local.dns_zones_ampls)
   name                = each.value
-  resource_group_name = azurerm_resource_group.rg_monitoring.name
+  resource_group_name = azurerm_resource_group.rg.name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "link" {

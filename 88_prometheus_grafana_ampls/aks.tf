@@ -1,7 +1,7 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = var.aks_name
-  location            = azurerm_resource_group.rg_aks_cluster.location
-  resource_group_name = azurerm_resource_group.rg_aks_cluster.name
+  name                = "aks-cluster"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks"
   kubernetes_version  = "1.28.5" # "1.29.0"
 
@@ -13,13 +13,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name           = "systempool"
-    node_count     = "3"
+    node_count     = 3
     vm_size        = "standard_b2als_v2"
     vnet_subnet_id = azurerm_subnet.snet-aks.id
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned" # "SystemAssigned"
+    identity_ids = [azurerm_user_assigned_identity.identity-aks.id]
   }
 
   oms_agent {
