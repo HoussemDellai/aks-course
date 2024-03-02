@@ -13,6 +13,11 @@ terraform {
       source  = "hashicorp/azuread"
       version = "= 2.47.0"
     }
+
+    azapi = {
+      source  = "Azure/azapi"
+      version = "1.12.1"
+    }
   }
 }
 
@@ -22,4 +27,8 @@ provider "azurerm" {
 
 # Configure the Azure Active Directory Provider
 provider "azuread" { # default takes current user/identity tenant
+}
+
+provider "azapi" {
+  # Configuration options
 }
