@@ -12,7 +12,6 @@ locals {
 }
 
 data "azurerm_monitor_diagnostic_categories" "resources" {
-  #   for_each = [azurerm_kubernetes_cluster.aks.id]
   for_each = { for resource in local.resources : resource.type => resource }
 
   resource_id = each.value.id

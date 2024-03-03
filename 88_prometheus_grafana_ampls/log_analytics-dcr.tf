@@ -6,20 +6,19 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
 
   destinations {
     log_analytics {
-      name                  = "log_analytics"
+      name                  = "log-analytics"
       workspace_resource_id = azurerm_log_analytics_workspace.workspace.id
     }
   }
 
   data_flow {
     streams      = ["Microsoft-ContainerInsights-Group-Default"]
-    destinations = ["log_analytics"]
+    destinations = ["log-analytics"]
   }
 
   data_sources {
     syslog {
-      name = "example-syslog"
-      #   streams = ["Microsoft-Syslog"]
+      name = "demo-syslog"
       facility_names = [
         "*"
       ]

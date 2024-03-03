@@ -35,10 +35,6 @@ resource "azurerm_windows_virtual_machine" "vm" {
     sku       = "win11-23h2-pro"
     version   = "latest"
   }
-
-  # boot_diagnostics {
-  #   storage_account_uri = null
-  # }
 }
 
 # resource "azurerm_virtual_machine_extension" "cloudinit" {

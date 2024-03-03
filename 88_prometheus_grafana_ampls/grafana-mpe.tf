@@ -11,7 +11,7 @@ resource "azapi_resource" "mpe-grafana" {
       privateLinkResourceId : azurerm_monitor_workspace.prometheus.id,
       privateLinkResourceRegion : azurerm_dashboard_grafana.grafana.location,
       groupIds : [ "prometheusMetrics" ],
-      requestMessage : ""
+      requestMessage : "Please approve for Grafana to connect to Prometheus"
     }
   })
 }
