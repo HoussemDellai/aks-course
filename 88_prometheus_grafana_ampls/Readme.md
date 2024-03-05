@@ -12,7 +12,7 @@ It will use `Azure Monitor Private Link Scope (AMPLS)`.
 
 ## Architecture
 
-![](images\architecture.png)
+![](images/architecture.png)
 
 ## Deploying the resources using Terraform
 
