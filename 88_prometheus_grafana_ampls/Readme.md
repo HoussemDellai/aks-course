@@ -1,21 +1,18 @@
-# Using Azure Grafana and Prometheus workspace in AKS using Terraform
+# Private Azure Grafana, Prometheus and Log Analytics with AKS
 
 ## Introduction
 
-This lab shows how to use Terraform to provision an AKS cluster, Grafana and Monitor Workspace for Prometheus. All configured together to collect metrics from the cluster and expose it through Grafana dashboard.
+With AKS, you can use `Azure Monitor Workspace for Prometheus` and `Azure Managed Grafana` to collect, query and visualize the metrics from AKS.
+And to collect logs, you can use `Azure Log Analytics`.
+These three resources comes with public endpoints, by default.
+However, some customers requires all resources to be exposed only on private endpoints.
 
-![](images\85_prometheus_grafana__architecture.png)
+This lab will provide a private implementation for monitoring and logging.
+It will use `Azure Monitor Private Link Scope (AMPLS)`.
 
-## Challenges
+## Architecture
 
-Azure Monitor Workspace for Prometheus is a new service (in preview).
-It is not yet supported with ARM template or with Terraform resource.
-
-So, we'll use `azapi` terraform provider to create the Monitor Workspace for Prometheus.
-
-And we'll use a `local-exec` to run a command line to configure AKS with Prometheus.
-
-AKS, Grafana and Log Analytics are suported with ARM templates and Terraform.
+![](images\architecture.png)
 
 ## Deploying the resources using Terraform
 
