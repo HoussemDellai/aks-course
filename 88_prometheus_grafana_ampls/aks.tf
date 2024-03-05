@@ -35,9 +35,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   lifecycle {
     ignore_changes = [
-      # monitor_metrics,
       default_node_pool.0.upgrade_settings,
-      # default_node_pool.0.upgrade_settings.0.max_surge,
     ]
   }
 }
