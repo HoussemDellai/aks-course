@@ -12,26 +12,16 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
   }
 
   data_flow {
-    streams      = ["Microsoft-ContainerInsights-Group-Default"]
+    streams      = ["Microsoft-ContainerInsights-Group-Default", "Microsoft-Syslog"]
     destinations = ["log-analytics"]
   }
 
   data_sources {
     syslog {
       name = "demo-syslog"
-      facility_names = [
-        "*"
-      ]
-      log_levels = [
-        "Debug",
-        "Info",
-        "Notice",
-        "Warning",
-        "Error",
-        "Critical",
-        "Alert",
-        "Emergency",
-      ]
+      facility_names = [ "*" ]
+      log_levels = ["Debug", "Info", "Notice", "Warning", "Error", "Critical", "Alert", "Emergency", ]
+      streams = [ "Microsoft-Syslog" ]
     }
     extension {
       extension_name = "ContainerInsights"
@@ -42,7 +32,9 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
           dataCollectionSettings = {
             enableContainerLogV2   = true
             interval               = "1m"
-            namespaceFilteringMode = "Off"
+            namespaceFilteringMode = "Include" # "Exclude" "Off"
+            namespaces = ["kube-system", "default"]
+            enableContainerLogV2   = true
           }
         }
       )
@@ -50,7 +42,6 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
   }
 }
 
-# associate to a Data Collection Rule
 resource "azurerm_monitor_data_collection_rule_association" "dcra-dcr-log-analytics-aks" {
   name                    = "dcra-dcr-log-analytics-aks"
   target_resource_id      = azurerm_kubernetes_cluster.aks.id
