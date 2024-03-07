@@ -1,4 +1,4 @@
-output "query_endpoint" {
+output "prometheus_query_endpoint" {
   value = azurerm_monitor_workspace.prometheus.query_endpoint
 }
 
