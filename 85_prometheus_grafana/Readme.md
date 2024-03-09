@@ -23,6 +23,10 @@ terraform plan -out tfplan
 terraform apply tfplan
 ```
 
+The following resources will be created.
+
+![](images/resources.png)
+
 ## Cleanup resources
 
 To delete the creates resources, run the following command:
