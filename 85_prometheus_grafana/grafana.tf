@@ -2,11 +2,11 @@ resource "azurerm_dashboard_grafana" "grafana" {
   name                              = "azure-grafana-${var.prefix}"
   resource_group_name               = azurerm_resource_group.rg.name
   location                          = azurerm_resource_group.rg.location
+  sku                               = "Standard"
+  grafana_major_version             = "10"
+  zone_redundancy_enabled           = false
   api_key_enabled                   = true
   deterministic_outbound_ip_enabled = true
-  sku                               = "Standard"
-  zone_redundancy_enabled           = false
-  grafana_major_version             = "10" # 9
   public_network_access_enabled     = true
 
   azure_monitor_workspace_integrations {

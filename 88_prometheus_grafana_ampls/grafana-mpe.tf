@@ -9,7 +9,7 @@ resource "azapi_resource" "mpe-grafana" {
   body = jsonencode({
     properties = {
       privateLinkResourceId : azurerm_monitor_workspace.prometheus.id,
-      privateLinkResourceRegion : azurerm_dashboard_grafana.grafana.location,
+      privateLinkResourceRegion : azurerm_monitor_workspace.prometheus.location,
       groupIds : ["prometheusMetrics"],
       requestMessage : "Please approve for Grafana to connect to Prometheus"
     }
@@ -25,7 +25,7 @@ data "azapi_resource_list" "mpe-grafana" {
 
 # Retrieve the Grafana's Managed Private Endpoint ID
 locals {
-  mpe-grafana-id = element([for pe in jsondecode(data.azapi_resource_list.mpe-grafana.output).value : pe.id if strcontains(pe.id, azapi_resource.mpe-grafana.name)], 0)
+  mpe-grafana-id = element([for pe in jsondecode(data.azapi_resource_list.mpe-grafana.output).value : pe.id if pe.properties.privateLinkServiceConnectionState.status == "Pending"], 0) # strcontains(pe.id, azapi_resource.mpe-grafana.name)], 0)
 }
 
 # Approve Grafana's Managed Private Endpoint connection to Prometheus

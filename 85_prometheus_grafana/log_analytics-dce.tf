@@ -1,3 +1,4 @@
+# not required
 resource "azurerm_monitor_data_collection_endpoint" "dce-log-analytics" {
   name                          = "dce-log-analytics"
   resource_group_name           = azurerm_resource_group.rg.name
@@ -6,7 +7,7 @@ resource "azurerm_monitor_data_collection_endpoint" "dce-log-analytics" {
   kind                          = "Linux"
 }
 
-# required
+# not required
 # associate to a Data Collection Endpoint
 # resource "azurerm_monitor_data_collection_rule_association" "dcra-dce-log-analytics-aks" {
 #   name                        = "configurationAccessEndpoint" # name is required when data_collection_rule_id is specified. And when data_collection_endpoint_id is specified, the name is populated with configurationAccessEndpoint
