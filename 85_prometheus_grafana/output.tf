@@ -30,6 +30,6 @@ output "dce-prometheus" {
   }
 }
 
-output "loganalytics" {
+output "log_analytics" {
   value = azurerm_log_analytics_workspace.workspace.workspace_id
 }
