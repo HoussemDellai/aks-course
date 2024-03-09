@@ -44,3 +44,6 @@ terraform.rc
 # ignore book
 **.pdf
 **.docx
+
+# ignore .infracost
+.infracost/*
