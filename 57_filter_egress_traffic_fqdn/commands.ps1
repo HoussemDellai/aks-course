@@ -11,14 +11,15 @@ az aks create -n $AKS_NAME -g $RG_NAME --network-plugin none
 az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing
 
 helm repo add cilium https://helm.cilium.io/
+helm repo update
 
-helm upgrade --install cilium cilium/cilium --version 1.14.2 `
+helm upgrade --install cilium cilium/cilium --version 1.15.1 `
   --namespace kube-system `
   --set aksbyocni.enabled=true `
   --set nodeinit.enabled=true `
   --set sctp.enabled=true `
   --set hubble.enabled=true `
-  --set hubble.metrics.enabled="{dns,drop,tcp,flow,icmp,http}" `
+  --set hubble.metrics.enabled="{dns,drop,tcp,flow,icmp,http,port-distribution,labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}" `
   --set hubble.relay.enabled=true `
   --set hubble.ui.enabled=true `
   --set hubble.ui.service.type=NodePort `
@@ -26,7 +27,7 @@ helm upgrade --install cilium cilium/cilium --version 1.14.2 `
   # --set gatewayAPI.enabled=true
 
 # Restart unmanaged Pods (required by new Cilium install)
-kubectl delete pods -A -all
+kubectl delete pods -A --all
 # kubectl get pods --all-namespaces -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,HOSTNETWORK:.spec.hostNetwork --no-headers=true | grep '<none>' | awk '{print "-n "$1" "$2}' | xaRG_NAMEs -L 1 -r kubectl delete pod
 
 # make sure cilium CLI is installed on your machine (https://github.com/cilium/cilium-cli/releases/tag/v0.15.0)
@@ -39,7 +40,7 @@ cilium status --wait
 cilium connectivity test
 
 # deploy sample online service, just to get public IP
-$FQDN=(az container create -g $RG_NAME -n aci-app --image nginx:latest --ports 80  --ip-address public --dns-name-label aci-app-931 --query ipAddress.fqdn --output tsv)
+$FQDN=(az container create -g $RG_NAME -n aci-app --image nginx:latest --ports 80 --ip-address public --dns-name-label aci-app-931 --query ipAddress.fqdn --output tsv)
 $FQDN
 # aci-app-931.westeurope.azurecontainer.io
 

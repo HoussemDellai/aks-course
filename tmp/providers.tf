@@ -8,11 +8,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "= 3.95.0"
     }
-
-    time = {
-      source  = "hashicorp/time"
-      version = "0.10.0"
-    }
   }
 }
 
@@ -20,6 +15,3 @@ provider "azurerm" {
   features {}
 }
 
-provider "time" {
-  # Configuration options
-}

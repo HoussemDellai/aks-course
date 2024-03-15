@@ -3,6 +3,7 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
   resource_group_name         = azurerm_resource_group.rg.name
   location                    = azurerm_resource_group.rg.location
   data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.dce-log-analytics.id
+  depends_on                  = [time_sleep.wait_60_seconds]
 
   destinations {
     log_analytics {
@@ -18,10 +19,10 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
 
   data_sources {
     syslog {
-      name = "demo-syslog"
-      facility_names = [ "*" ]
-      log_levels = ["Debug", "Info", "Notice", "Warning", "Error", "Critical", "Alert", "Emergency", ]
-      streams = [ "Microsoft-Syslog" ]
+      name           = "demo-syslog"
+      facility_names = ["*"]
+      log_levels     = ["Debug", "Info", "Notice", "Warning", "Error", "Critical", "Alert", "Emergency", ]
+      streams        = ["Microsoft-Syslog"]
     }
     extension {
       extension_name = "ContainerInsights"
@@ -33,13 +34,20 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
             enableContainerLogV2   = true
             interval               = "1m"
             namespaceFilteringMode = "Include" # "Exclude" "Off"
-            namespaces = ["kube-system", "default"]
+            namespaces             = ["kube-system", "default"]
             enableContainerLogV2   = true
           }
         }
       )
     }
   }
+}
+
+# DCR creation should be started about 60 seconds after the Log Analytics workspace is created
+# This is a workaround, could be fixed in the future
+resource "time_sleep" "wait_60_seconds" {
+  create_duration = "60s"
+  depends_on      = [azurerm_log_analytics_workspace.workspace]
 }
 
 resource "azurerm_monitor_data_collection_rule_association" "dcra-dcr-log-analytics-aks" {
