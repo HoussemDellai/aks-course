@@ -15,7 +15,7 @@ resource "azurerm_network_interface" "nic-vm-proxy" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.subnet-vm.id
+    subnet_id                     = azurerm_subnet.snet-aks.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip-vm-proxy.id
   }
@@ -33,7 +33,7 @@ resource "azurerm_linux_virtual_machine" "vm-proxy" {
   priority                        = "Spot"
   eviction_policy                 = "Deallocate"
 
-  custom_data = filebase64("./install-mitmproxy.sh")
+  # custom_data = filebase64("./install-mitmproxy.sh")
 
   os_disk {
     name                 = "os-disk-vm"
@@ -53,7 +53,49 @@ resource "azurerm_linux_virtual_machine" "vm-proxy" {
   }
 }
 
-output "vm_ublic_ip" {
+# nsg
+resource "azurerm_network_security_group" "nsg-vm-proxy" {
+  name                = "nsg-vm-proxy"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+# nsg rule
+resource "azurerm_network_security_rule" "nsg-allow-ssh" {
+  name                        = "nsg-allow-ssh"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.rg.name
+  network_security_group_name = azurerm_network_security_group.nsg-vm-proxy.name
+}
+
+resource "azurerm_network_security_rule" "nsg-allow-http" {
+  name                        = "nsg-allow-http"
+  priority                    = 110
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.rg.name
+  network_security_group_name = azurerm_network_security_group.nsg-vm-proxy.name
+}
+
+# attach nsg to NIC
+resource "azurerm_network_interface_security_group_association" "nsg-association-vm-proxy" {
+  network_interface_id      = azurerm_network_interface.nic-vm-proxy.id
+  network_security_group_id = azurerm_network_security_group.nsg-vm-proxy.id
+}
+
+output "vm_public_ip" {
   value = azurerm_public_ip.pip-vm-proxy.ip_address
 }
 

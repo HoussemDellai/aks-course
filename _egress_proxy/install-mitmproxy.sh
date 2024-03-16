@@ -18,7 +18,13 @@ pip3 install mitmproxy
 
 # mitmproxy --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false
 
-mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --certs *=cert.pem --set block_global=false
+sudo apt install wget -y
+
+wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/cert.pem'
+
+mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false --certs *=cert.pem
+
+# mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --certs *=cert.pem --set block_global=false
 
 # screen -d -m mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false
 
