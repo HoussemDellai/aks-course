@@ -14,7 +14,8 @@ resource "azurerm_container_group" "aci-mitmproxy" {
     commands = [
       "/bin/bash",
       "-c",
-      "apt update -y; apt install wget -y; wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/cert.pem'; mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false --certs *=cert.pem"
+      "mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false"
+      # "apt update -y; apt install wget -y; wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/cert.pem'; mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false --certs *=cert.pem"
     ]
 
     ports {

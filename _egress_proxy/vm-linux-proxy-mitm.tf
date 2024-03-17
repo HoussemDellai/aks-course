@@ -15,7 +15,7 @@ resource "azurerm_network_interface" "nic-vm-proxy" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.snet-aks.id
+    subnet_id                     = azurerm_subnet.snet-vm.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip-vm-proxy.id
   }
