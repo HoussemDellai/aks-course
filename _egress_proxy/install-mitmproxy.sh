@@ -2,8 +2,10 @@
 
 sudo apt update -y
 
+# wget https://downloads.mitmproxy.org/10.2.2/mitmproxy-10.2.2-linux-x86_64.tar.gz
 wget https://downloads.mitmproxy.org/10.2.4/mitmproxy-10.2.4-linux-x86_64.tar.gz
 
+# tar -xvf mitmproxy-10.2.2-linux-x86_64.tar.gz
 tar -xvf mitmproxy-10.2.4-linux-x86_64.tar.gz
 
 # # start the proxy
@@ -18,12 +20,12 @@ tar -xvf mitmproxy-10.2.4-linux-x86_64.tar.gz
 
 # mitmproxy --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false
 
-sudo apt install wget -y
+# sudo apt install wget -y
 
 wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca-cert.pem'
 wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca.pem'
 
-mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false --certs *=./mitmproxy-ca.pem --set confdir=./
+./mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false --certs *=./mitmproxy-ca.pem --set confdir=./
 
 # mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --certs *=cert.pem --set block_global=false
 

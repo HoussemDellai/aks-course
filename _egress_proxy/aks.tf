@@ -1,15 +1,16 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks-cluster"
+  name                = "aks-cluster129"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks"
-  kubernetes_version  = "1.29.0"
+  kubernetes_version  = "1.28.5" # "1.29.0"
 
   network_profile {
-    network_plugin      = "azure"
-    network_plugin_mode = "overlay"
-    ebpf_data_plane     = "cilium"
-    outbound_type       = "loadBalancer"
+    network_plugin      = "azure" # "kubenet"
+    # network_plugin_mode = "overlay"
+    # ebpf_data_plane     = "cilium"
+    # outbound_type       = "loadBalancer"
+    # pod_cidr            = "10.20.0.0/20"
   }
 
   default_node_pool {
@@ -24,10 +25,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   http_proxy_config {
-    http_proxy  = "http://${azurerm_public_ip.pip-vm-proxy.ip_address}:8080/" # "http://${azurerm_network_interface.nic-vm-proxy.private_ip_address}:8080/"  # "http://${azurerm_public_ip.pip-vm-proxy.ip_address}:8080/" # "http://${azurerm_container_group.aci-mitmproxy.ip_address}:8080/" # "http://20.76.37.30:8080/"
+    http_proxy  = "http://${azurerm_public_ip.pip-vm-proxy.ip_address}:8080/"  # "http://${azurerm_network_interface.nic-vm-proxy.private_ip_address}:8080/"  # "http://${azurerm_public_ip.pip-vm-proxy.ip_address}:8080/" # "http://${azurerm_container_group.aci-mitmproxy.ip_address}:8080/" # "http://20.76.37.30:8080/"
     https_proxy = "https://${azurerm_public_ip.pip-vm-proxy.ip_address}:8080/" # "https://${azurerm_network_interface.nic-vm-proxy.private_ip_address}:8080/" # "http://20.76.37.30:8080/"
-    no_proxy    = ["localhost", "127.0.0.1", "docker.io"]                                      #, azurerm_subnet.snet-aks.address_prefixes[0]]
-    trusted_ca  = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUQwekNDQXJ1Z0F3SUJBZ0lVRmc5N0RxL2tEYUNjQTgvcy83NnRuWUZjTENrd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2VURUxNQWtHQTFVRUJoTUNSbEl4RGpBTUJnTlZCQWdNQlZCaGNtbHpNUTR3REFZRFZRUUhEQVZRWVhKcApjekVOTUFzR0ExVUVDZ3dFWTI5eWNERVBNQTBHQTFVRUN3d0dkVzdEZ3pBeE1Rb3dDQVlEVlFRRERBRXFNUjR3CkhBWUpLb1pJaHZjTkFRa0JGZzlsYldGcGJFQmxiV0ZwYkM1amIyMHdIaGNOTWpRd016RTNNRFl6TkRFMFdoY04KTWpRd05ERTJNRFl6TkRFMFdqQjVNUXN3Q1FZRFZRUUdFd0pHVWpFT01Bd0dBMVVFQ0F3RlVHRnlhWE14RGpBTQpCZ05WQkFjTUJWQmhjbWx6TVEwd0N3WURWUVFLREFSamIzSndNUTh3RFFZRFZRUUxEQVoxYnNPRE1ERXhDakFJCkJnTlZCQU1NQVNveEhqQWNCZ2txaGtpRzl3MEJDUUVXRDJWdFlXbHNRR1Z0WVdsc0xtTnZiVENDQVNJd0RRWUoKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTWI4aEc3UlcvNGxqeUZaZ2dBM1A0YStjTHE3YmtJTAp3ZWNwbGsyZkx1M1dGSFhxdjZMS0Z1TXdWWVI2S0lScjNiVldRb0RUQ1FLN25sMVB2d2lhR2ozMGZqc1QzRmI4CkV4ZzdzdCtFSFMzWVJibm53WHB5N25wOHFSRUYwU0puQXhKMmV2V2tKQk1jSEJFTCtuU2ZMclJxSnAvVU52N0IKYzhtVlYyb29JTkZXZGNZSElaQ3JMUEMyc3NnSW42K2lLQkZmbDBPYVdZUkZPMUdRRkg2N0s0NC9jVnlVRVFQTApaYTlXNy92bzlqOVY1QThvaXFXa2F4OTdPTHN5TzVSQlJCV0kwVmZCRzUxT0FXVld2N3BqWU50NUlSNW5XelBnCkpiS1FNL0w2d0pOWlBNbVF1YUdlSVA1MkFZSjJDQk9mL3FyaVFMOHNUSjY0WEVoNGcreHNLRXNDQXdFQUFhTlQKTUZFd0hRWURWUjBPQkJZRUZPa1pMMEhmSzRmT1FkMlJUZURDUTBaVFUvYUJNQjhHQTFVZEl3UVlNQmFBRk9rWgpMMEhmSzRmT1FkMlJUZURDUTBaVFUvYUJNQThHQTFVZEV3RUIvd1FGTUFNQkFmOHdEUVlKS29aSWh2Y05BUUVMCkJRQURnZ0VCQUkwR2VwOEo5YXlQbmxiUm5XSFFRcE45NHhVdVNuU3kwaEVGYlNzeXlBNE5RRmhVcDNjZU5ES1AKZjRCMW1zNnAwVnRNWmhiTDhaOUJmVmlsQ1B0TnhVc0p4OEVvdGdWSE9Ncm1abTlKei9SK0pnRHBQZlhTYUNoQgorZlhucUJROUZqaXU4SUlXMkxKTTJ3ZVRXMnBoWnFsMUpBT1JsRDcwTnlKdXlOVk9ScWc3aUp4SjhGZHI5KzNnClF4TlllNE5pcnFnSzh5dzErQU4xR1hCeklLV0dVT25jRlIzUWhaSWlXMHBQOEx5cjFoODZNV3gxQ0xIb3daT0YKTjZscFpZK0Rpa0o2bGFHK0JLSGZwOFJjVFdrclM3V3pZYldScHVjTlZKZlliZ1VwaVhMcGlQSjR6VjZhM1UyeQpwcTgva29WMS9KQ2tQeEN0UEw0RnhYeVhPWUdqb0dZPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+    no_proxy    = ["localhost", "127.0.0.1", "docker.io"]                      #, azurerm_subnet.snet-aks.address_prefixes[0]]
+    trusted_ca  = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURnekNDQW11Z0F3SUJBZ0lVUzJTOHNMblQ1bi8vNkM3QTErMG01WXJUejhRd0RRWUpLb1pJaHZjTkFRRUwKQlFBd1VURUxNQWtHQTFVRUJoTUNSbEl4RXpBUkJnTlZCQWdNQ2xOdmJXVXRVM1JoZEdVeElUQWZCZ05WQkFvTQpHRWx1ZEdWeWJtVjBJRmRwWkdkcGRITWdVSFI1SUV4MFpERUtNQWdHQTFVRUF3d0JLakFlRncweU5EQXpNVFl3Ck9UUTVNemxhRncweU5EQTBNVFV3T1RRNU16bGFNRkV4Q3pBSkJnTlZCQVlUQWtaU01STXdFUVlEVlFRSURBcFQKYjIxbExWTjBZWFJsTVNFd0h3WURWUVFLREJoSmJuUmxjbTVsZENCWGFXUm5hWFJ6SUZCMGVTQk1kR1F4Q2pBSQpCZ05WQkFNTUFTb3dnZ0VpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElCRHdBd2dnRUtBb0lCQVFDWjVsUncvZFVlCkJsNXFjSzZSUUUrM1RwdTV5bWgxZDVDR0RwYkt2RDZ0djUwRjc5Y0JuUDJYODJ4aVJWU2R2TXJYZEx4MWJkek4KMVBnbjY4cVloSHVSOSt6TVdUN2VZUUtMZi9FYm9mSUEzbWhhS0xsVXFnTjNIRTNaMDU0RUdkQ0RrTlB3c3QyUAp6ckdBM3dVeDJyYkhXRzRpcC9SN1MvN0hIamtHdWh4QXFYZEdUM1BZdnBvKzh6RGVVeTdVRUxWYXg5VS9zdUFOCmhOMktweWxUZThLQmNVNnNFclNjUjdxYU8xLzdJYmVFRW9oQXhpblJ5SFQzaHJQZlY3WktjR0Q3NWtZUkJyRUMKWUdVL203bUsyeDJwek4zNmpad012ckxWZ3dkQkFieHpTSkxFSkR2YlVBWmZZalg3Y2w2SDNqL3ozYW1sTVdMbgpvU2NBeStkVTBFVkRBZ01CQUFHalV6QlJNQjBHQTFVZERnUVdCQlN1Y2VBWXQ2NE96Wk1XUXp3Q3BvZWVvRHk4ClVEQWZCZ05WSFNNRUdEQVdnQlN1Y2VBWXQ2NE96Wk1XUXp3Q3BvZWVvRHk4VURBUEJnTlZIUk1CQWY4RUJUQUQKQVFIL01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQkswdFdybDZ3b1dDUCs1bS81VWx4SWl3MnE2d1QvdVQwVgpCR2J5QllYTGZKcms5L1lXQVBZR05yaFdmekhVQU8vaEIrbVY5TDU2UlU3NHAvYk51MXdqdGZuT0phRjl5YmUwCmhyMFNsaDlkdFdvRnBHeFVzMGlFVVFHNmhEVzM5bDg2TTlweVJ6NFYrWjVGVHMvMEkya2NTUk1ySk9PZk5JZm4KMkJiVSs4Z1FUV0U5L3gvcThOcWJocUZxSUQybkZXWjl4aUlvWG1GSmt5T3hNeU1ZS2RyTERERUlHa2ZEWHhqNQphUHp1Y3l4S0ZBVzNtbWEwd1Y3WEZFdE8yYjVDMkh1YjdEN2RlbDBkSzFmZUsveWR6Z2szaTdIREFvaFZKSFlLCmZxVzVZWlpNMjkyLzY1VThPaWJmNmtjYTNZOGRFTFRPYzkxRUdPdkt2SVBJQVQvdTFFTmgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
   }
 
   # http_proxy_config {

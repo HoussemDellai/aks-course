@@ -10,4 +10,4 @@ cat cert.key mitmproxy-ca-cert.pem > mitmproxy-ca.pem
 openssl pkcs12 -export -inkey cert.key -in mitmproxy-ca-cert.pem -out mitmproxy-ca-cert.p12
 
 
-cat cert.pem | base64 -w0
+cat mitmproxy-ca-cert.pem | base64 -w0
