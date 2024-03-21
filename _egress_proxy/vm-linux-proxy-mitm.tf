@@ -33,7 +33,7 @@ resource "azurerm_linux_virtual_machine" "vm-proxy" {
   priority                        = "Spot"
   eviction_policy                 = "Deallocate"
 
-  # custom_data = filebase64("./install-mitmproxy.sh")
+  custom_data = filebase64("./install-mitmproxy.sh")
 
   os_disk {
     name                 = "os-disk-vm"

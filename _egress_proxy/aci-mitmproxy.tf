@@ -14,7 +14,9 @@ resource "azurerm_container_group" "aci-mitmproxy" {
     commands = [
       "/bin/bash",
       "-c",
-      "mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false"
+      "apt update -y; apt install wget -y; wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca-cert.pem'; wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca.pem'; wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca-cert.p12'; mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false --certs *=./mitmproxy-ca.pem --set confdir=./",
+# EOF
+      # "mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false"
       # "apt update -y; apt install wget -y; wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/cert.pem'; mitmweb --listen-port 8080 --web-host 0.0.0.0 --web-port 8081 --set block_global=false --certs *=cert.pem"
     ]
 
@@ -50,6 +52,6 @@ resource "azurerm_container_group" "aci-mitmproxy" {
 #   }
 # }
 
-output "aci-mitmproxy-public_ip" {
+output "aci_mitmproxy_public_ip" {
   value = azurerm_container_group.aci-mitmproxy.ip_address
 }
