@@ -188,4 +188,13 @@ kubectl exec -it nginx-noproxy -- curl ifconf.me
 
 ## Updating Proxy configuration
 
-You can change proxy configuration like IP address and certificate.
+You can update a cluster with existing proxy settings, but could not enable proxy for existing cluster.
+
+```sh
+az aks update -n aks -g rg-aks --http-proxy-config aks-proxy-config.json
+```
+
+An aks update for httpProxy, httpsProxy, and/or NoProxy will automatically inject new environment variables into pods with the new httpProxy, httpsProxy, or NoProxy values. 
+Pods must be rotated for the apps to pick it up.
+
+For components under kubernetes, like containerd and the node itself, this won't take effect until a node image upgrade is performed.
