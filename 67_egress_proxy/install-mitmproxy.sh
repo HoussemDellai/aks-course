@@ -15,9 +15,9 @@ tar -xvf mitmproxy-10.2.4-linux-x86_64.tar.gz
 # MITM proxy can create a certificate for us on starting, but we will use our own certificate
 # 2. download the certificate files
 
-wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca-cert.pem'
-wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca.pem'
-wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/_egress_proxy/certificate/mitmproxy-ca-cert.p12'
+wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/67_egress_proxy/certificate/mitmproxy-ca-cert.pem'
+wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/67_egress_proxy/certificate/mitmproxy-ca.pem'
+wget 'https://raw.githubusercontent.com/HoussemDellai/docker-kubernetes-course/main/67_egress_proxy/certificate/mitmproxy-ca-cert.p12'
 
 # 3. start MITM proxy with the certificate and expose the web interface
 

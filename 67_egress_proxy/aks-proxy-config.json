@@ -1,6 +1,6 @@
 {
-    "httpProxy": "http://20.73.245.90:8080/",
-    "httpsProxy": "https://20.73.245.90:8080/",
+    "httpProxy": "http://10.10.0.4:8080/",
+    "httpsProxy": "https://10.10.0.4:8080/",
     "noProxy": [
         "localhost",
         "127.0.0.1",
