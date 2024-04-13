@@ -6,20 +6,11 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 3.97.1"
-    }
-
-    time = {
-      source  = "hashicorp/time"
-      version = "0.11.1"
+      version = "= 3.99.0"
     }
   }
 }
 
 provider "azurerm" {
   features {}
-}
-
-provider "time" {
-  # Configuration options
 }

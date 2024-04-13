@@ -1,4 +1,4 @@
-# Private Azure Grafana, Prometheus and Log Analytics with AKS
+# Azure Grafana, Prometheus and Log Analytics with AKS
 
 ## Introduction
 

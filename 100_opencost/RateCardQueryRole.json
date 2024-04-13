@@ -1,0 +1,15 @@
+{
+    "Name": "OpenCostRole",
+    "IsCustom": true,
+    "Description": "Rate Card query role",
+    "Actions": [
+        "Microsoft.Compute/virtualMachines/vmSizes/read",
+        "Microsoft.Resources/subscriptions/locations/read",
+        "Microsoft.Resources/providers/read",
+        "Microsoft.ContainerService/containerServices/read",
+        "Microsoft.Commerce/RateCard/read"
+    ],
+    "AssignableScopes": [
+        "/subscriptions/38977b70-47bf-4da5-a492-88712fce8725"
+    ]
+}

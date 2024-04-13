@@ -31,10 +31,7 @@ $grafana_id=$(az grafana create -n azure-grafana-15 -g $RG --query id -o tsv)
 
 az aks create -n aks-cluster -g $RG --network-plugin azure --network-plugin-mode overlay -k 1.29.0 --enable-azure-monitor-metrics --enable-addons monitoring --azure-monitor-workspace-resource-id $prometheus_id --grafana-resource-id $grafana_id --workspace-resource-id $log_analytics_id
 
-
-# az aks update -n aks-cluster -g $RG --grafana-resource-id $grafanaId
-
-az aks get-credentials -n aks-cluster -g $RG
+az aks get-credentials -n aks-cluster -g $RG --overwrite-existing
 ```
 
 The following resources will be created.
@@ -51,7 +48,7 @@ Edit the file to make sure `exclude_namespaces` is empty and to enable `Containe
 2.1. Replacing `exclude_namespaces = ["kube-system","gatekeeper-system"]` with `exclude_namespaces = []`
 2.2. Setting the version to v2: `containerlog_schema_version = "v2"` 
 
->Note You can also enable multi-line logging by setting it to enabled:
+>Note you can also enable multi-line logging by setting it to enabled.
 ```yaml
 [log_collection_settings.enable_multiline_logs] 
   enabled = "true"
