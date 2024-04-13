@@ -1,6 +1,4 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  
-
   name                = "aks-cluster"
   location            = azurerm_resource_group.rg-spoke.location
   resource_group_name = azurerm_resource_group.rg-spoke.name
@@ -35,14 +33,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.identity-aks.id]
   }
+
+  lifecycle {
+    ignore_changes = [
+      default_node_pool.0.upgrade_settings
+    ]
+  }
+
+  depends_on = [
+    azurerm_role_assignment.private-dns-zone-contributor,
+    azurerm_role_assignment.network-contributor
+  ]
 }
-
-# resource "azurerm_kubernetes_cluster_node_pool" "nodepool" {
-#   for_each = { for cluster in var.aks : cluster.cluster_name => cluster }
-
-#   name                  = "usernp"
-#   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
-#   vm_size               = "Standard_B2als_v2"
-#   node_count            = each.value.node_count
-#   priority              = "Spot"
-# }

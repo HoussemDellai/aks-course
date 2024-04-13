@@ -1,4 +1,4 @@
-resource azurerm_public_ip "pip-vm-hub" {
+resource "azurerm_public_ip" "pip-vm-hub" {
   name                = "pip-vm-hub"
   resource_group_name = azurerm_resource_group.rg-hub.name
   location            = azurerm_resource_group.rg-hub.location
@@ -35,7 +35,7 @@ resource "azurerm_linux_virtual_machine" "vm-hub" {
   custom_data = filebase64("./install-tools.sh")
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.identity-vm-hub.id]
   }
 
