@@ -1,6 +1,6 @@
 variable "prefix" {
   type    = string
-  default = "303"
+  default = "203"
 }
 
 variable "location" {
