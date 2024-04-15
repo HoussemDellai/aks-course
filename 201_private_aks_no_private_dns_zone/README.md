@@ -21,6 +21,11 @@ A `VNET` could be linked/attached to maximum 1000 `Private DNS Zones`.
 `VNET` could be peered to maximum 500 `VNETs`.
  
 
+ 
+![](images/architecture.png)
+![](images/private-aks-cluster.png)
+![](images/resources-hub.png)
+![](images/resources-spoke.png)
 
 
 
@@ -84,6 +89,3 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 ```
 
-![](images/private-aks-cluster.png)
-![](images/resources-hub.png)
-![](images/resources-spoke.png)
