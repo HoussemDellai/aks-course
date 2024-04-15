@@ -184,4 +184,19 @@ kubectl get secretProviderClass -A -o yaml
 # kind: List
 # metadata:
 #   resourceVersion: ""
+
+kubectl get pods -n app-routing-system
+# NAME                                READY   STATUS    RESTARTS   AGE
+# external-dns-5b4fb7c9f-kq2pg        1/1     Running   0          11m
+# nginx-75b695b88d-d7knp              1/1     Running   0          84m
+# nginx-75b695b88d-tn8c6              1/1     Running   0          85m
+# nginx-internal-0-5f654fd544-6lqn9   1/1     Running   0          63m
+# nginx-internal-0-5f654fd544-cqkfz   1/1     Running   0          64m
+# nginx-public-0-6db48bfd68-plncd     1/1     Running   0          64m
+# nginx-public-0-6db48bfd68-wv5nc     1/1     Running   0          64m
+
+kubectl get pods -n hello-web-app-routing
+# NAME                                      READY   STATUS    RESTARTS   AGE
+# aks-helloworld-77fbc6b96c-kpjcm           1/1     Running   0          74m
+# keyvault-aks-helloworld-c7f879954-p9rv7   1/1     Running   0          22m
 ```
