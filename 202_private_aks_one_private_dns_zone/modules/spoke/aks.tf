@@ -7,7 +7,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   private_cluster_enabled             = true
   private_cluster_public_fqdn_enabled = false
-  private_dns_zone_id                 = azurerm_private_dns_zone.private_dns_zone.id
+  private_dns_zone_id                 = var.private_dns_zone_id
   # (Optional) Either the ID of Private DNS Zone which should be delegated to this Cluster, 
   # System to have AKS manage this 
   # or None. 

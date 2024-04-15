@@ -5,7 +5,7 @@ resource "azurerm_user_assigned_identity" "identity-aks" {
 }
 
 resource "azurerm_role_assignment" "private-dns-zone-contributor" {
-  scope                = var.private_dns_zone_id
+  scope                = azurerm_private_dns_zone.private_dns_zone.id
   role_definition_name = "Private DNS Zone Contributor"
   principal_id         = azurerm_user_assigned_identity.identity-aks.principal_id
 }

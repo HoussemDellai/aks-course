@@ -13,6 +13,6 @@ az login --identity
 
 # az aks list -o table
 
-# az aks get-credentials -n aks-cluster -g rg-spoke-202 --overwrite-existing
+# az aks get-credentials -n aks-cluster -g rg-spoke-203 --overwrite-existing
 
 # kubectl get nodes
