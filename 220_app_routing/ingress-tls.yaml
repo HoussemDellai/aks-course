@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.azure.com/tls-cert-keyvault-uri: "https://kv4aks220.vault.azure.net/certificates/aks-ingress-tls-01"
+    # kubernetes.azure.com/tls-cert-keyvault-uri: "https://kvakscert01.vault.azure.net/certificates/aks-app-cert"
+  name: aks-helloworld
+  namespace: webapp
+spec:
+  ingressClassName: webapprouting.kubernetes.azure.com
+  rules:
+  - host: houssemdellai01.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: aks-helloworld
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - houssemdellai01.com
+    secretName: keyvault-aks-helloworld
