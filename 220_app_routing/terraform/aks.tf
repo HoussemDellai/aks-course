@@ -40,6 +40,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
+# Required to create internal Load Balancer
+resource "azurerm_role_assignment" "network-contributor" {
+  scope                            = azurerm_subnet.snet-aks.id
+  role_definition_name             = "Network Contributor"
+  principal_id                     = azurerm_kubernetes_cluster.aks.identity.0.principal_id
+}
+
 resource "terraform_data" "aks-get-credentials" {
   triggers_replace = [
     azurerm_kubernetes_cluster.aks.id

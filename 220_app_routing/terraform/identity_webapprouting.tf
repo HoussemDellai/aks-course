@@ -18,6 +18,6 @@ resource "azurerm_role_assignment" "dns-zone-contributor" {
 
 resource "azurerm_role_assignment" "private-dns-zone-contributor" {
   scope                = azurerm_private_dns_zone.private_dns_zone.id
-  role_definition_name = "DNS Zone Contributor"
+  role_definition_name = "Private DNS Zone Contributor"
   principal_id         = data.azurerm_user_assigned_identity.webapp_routing.principal_id
 }
