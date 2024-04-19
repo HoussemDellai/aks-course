@@ -1,13 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: aks-helloworld-internal
+  name: aks-helloworld
   namespace: webapp
 spec:
-  ingressClassName: nginx-internal # webapprouting.kubernetes.azure.com
+  ingressClassName: webapprouting.kubernetes.azure.com
   rules:
-  - host: aks.internal # hello.aks.internal
-    http:
+  - http:
       paths:
       - backend:
           service:
