@@ -6,7 +6,7 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 3.99.0"
+      version = "= 3.100.0"
     }
 
     azapi = {
@@ -22,10 +22,14 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
     key_vault {
-      purge_soft_delete_on_destroy          = true
-      recover_soft_deleted_key_vaults       = true
-      purge_soft_deleted_secrets_on_destroy = true
-      recover_soft_deleted_secrets          = true
+      purge_soft_delete_on_destroy               = true
+      purge_soft_deleted_secrets_on_destroy      = true
+      purge_soft_deleted_keys_on_destroy         = true
+      purge_soft_deleted_certificates_on_destroy = true
+      recover_soft_deleted_key_vaults            = true
+      recover_soft_deleted_secrets               = true
+      recover_soft_deleted_certificates          = true
+      recover_soft_deleted_keys                  = true
     }
   }
 }

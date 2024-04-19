@@ -29,8 +29,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   key_vault_secrets_provider {
-    secret_rotation_enabled = true
+    secret_rotation_enabled  = true
     secret_rotation_interval = "2m"
+  }
+
+  monitor_metrics {
+    annotations_allowed = null
+    labels_allowed      = null
   }
 
   lifecycle {
@@ -42,9 +47,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # Required to create internal Load Balancer
 resource "azurerm_role_assignment" "network-contributor" {
-  scope                            = azurerm_subnet.snet-aks.id
-  role_definition_name             = "Network Contributor"
-  principal_id                     = azurerm_kubernetes_cluster.aks.identity.0.principal_id
+  scope                = azurerm_subnet.snet-aks.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.aks.identity.0.principal_id
 }
 
 resource "terraform_data" "aks-get-credentials" {

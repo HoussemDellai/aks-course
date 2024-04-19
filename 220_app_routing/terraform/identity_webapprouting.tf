@@ -1,5 +1,4 @@
 data "azurerm_user_assigned_identity" "webapp_routing" {
-  #   name                = "webapprouting-${azurerm_kubernetes_cluster.aks.name}"
   name                = split("/", azurerm_kubernetes_cluster.aks.web_app_routing.0.web_app_routing_identity.0.user_assigned_identity_id)[8]
   resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
 }

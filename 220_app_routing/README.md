@@ -1,5 +1,19 @@
 # AKS Web App Routing demystified
 
+When you expose your AKS applications, you typically use ingress. With ingress, you will need to manage:
+
+1) Private and public Ingress Controllers
+2) DNS custom domain names
+3) TLS certificates
+
+You wish if just there were a managed service that make this task easy ?
+Now that service exist. It is called Application Routing.
+Here is how it works.
+
+![](images/architecture.png)
+
+Disclaimer: This video is part of my Udemy course: https://www.udemy.com/course/learn-aks-network-security
+
 ```sh
 az group create -n rg-aks-cluster -l swedencentral
 
