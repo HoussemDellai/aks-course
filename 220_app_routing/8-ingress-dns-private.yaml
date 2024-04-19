@@ -6,7 +6,8 @@ metadata:
 spec:
   ingressClassName: nginx-internal
   rules:
-  - http:
+  - host: hello.aks.internal
+    http:
       paths:
       - backend:
           service:
