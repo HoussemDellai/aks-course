@@ -1,5 +1,5 @@
 resource "azurerm_private_dns_zone" "private_dns_zone" {
-  name                = "aks.internal"
+  name                = "internal.${var.custom_domain_name}"
   resource_group_name = azurerm_resource_group.rg.name
 }
 
