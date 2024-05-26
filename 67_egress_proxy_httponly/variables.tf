@@ -1,0 +1,5 @@
+variable "prefix" {
+  description = "Prefix for resources"
+  type        = string
+  default     = "67-httponly"
+}
