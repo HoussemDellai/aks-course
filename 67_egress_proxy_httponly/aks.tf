@@ -14,7 +14,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count     = 3
     vm_size        = "standard_b2als_v2"
     vnet_subnet_id = azurerm_subnet.snet-aks.id
-    temporary_name_for_rotation = "systempool2"
   }
 
   identity {

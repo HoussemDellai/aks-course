@@ -58,6 +58,5 @@ output "mssql_server_fqdn" {
 
 output "sqlcmd" {
   value     = "sqlcmd -S ${azurerm_mssql_server.mssql-server.fully_qualified_domain_name} -U ${azurerm_mssql_server.mssql-server.administrator_login} -P @Aa123456789 -d ${azurerm_mssql_database.database.name} -Q 'select @@version'"
-  # value     = "sqlcmd -S ${azurerm_mssql_server.mssql-server.fully_qualified_domain_name} -U ${azurerm_mssql_server.mssql-server.administrator_login} -P ${azurerm_mssql_server.mssql-server.administrator_login_password} -d ${azurerm_mssql_database.database.name} -Q 'select @@version'"
   sensitive = false
 }
