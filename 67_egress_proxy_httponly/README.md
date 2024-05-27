@@ -27,6 +27,8 @@ terraform plan -out tfplan
 terraform apply tfplan
 ```
 
+> Note how we allowed the IP address of the current machine and the IP address of the AKS Load Balancer. 
+
 ## Check the created resources
 
 ![](images/resources.png)
