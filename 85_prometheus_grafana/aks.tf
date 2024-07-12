@@ -3,12 +3,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks"
-  kubernetes_version  = "1.29.0"
+  kubernetes_version  = "1.29.4"
 
   network_profile {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
-    ebpf_data_plane     = "cilium"
+    network_data_plane  = "cilium"
     outbound_type       = "loadBalancer"
   }
 
