@@ -25,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   web_app_routing {
-    dns_zone_id = null # azurerm_dns_zone.dns_zone.id
+    dns_zone_ids = null
   }
 
   lifecycle {
@@ -35,7 +35,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-# Required to create internal Load Balancer
+# Required to create internal Load Balancer for Nginx Ingress Controller
 resource "azurerm_role_assignment" "network-contributor" {
   scope                = azurerm_subnet.snet-aks.id
   role_definition_name = "Network Contributor"

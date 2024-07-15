@@ -5,11 +5,11 @@ resource "azurerm_public_ip" "pip-apim" {
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1"]
-  domain_name_label   = "apim-external-${var.prefix}"
+  domain_name_label   = "apim-ext-${var.prefix}"
 }
 
 resource "azurerm_api_management" "apim" {
-  name                          = "apim-external-${var.prefix}"
+  name                          = "apim-external-aks-${var.prefix}"
   location                      = azurerm_resource_group.rg.location
   resource_group_name           = azurerm_resource_group.rg.name
   publisher_name                = "My Company"
