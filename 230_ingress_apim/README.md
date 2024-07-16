@@ -41,7 +41,6 @@ You will use `terraform` to deploy the resources.
 To deploy the resources, run the following commands from the `terraform` directory:
 
 ```sh
-cd terraform
 terraform init
 terraform apply -auto-approve
 ```
