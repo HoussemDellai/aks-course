@@ -65,6 +65,48 @@ kubectl apply -f 1-app.yaml,2-nginx-internal-controller.yaml,3-ingress-internal.
 
 This will deploy:
 - Kubernetes namespace, deployment, and service for the application
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+  namespace: webapi
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+    spec:
+      containers:
+      - name: webapi
+        image: ghcr.io/houssemdellai/containerapps-album-backend:v1
+        ports:
+        - containerPort: 3500
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi
+  namespace: webapi
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 3500
+  selector:
+    app: webapi
+```
+
 - Nginx Ingress Controller with an internal Load Balancer that uses static IP
 
 ```yaml
