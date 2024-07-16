@@ -63,6 +63,45 @@ After that, you will need to deploy an application to the AKS cluster. To do thi
 kubectl apply -f 1-app.yaml,2-nginx-internal-controller.yaml,3-ingress-internal.yaml
 ```
 
+This will deploy:
+- Kubernetes namespace, deployment, and service for the application
+- Nginx Ingress Controller with an internal Load Balancer that uses static IP
+
+```yaml
+apiVersion: approuting.kubernetes.azure.com/v1alpha1
+kind: NginxIngressController
+metadata:
+  name: nginx-internal-static
+spec:
+  ingressClassName: nginx-internal-static
+  controllerNamePrefix: nginx-internal-static
+  loadBalancerAnnotations: 
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: "10.10.0.10"
+```
+
+- Ingress resource to expose the application using the Ingress Controller
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapi
+  namespace: webapi
+spec:
+  ingressClassName: nginx-internal-static
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: webapi
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+```
+
 The application should be exposed using the Ingress Controller.
 
 ```sh
