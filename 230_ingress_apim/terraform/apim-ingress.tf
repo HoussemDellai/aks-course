@@ -7,7 +7,7 @@ resource "azurerm_api_management_api" "api-albums" {
   path                  = "albums"
   api_type              = "http" # graphql, http, soap, and websocket
   protocols             = ["http", "https"]
-  service_url           = "http://10.10.0.7/albums" # Private IP of the Ingress Controller
+  service_url           = "http://10.10.0.10/albums" # Private IP of the Ingress Controller
   subscription_required = false
 }
 

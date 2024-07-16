@@ -1,9 +1,9 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                    = "aks-cluster"
+  name                    = "aks-cluster-swc"
   location                = azurerm_resource_group.rg.location
   resource_group_name     = azurerm_resource_group.rg.name
   dns_prefix              = "aks"
-  kubernetes_version      = "1.29.4"
+  kubernetes_version      = "1.30.0"
   private_cluster_enabled = false
 
   network_profile {

@@ -5,7 +5,7 @@ resource "azurerm_public_ip" "pip-apim" {
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1"]
-  domain_name_label   = "apim-ext-${var.prefix}"
+  domain_name_label   = "apim-external-${var.prefix}"
 }
 
 resource "azurerm_api_management" "apim" {
