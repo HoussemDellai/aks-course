@@ -143,7 +143,7 @@ spec:
         pathType: Prefix
 ```
 
-The application should be exposed using the Ingress Controller.
+The application should now be exposed using the Ingress Controller.
 
 ```sh
 kubectl run nginx --image=nginx
