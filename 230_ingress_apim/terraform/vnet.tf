@@ -18,5 +18,4 @@ resource "azurerm_subnet" "snet-apim" {
   resource_group_name  = azurerm_virtual_network.vnet-spoke.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet-spoke.name
   address_prefixes     = ["10.10.1.0/24"]
-  # service_endpoints    = ["Microsoft.Web"]
 }

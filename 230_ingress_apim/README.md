@@ -28,10 +28,11 @@ Official documentation here: https://learn.microsoft.com/en-us/azure/api-managem
 In this lab, you will learn how to expose an AKS application using API Management. You will go through the following steps:
 
 1. Deploy an AKS cluster
-2. Deploy an internal Nginx Ingress Controller to the AKS cluster
+2. Enable AKS App Routing addon to create a managed Nginx Ingress Controller
 3. Deploy an application to the cluster
-4. Deploy an API Management instance
-5. Expose the application using API Management
+4. Expose the application using the Ingress Controller and internal Load Balancer
+5. Deploy an API Management instance
+6. Expose the application using API Management
 
 ### Deploying the resources
 
@@ -48,33 +49,18 @@ terraform apply -auto-approve
 This will take about 22 minutes to complete.
 The following resources will be deployed: ![](images/resources.png)
 
-Then, you will need to deploy an `ingress controller` like `nginx` to the AKS cluster. To do this, run the following commands:
+- AKS cluster with App Routing addon enabled
+- API Management developer instance (the cheapest SKU)
+- Virtual Network with a subnet for the AKS cluster and another subnet for the API Management instance
+- NSG rules to allow required inbound and outbound traffic for API Management instance
+- API definition for the application in API Management
 
-```sh
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-
-helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-    --version 4.11.0 \
-    --namespace ingress-nginx \
-    --create-namespace \
-    --set controller.replicaCount=2 \
-    --set controller.nodeSelector."kubernetes\.io/os"=linux \
-    --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux \
-    --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-internal"=true \
-    --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
-
-kubectl get pods,deployments,services --namespace ingress-nginx
-
-kubectl get services ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-```
-
-> Note how we are using the static IP address `10.10.0.7` for the Ingress Controller. This IP will be used to configure the API Management API backend.
+> Note how we are using the static IP address `10.10.0.10` for the Ingress Controller. This IP will be used to configure the API Management API backend.
 
 After that, you will need to deploy an application to the AKS cluster. To do this, run the following commands from the `kubernetes` directory:
 
 ```sh
-kubectl apply -f app.yaml
+kubectl apply -f 1-app.yaml,2-nginx-internal-controller.yaml,3-ingress-internal.yaml
 ```
 
 The application should be exposed using the Ingress Controller.
@@ -86,4 +72,8 @@ root@nginx:/# curl 10.10.0.10/albums
 [{"id":1,"title":"You, Me and an App Id","artist":"Daprize","price":10.99,"image_url":"https://aka.ms/albums-daprlogo"},{"id":2,"title":"Seven Revision Army","artist":"The Blue-Green Stripes","price":13.99,"image_url":"https://aka.ms/albums-containerappslogo"},{"id":3,"title":"Scale It Up","artist":"KEDA Club","price":13.99,"image_url":"https://aka.ms/albums-kedalogo"},{"id":4,"title":"Lost in Translation","artist":"MegaDNS","price":12.99,"image_url":"https://aka.ms/albums-envoylogo"},{"id":5,"title":"Lock Down Your Love","artist":"V is for VNET","price":12.99,"image_url":"https://aka.ms/albums-vnetlogo"},{"id":6,"title":"Sweet Container O' Mine","artist":"Guns N Probeses","price":14.99,"image_url":"https://aka.ms/albums-containerappslogo"}]
 ```
 
-Now you
+Now you can verify the application is exposed using the API Management instance.
+Get the Gateway URL, which should be something like `https://apim-external-aks-230-swc.azure-api.net`.
+Then paste the URL in the browser and add `/albums` to the end of the URL. You should see the same response as before.
+
+![apim](images/webapi.png)
