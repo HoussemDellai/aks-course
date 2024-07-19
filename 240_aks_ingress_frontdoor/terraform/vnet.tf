@@ -12,10 +12,3 @@ resource "azurerm_subnet" "snet-aks" {
   virtual_network_name = azurerm_virtual_network.vnet-spoke.name
   address_prefixes     = ["10.10.0.0/24"]
 }
-
-resource "azurerm_subnet" "snet-frontdoor" {
-  name                 = "snet-frontdoor"
-  resource_group_name  = azurerm_virtual_network.vnet-spoke.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet-spoke.name
-  address_prefixes     = ["10.10.1.0/24"]
-}
