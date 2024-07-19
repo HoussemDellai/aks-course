@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webapi
+  name: webapi-pls
   namespace: webapi
 spec:
-  ingressClassName: nginx-internal-static
+  ingressClassName: nginx-internal-static-pls
   rules:
   - http:
       paths:

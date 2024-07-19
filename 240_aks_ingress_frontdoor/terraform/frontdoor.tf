@@ -1,29 +1,16 @@
-locals {
-  front_door_profile_name         = "frontdoor-aks-apps"
-  front_door_sku_name             = "Premium_AzureFrontDoor" // Must be premium for Private Link support.
-  front_door_endpoint_name        = "frontdoor-240"
-  front_door_origin_group_name    = "origin-group-01"
-  front_door_origin_name          = "origin-aks-ingress"
-  front_door_route_name           = "route-aks-ingress"
-  front_door_origin_path          = "/"
-  front_door_custom_domain_name   = "frontdoor-houssemdellai01-com"
-  front_door_firewall_policy_name = "wafpolicy"
-  front_door_security_policy_name = "security-policy"
-}
-
 resource "azurerm_cdn_frontdoor_profile" "frontdoor" {
-  name                = local.front_door_profile_name
+  name                = "frontdoor-aks-apps"
   resource_group_name = azurerm_resource_group.rg.name
-  sku_name            = local.front_door_sku_name
+  sku_name            = "Premium_AzureFrontDoor" # Must be premium for Private Link support.
 }
 
 resource "azurerm_cdn_frontdoor_endpoint" "frontdoor-endpoint" {
-  name                     = local.front_door_endpoint_name
+  name                     = "frontdoor-240"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.frontdoor.id
 }
 
 resource "azurerm_cdn_frontdoor_origin_group" "frontdoor-origin-group" {
-  name                     = local.front_door_origin_group_name
+  name                     = "origin-group-01"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.frontdoor.id
   session_affinity_enabled = true
 
@@ -33,15 +20,14 @@ resource "azurerm_cdn_frontdoor_origin_group" "frontdoor-origin-group" {
   }
 
   health_probe {
-    path                = "/"
     request_type        = "HEAD"
     protocol            = "Https"
     interval_in_seconds = 100
   }
 }
 
-resource "azurerm_cdn_frontdoor_origin" "frontdoor-origin" {
-  name                          = local.front_door_origin_name
+resource "azurerm_cdn_frontdoor_origin" "frontdoor-origin-service" {
+  name                          = "origin-aks-service"
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.frontdoor-origin-group.id
 
   enabled                        = true
@@ -61,18 +47,18 @@ resource "azurerm_cdn_frontdoor_origin" "frontdoor-origin" {
   }
 }
 
-resource "azurerm_cdn_frontdoor_route" "frontdoor-route" {
-  name                          = local.front_door_route_name
+resource "azurerm_cdn_frontdoor_route" "frontdoor-route-service" {
+  name                          = "route-aks-service"
   cdn_frontdoor_endpoint_id     = azurerm_cdn_frontdoor_endpoint.frontdoor-endpoint.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.frontdoor-origin-group.id
-  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.frontdoor-origin.id]
+  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.frontdoor-origin-service.id]
 
   supported_protocols       = ["Http", "Https"]
   patterns_to_match         = ["/*"]
   forwarding_protocol       = "HttpOnly" # "HttpsOnly"
   link_to_default_domain    = true
   https_redirect_enabled    = false
-  cdn_frontdoor_origin_path = local.front_door_origin_path
+  cdn_frontdoor_origin_path = "/"
 
   cdn_frontdoor_custom_domain_ids = [
     azurerm_cdn_frontdoor_custom_domain.frontdoor-custom-domain.id
@@ -80,7 +66,7 @@ resource "azurerm_cdn_frontdoor_route" "frontdoor-route" {
 }
 
 resource "azurerm_cdn_frontdoor_custom_domain" "frontdoor-custom-domain" {
-  name                     = local.front_door_custom_domain_name
+  name                     = "frontdoor-houssemdellai01-com"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.frontdoor.id
   host_name                = var.custom_domain_name
 
@@ -91,9 +77,9 @@ resource "azurerm_cdn_frontdoor_custom_domain" "frontdoor-custom-domain" {
 }
 
 resource "azurerm_cdn_frontdoor_firewall_policy" "frontdoor-waf-policy" {
-  name                = local.front_door_firewall_policy_name
+  name                = "wafpolicy"
   resource_group_name = azurerm_resource_group.rg.name
-  sku_name            = local.front_door_sku_name
+  sku_name            = "Premium_AzureFrontDoor" # Must be premium for Private Endpoint support.
   enabled             = true
   mode                = var.waf_mode
 
@@ -111,7 +97,7 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "frontdoor-waf-policy" {
 }
 
 resource "azurerm_cdn_frontdoor_security_policy" "frontdoor-security-policy" {
-  name                     = local.front_door_security_policy_name
+  name                     = "security-policy"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.frontdoor.id
 
   security_policies {
