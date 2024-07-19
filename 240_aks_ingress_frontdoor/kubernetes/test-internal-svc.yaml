@@ -19,4 +19,4 @@ spec:
     app: webapi
   ports:
   - port: 80
-    targetPort: 3500
+    targetPort: 80

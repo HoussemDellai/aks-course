@@ -5,7 +5,7 @@ locals {
   front_door_origin_group_name    = "origin-group-01"
   front_door_origin_name          = "origin-aks-ingress"
   front_door_route_name           = "route-aks-ingress"
-  front_door_origin_path          = "/albums" // The path to the blob container.
+  front_door_origin_path          = "/"
   front_door_custom_domain_name   = "frontdoor-houssemdellai01-com"
   front_door_firewall_policy_name = "wafpolicy"
   front_door_security_policy_name = "security-policy"
