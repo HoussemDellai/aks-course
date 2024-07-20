@@ -54,8 +54,3 @@ resource "azurerm_cdn_frontdoor_route" "route-aks-service" {
   https_redirect_enabled        = false
   cdn_frontdoor_origin_path     = "/"
 }
-
-data "azurerm_private_link_service" "pls-service" {
-  name                = var.pls_service_name
-  resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
-}
