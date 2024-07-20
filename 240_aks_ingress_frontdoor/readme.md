@@ -173,3 +173,5 @@ Just go to the `Private Link Center`in the Azure portal, then pending connection
 
 ## Test the application
 
+Go to the Azure portal and get the `Front Door` URL.
+![](images/frontdoor-url.png)
