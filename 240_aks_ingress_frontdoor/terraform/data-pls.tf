@@ -1,4 +1,6 @@
-# Get the PLS that is created for the ingress and the service
+# Get the PLS that is created for the ingress and the service.
+# PLS is created automatically by the kubernetes service annotations.
+# It takes about 2/3 minutes for the PLS to be created.
 data "azurerm_private_link_service" "pls-ingress" {
   name                = var.pls_ingress_name
   resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
