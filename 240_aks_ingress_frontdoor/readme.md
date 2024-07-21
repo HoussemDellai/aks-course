@@ -140,7 +140,7 @@ data "azurerm_private_link_service" "pls-ingress" {
   name                = var.pls_ingress_name
   resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
 
-  depends_on = [time_sleep.wait_120_seconds]
+  depends_on = [time_sleep.wait_210_seconds]
 }
 
 resource "azurerm_cdn_frontdoor_origin" "origin-aks-ingress" {
@@ -180,3 +180,7 @@ Go to the Azure portal and get the `Front Door` URL.
 You should see the application running.
 
 ![](images/app-running.png)
+
+## More resources
+
+https://learn.microsoft.com/en-us/azure/aks/internal-lb
