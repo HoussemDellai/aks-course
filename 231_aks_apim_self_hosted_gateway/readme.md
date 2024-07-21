@@ -1,4 +1,4 @@
-# Exposing AKS applications using API Management
+# Exposing AKS applications using API Management Self Hosted Gateway
 
 ## Introduction
 
