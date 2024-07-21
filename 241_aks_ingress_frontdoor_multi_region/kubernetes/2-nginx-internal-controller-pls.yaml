@@ -1,0 +1,17 @@
+apiVersion: approuting.kubernetes.azure.com/v1alpha1
+kind: NginxIngressController
+metadata:
+  name: nginx-internal-static-pls
+spec:
+  ingressClassName: nginx-internal-static-pls
+  controllerNamePrefix: nginx-internal-static-pls
+  loadBalancerAnnotations: 
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true" # Right now PLS must be used with internal LB
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.10.0.30
+    service.beta.kubernetes.io/azure-pls-create: "true"
+    service.beta.kubernetes.io/azure-pls-name: "pls-aks-ingress"
+    service.beta.kubernetes.io/azure-pls-ip-configuration-subnet: "snet-aks" # Private Link subnet name
+    service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count: "1"
+    service.beta.kubernetes.io/azure-pls-proxy-protocol: "false"
+    service.beta.kubernetes.io/azure-pls-visibility: "*"
+    service.beta.kubernetes.io/azure-pls-auto-approval: "38977b70-47bf-4da5-a492-88712fce8725"
