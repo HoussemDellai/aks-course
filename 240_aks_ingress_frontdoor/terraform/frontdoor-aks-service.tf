@@ -35,10 +35,9 @@ resource "azurerm_cdn_frontdoor_origin" "origin-aks-service" {
 
   private_link {
     private_link_target_id = data.azurerm_private_link_service.pls-service.id
-    # private_link_target_id = "${azurerm_kubernetes_cluster.aks.node_resource_group_id}/providers/Microsoft.Network/privateLinkServices/${var.pls_service_name}"
+    request_message        = "Request access for Azure Front Door Private Link origin"
+    location               = var.location
     # target_type            = "privateLinkServices" # cannot be specified when using a Load Balancer as an Origin.
-    request_message = "Request access for Azure Front Door Private Link origin"
-    location        = var.location
   }
 }
 

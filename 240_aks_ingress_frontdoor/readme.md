@@ -112,7 +112,7 @@ spec:
 ```
 
 `Terraform` deploys all YAML files in the `kubernetes` directory.
-That includes a sample application.
+That includes a sample application, ingress and controller.
 
 ```sh
 kubectl get pods,deployments,services,ingress --namespace webapi
@@ -131,6 +131,8 @@ service/webapi-internal-service-pls   LoadBalancer   10.0.133.161   10.10.0.25  
 NAME                                   CLASS                       HOSTS   ADDRESS      PORTS   AGE
 ingress.networking.k8s.io/webapi-pls   nginx-internal-static-pls   *       10.10.0.30   80      16m
 ```
+
+Note that the `webapi-internal-service-pls` service has an internal IP address `10.10.0.25` and the `webapi-pls` ingress has an internal IP address `10.10.0.30`. Both IPs are created for the internal Load Balancer. Azure Front Door will use these IPs to connect to the AKS applications through Private Endpoint.
 
 ### 4. Configure Azure `Front Door` to create a `Private Endpoint` to connect to the `Private Link Service`.
 
