@@ -1,36 +1,36 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: webapi
+  name: webapp
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapi
-  namespace: webapi
+  name: webapp
+  namespace: webapp
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: webapi
+      app: webapp
   template:
     metadata:
       labels:
-        app: webapi
+        app: webapp
     spec:
       containers:
-      - name: webapi
-        image: jelledruyts/inspectorgadget # ghcr.io/houssemdellai/containerapps-album-backend:v1
+      - name: webapp
+        image: jelledruyts/inspectorgadget
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: webapi
-  namespace: webapi
+  name: webapp
+  namespace: webapp
 spec:
   type: ClusterIP
   ports:
   - port: 80
     targetPort: 80
   selector:
-    app: webapi
+    app: webapp

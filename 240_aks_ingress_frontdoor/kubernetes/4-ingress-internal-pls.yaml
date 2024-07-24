@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webapi-pls
-  namespace: webapi
+  name: webapp-internal-ingress-pls
+  namespace: webapp
 spec:
   ingressClassName: nginx-internal-static-pls
   rules:
@@ -10,7 +10,7 @@ spec:
       paths:
       - backend:
           service:
-            name: webapi
+            name: webapp
             port:
               number: 80
         path: /

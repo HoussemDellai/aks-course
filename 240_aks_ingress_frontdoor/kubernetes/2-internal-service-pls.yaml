@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: webapi-internal-service-pls
-  namespace: webapi
+  name: webapp-internal-service-pls
+  namespace: webapp
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "true" # Right now PLS must be used with internal LB
     service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.224.0.25 # 10.10.0.25
@@ -16,7 +16,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: webapi
+    app: webapp
   ports:
   - port: 80
     targetPort: 80
