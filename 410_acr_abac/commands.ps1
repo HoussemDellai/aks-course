@@ -12,5 +12,8 @@ az acr update -n $ACR_NAME -g $RG_NAME --role-assignment-mode AbacRepositoryPerm
 az acr import -n $ACR_NAME --source docker.io/library/nginx:latest -t acrabac.azurecr.io/frontend/nginx:latest
 az acr import -n $ACR_NAME --source docker.io/library/nginx:latest -t acrabac.azurecr.io/backend/nginx:latest
 
+# list images in ACR
+az acr repository list -n $ACR_NAME -o table
+
 # create a  Container App
 

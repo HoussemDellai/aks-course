@@ -1,5 +1,5 @@
 resource "azurerm_container_registry" "acr" {
-  name                          = "acr1abac"
+  name                          = "acr11abac"
   resource_group_name           = azurerm_resource_group.rg.name
   location                      = azurerm_resource_group.rg.location
   sku                           = "Standard"
@@ -9,19 +9,55 @@ resource "azurerm_container_registry" "acr" {
   anonymous_pull_enabled        = false
   data_endpoint_enabled         = false
   network_rule_bypass_option    = "AzureServices"
+}
 
-  provisioner "local-exec" {
-    # interpreter = ["PowerShell", "-Command"]
-    command = "az acr import --name ${azurerm_container_registry.acr.login_server} --source docker.io/library/nginx:latest --image nginx:latest"
-    # command = "az acr import --name ${azurerm_container_registry.acr.login_server} --source docker.io/library/hello-world:latest --image hello-world:latest"
-    when    = create
+# az acr update -n $ACR_NAME -g $RG_NAME --role-assignment-mode AbacRepositoryPermissions
+
+# use AzAPI terraform provider to enable ABAC for ACR
+resource "azapi_update_resource" "anable-acr-abac" {
+  type        = "Microsoft.ContainerRegistry/registries@2024-01-01-preview"
+  resource_id = azurerm_container_registry.acr.id
+
+  body = {
+    properties = {
+      roleAssignmentMode = "AbacRepositoryPermissions"
+    }
   }
 }
 
-resource "azurerm_container_registry_cache_rule" "cache_rule" {
-  name                  = "cacherule"
-  container_registry_id = azurerm_container_registry.acr.id
-  target_repo           = "app1/nginx"
-  source_repo           = "docker.io/library/nginx:latest" # "docker.io/hello-world"
-#   credential_set_id     = "${azurerm_container_registry.acr.id}/credentialSets/example"
+
+resource "terraform_data" "acr-import-app1" {
+  triggers_replace = [
+    azurerm_container_registry.acr.id
+  ]
+
+  provisioner "local-exec" {
+    command = "az acr import --name ${azurerm_container_registry.acr.name} --source ghcr.io/jelledruyts/inspectorgadget:latest --image team1/app1:v1"
+  }
 }
+
+resource "terraform_data" "acr-import-app2" {
+  triggers_replace = [
+    azurerm_container_registry.acr.id
+  ]
+
+  provisioner "local-exec" {
+    command = "az acr import --name ${azurerm_container_registry.acr.name} --source ghcr.io/jelledruyts/inspectorgadget:latest --image team2/app2:v1"
+  }
+}
+
+# role assignment for current user
+
+resource "azurerm_role_assignment" "acr-lister" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "ACR Registry Catalog Lister"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "acr-contributor" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "ACR Repository Contributor"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+data "azurerm_client_config" "current" {}

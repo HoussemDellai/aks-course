@@ -7,7 +7,7 @@ resource "azurerm_container_app" "aca_app1" {
   template {
     container {
       name   = "app1"
-      image  = "ghcr.io/jelledruyts/inspectorgadget:latest"
+      image  = "${azurerm_container_registry.acr.login_server}/team1/app1:v1"
       cpu    = 0.25
       memory = "0.5Gi"
     }

@@ -20,14 +20,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.aks_identity.id]
+    identity_ids = [azurerm_user_assigned_identity.identity_aks.id]
+  }
+
+  lifecycle {
+    ignore_changes = [
+      default_node_pool.0.upgrade_settings
+    ]
   }
 }
 
 # managed identity for the AKS cluster
 
-resource "azurerm_user_assigned_identity" "aks_identity" {
+resource "azurerm_user_assigned_identity" "identity_aks" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  name                = "aks-identity"
+  name                = "identity-aks"
 }
