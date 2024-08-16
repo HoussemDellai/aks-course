@@ -13,6 +13,11 @@ resource "azurerm_container_app" "aca_app2" {
     }
   }
 
+  registry {
+    server = azurerm_container_registry.acr.login_server
+    identity = azurerm_user_assigned_identity.identity_aca_app2.id
+  }
+
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.identity_aca_app2.id]
