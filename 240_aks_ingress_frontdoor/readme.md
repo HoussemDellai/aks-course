@@ -183,6 +183,29 @@ You should see the application running.
 
 ![](images/app-running.png)
 
+## More configuration options for Front Door and Ingress
+
+When you run `AKS` with an `NGINX ingress controller`, you should create a `network security group` in the `virtual network` that hosts the AKS cluster. Configure a network security group rule to allow inbound access on ports 80 and 443 from the `AzureFrontDoor.Backend` service tag, and disallow inbound traffic on ports 80 and 443 from the `Internet` service tag.
+
+Use a Kubernetes ingress configuration file like in the following example to inspect the `X-Azure-FDID` header on your incoming requests:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontdoor-ingress
+  annotations:
+  kubernetes.io/ingress.class: nginx
+  nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+  nginx.ingress.kubernetes.io/modsecurity-snippet: |
+    SecRuleEngine On
+    SecRule &REQUEST_HEADERS:X-Azure-FDID \"@eq 0\"  \"log,deny,id:106,status:403,msg:\'Front Door ID not present\'\"
+    SecRule REQUEST_HEADERS:X-Azure-FDID \"@rx ^(?!xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).*$\"  \"log,deny,id:107,status:403,msg:\'Wrong Front Door ID\'\"
+spec:
+  #section omitted on purpose
+```
+
 ## More resources
 
 https://learn.microsoft.com/en-us/azure/aks/internal-lb
+https://learn.microsoft.com/en-us/azure/frontdoor/origin-security?tabs=aks-nginx&pivots=front-door-standard-premium#example-configuration

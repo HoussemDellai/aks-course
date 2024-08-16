@@ -5,10 +5,10 @@ metadata:
   namespace: webapp
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "true" # Right now PLS must be used with internal LB
-    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.224.0.25 # 10.10.0.25
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.10.0.25
     service.beta.kubernetes.io/azure-pls-create: "true"
     service.beta.kubernetes.io/azure-pls-name: "pls-aks-service"
-    service.beta.kubernetes.io/azure-pls-ip-configuration-subnet: "aks-subnet" # "snet-aks" # Private Link subnet name
+    service.beta.kubernetes.io/azure-pls-ip-configuration-subnet: "snet-aks" # Private Link subnet name
     service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count: "1"
     service.beta.kubernetes.io/azure-pls-proxy-protocol: "false"
     service.beta.kubernetes.io/azure-pls-visibility: "*"

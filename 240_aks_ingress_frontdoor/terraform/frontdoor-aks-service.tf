@@ -1,5 +1,5 @@
 resource "azurerm_cdn_frontdoor_endpoint" "endpoint-aks-service" {
-  name                     = "endpoint-aks-service"
+  name                     = "endpoint-aks-service13"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.frontdoor.id
 }
 
