@@ -14,7 +14,7 @@ resource "azurerm_container_app" "aca_app2" {
   }
 
   registry {
-    server = azurerm_container_registry.acr.login_server
+    server   = azurerm_container_registry.acr.login_server
     identity = azurerm_user_assigned_identity.identity_aca_app2.id
   }
 
@@ -34,6 +34,12 @@ resource "azurerm_container_app" "aca_app2" {
       percentage      = 100
     }
   }
+
+  depends_on = [
+    terraform_data.acr_import_app2,
+    azurerm_role_assignment.aca_app2_reader_team2,
+    time_sleep.wait_role_propagation
+  ]
 }
 
 resource "azurerm_user_assigned_identity" "identity_aca_app2" {

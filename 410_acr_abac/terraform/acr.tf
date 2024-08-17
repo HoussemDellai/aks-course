@@ -12,9 +12,7 @@ resource "azurerm_container_registry" "acr" {
 }
 
 # az acr update -n $ACR_NAME -g $RG_NAME --role-assignment-mode AbacRepositoryPermissions
-
-# use AzAPI terraform provider to enable ABAC for ACR
-resource "azapi_update_resource" "anable-acr-abac" {
+resource "azapi_update_resource" "anable_acr_abac" {
   type        = "Microsoft.ContainerRegistry/registries@2024-01-01-preview"
   resource_id = azurerm_container_registry.acr.id
 
@@ -26,7 +24,7 @@ resource "azapi_update_resource" "anable-acr-abac" {
 }
 
 
-resource "terraform_data" "acr-import-app1" {
+resource "terraform_data" "acr_import_app1" {
   triggers_replace = [
     azurerm_container_registry.acr.id
   ]
@@ -34,9 +32,11 @@ resource "terraform_data" "acr-import-app1" {
   provisioner "local-exec" {
     command = "az acr import --name ${azurerm_container_registry.acr.name} --source ghcr.io/jelledruyts/inspectorgadget:latest --image team1/app1:v1"
   }
+
+  depends_on = [azapi_update_resource.anable_acr_abac]
 }
 
-resource "terraform_data" "acr-import-app2" {
+resource "terraform_data" "acr_import_app2" {
   triggers_replace = [
     azurerm_container_registry.acr.id
   ]
@@ -44,6 +44,8 @@ resource "terraform_data" "acr-import-app2" {
   provisioner "local-exec" {
     command = "az acr import --name ${azurerm_container_registry.acr.name} --source ghcr.io/jelledruyts/inspectorgadget:latest --image team2/app2:v1"
   }
+
+  depends_on = [azapi_update_resource.anable_acr_abac]
 }
 
 # role assignment for current user
