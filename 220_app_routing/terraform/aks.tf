@@ -25,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   web_app_routing {
-    dns_zone_id = azurerm_dns_zone.dns_zone.id
+    dns_zone_ids = [azurerm_dns_zone.dns_zone.id]
   }
 
   key_vault_secrets_provider {
