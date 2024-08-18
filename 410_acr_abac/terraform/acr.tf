@@ -23,7 +23,6 @@ resource "azapi_update_resource" "anable_acr_abac" {
   }
 }
 
-
 resource "terraform_data" "acr_import_app1" {
   triggers_replace = [
     azurerm_container_registry.acr.id
