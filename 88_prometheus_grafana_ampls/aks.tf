@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   network_profile {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
-    ebpf_data_plane     = "cilium"
+    network_data_plane  = "cilium"
   }
 
   default_node_pool {
@@ -19,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   identity {
-    type = "UserAssigned" # "SystemAssigned"
+    type         = "UserAssigned" # "SystemAssigned"
     identity_ids = [azurerm_user_assigned_identity.identity-aks.id]
   }
 
