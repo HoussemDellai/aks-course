@@ -1,5 +1,5 @@
-resource "azurerm_network_interface" "nic" {
-  name                 = "nic"
+resource "azurerm_network_interface" "nic-vm" {
+  name                 = "nic-vm"
   resource_group_name  = azurerm_resource_group.rg.name
   location             = azurerm_resource_group.rg.location
 
@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "vm" {
+resource "azurerm_linux_virtual_machine" "vm-linux" {
   name                            = "vm-linux-jumpbox"
   resource_group_name             = azurerm_resource_group.rg.name
   location                        = azurerm_resource_group.rg.location
@@ -19,7 +19,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   disable_password_authentication = false
   admin_username                  = "azureuser"
   admin_password                  = "@Aa123456789"
-  network_interface_ids           = [azurerm_network_interface.nic.id]
+  network_interface_ids           = [azurerm_network_interface.nic-vm.id]
   priority                        = "Spot"
   eviction_policy                 = "Deallocate"
 
@@ -27,7 +27,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.identity.id]
+    identity_ids = [azurerm_user_assigned_identity.identity-vm.id]
   }
 
   os_disk {

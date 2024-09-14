@@ -3,5 +3,5 @@ output "rg_name" {
 }
 
 output "vm_id" {
-  value = azurerm_linux_virtual_machine.vm.id
+  value = azurerm_linux_virtual_machine.vm-linux.id
 }
