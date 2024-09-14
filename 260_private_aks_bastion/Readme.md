@@ -29,6 +29,10 @@ The following resources should be deployed.
 
 ![](images/resources.png)
 
+In the node resource group, you should see the following resources including the `Private Endpoint` of te AKS cluster.
+
+![](images/resources-node-rg.png)
+
 ## Connecting to the private AKS cluster
 
 You can either use the Azure portal or the command line to connect to `private AKS`. In this lab, you will use the Azure CLI to connect to the private AKS cluster.
