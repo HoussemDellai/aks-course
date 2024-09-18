@@ -53,7 +53,7 @@ Once you are connected to the Azure VM, run the following command to connect to 
 az login --identity
 
 # get the credentials of the AKS cluster
-az aks get-credentials -g rg-private-aks-bastion-260 -n aks-private-260
+az aks get-credentials -g rg-private-aks-bastion-260 -n aks-cluster
 
 # verify the connection
 kubectl get nodes

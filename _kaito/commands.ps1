@@ -1,6 +1,8 @@
+# https://learn.microsoft.com/en-us/azure/aks/ai-toolchain-operator
+
 $AZURE_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-$AZURE_RESOURCE_GROUP="rg-kaito"
-$AZURE_LOCATION="swedencentral"
+$AZURE_RESOURCE_GROUP="rg-aks-kaito-frc"
+$AZURE_LOCATION="francecentral" # "swedencentral"
 $CLUSTER_NAME="aks-cluster"
 
 az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION
@@ -34,6 +36,6 @@ kubectl rollout restart deployment/kaito-gpu-provisioner -n kube-system
 kubectl get deployment -n kube-system | grep kaito
 
 # Deploy the Falcon 7B-instruct model from the KAITO model repository using the kubectl apply command.
-kubectl apply -f https://raw.githubusercontent.com/Azure/kaito/main/examples/kaito_workspace_falcon_7b-instruct.yaml
+kubectl apply -f https://raw.githubusercontent.com/Azure/kaito/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml
 
 kubectl get workspace workspace-falcon-7b-instruct -w

@@ -13,6 +13,6 @@ snap install kubectl --classic
 
 # az aks list -o table
 
-# az aks get-credentials -n aks-cluster -g rg-spoke-202 --overwrite-existing
+# az aks get-credentials -g rg-private-aks-bastion-260 -n aks-private-260
 
 # kubectl get nodes
