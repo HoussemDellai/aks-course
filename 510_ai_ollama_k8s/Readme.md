@@ -1,6 +1,43 @@
 # Ollama AI model deployment on Azure Kubernetes Service (AKS)
 
-https://github.com/open-webui/open-webui/tree/main/kubernetes/manifest/base
+This lab will guide you through running `LLM` models on your local machine and on `AKS`. The lab will use the `ollama` server and client app `Open-WebUI` to deploy the models. The `ollama` server is a REST API server that can run LLM models. The client app is a web-based user interface that can interact with the `ollama` server. The `ollama` server and client app are deployed in AKS using Kubernetes manifests.
+
+## 1. Run LLM models on your local machine
+
+The `ollama` server can run LLM models on your local machine. The `ollama` server can run LLM models like `llama3.1`, `phi3`, `gemma2`, `mistral`, `moondream`, `neural-chat`, `starling`, `codellama`, `llama2-uncensored`, `llava`, and `solar`.
+
+### 1.1. Run `ollama` container
+
+`ollama` server can run as a program in your machine or as a `docker` container. Here are the steps to install `ollama` server as a `docker` container. The container is available in Dockeer Hub: (https://hub.docker.com/r/ollama/ollama)[https://hub.docker.com/r/ollama/ollama].
+
+```sh
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+```
+
+> For simplicity, we are running `ollama` in `CPU only` mode. Note that it can also support `GPU` and `NPU` for better performance.
+
+### 1.2. Run Microsoft `Phi3.5` LLM model on ollama
+
+```sh
+docker exec -it ollama sh -c 'ollama run phi3.5'
+# then ctrl + d to exit
+```
+
+### 1.3. Run `Open-WebUI` client app
+
+```sh
+docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data -e WEBUI_AUTH=False --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+```
+
+Now open your browser on `http://localhost:3000` to access the `Open-WebUI` client app and you can chat with the model.
+
+!()[images/open-webui.png]
+
+## 2. Run LLM models on Azure Kubernetes Service (AKS)
+
+`ollama` and `Open-WebUI` are both available as Docker containers. This makes it easy to deploy it into AKS.
+
+`ollama` and `Open-WebUI` can be deployed in AKS using Kubernetes manifests. The `ollama` server is deployed as a StatefulSet with one replica. The `Open-WebUI` client app is deployed as a Deployment with one replica. The `ollama` server and client app are deployed in the `ollama` namespace.
 
 ```sh
 $AKS_RG="rg-aks-ollama-llm"
@@ -19,13 +56,16 @@ az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 kubectl apply -f .
 
 # check the install
-kubectl get all -n open-webui
+kubectl get all -n ollama
 
 # install LLM model likw phi3 or llama3.1 into ollama server
 kubectl exec ollama-0 -n ollama -it -- ollama run phi3
 
+# or you can run another model like llama3.1
+kubectl exec ollama-0 -n ollama -it -- ollama run llama3.1
+
 # get the public IP of the client service
-kubectl get svc -n open-webui
+kubectl get svc -n ollama
 ```
 
 Here are some example models that can be used in `ollama` [available here](https://github.com/ollama/ollama/blob/main/README.md#model-library):
@@ -49,3 +89,11 @@ Here are some example models that can be used in `ollama` [available here](https
 | LLaVA              | 7B         | 4.5GB | `ollama run llava`             |
 | Solar              | 10.7B      | 6.1GB | `ollama run solar`             |
 
+## Important notes
+
+- The `ollama` server is running only on CPU. However, it can also run on GPU or also NPU.
+
+## References
+
+- [Ollama AI model deployment on Kubernetes](
+https://github.com/open-webui/open-webui/tree/main/kubernetes/manifest/base)

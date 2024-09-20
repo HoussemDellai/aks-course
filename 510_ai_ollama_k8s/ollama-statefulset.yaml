@@ -17,6 +17,10 @@ spec:
       containers:
       - name: ollama
         image: ollama/ollama:latest
+        # command: ["/bin/ollama"]
+        # args: ["-c", "pull phi3"]
+        # command: ["/bin/bash"]
+        # args: ["-c", "ollama run phi3 &"]
         ports:
         - containerPort: 11434
         resources:
