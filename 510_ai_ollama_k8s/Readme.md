@@ -8,7 +8,7 @@ The `ollama` server can run LLM models on your local machine. The `ollama` serve
 
 ### 1.1. Run `ollama` container
 
-`ollama` server can run as a program in your machine or as a `docker` container. Here are the steps to install `ollama` server as a `docker` container. The container is available in Dockeer Hub: [https://hub.docker.com/r/ollama/ollama[(https://hub.docker.com/r/ollama/ollama).
+`ollama` server can run as a program in your machine or as a `docker` container. Here are the steps to install `ollama` server as a `docker` container. The container is available in Dockeer Hub: https://hub.docker.com/r/ollama/ollama.
 
 ```sh
 docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
