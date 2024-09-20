@@ -68,6 +68,8 @@ kubectl exec ollama-0 -n ollama -it -- ollama run llama3.1
 kubectl get svc -n ollama
 ```
 
+Now you can navigate to the public IP of the client service to chat with the model.
+
 Here are some example models that can be used in `ollama` [available here](https://github.com/ollama/ollama/blob/main/README.md#model-library):
 
 | Model              | Parameters | Size  | Download                       |
