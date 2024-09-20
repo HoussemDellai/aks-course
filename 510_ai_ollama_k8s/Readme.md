@@ -94,6 +94,8 @@ Here are some example models that can be used in `ollama` [available here](https
 ## Important notes
 
 - The `ollama` server is running only on CPU. However, it can also run on GPU or also NPU.
+- As LLM models size are large, it is recommended to use a VM with large disk space.
+- During the inference, the model will consume a lot of memory and CPU. It is recommended to use a VM with a large memory and CPU.
 
 ## References
 
