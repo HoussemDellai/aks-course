@@ -123,12 +123,10 @@ Navigate into the `app-dotnet` folder and run the following command to package t
 
 ```sh 
 $acrName="<your acr name>" 
-az acr build -t "$acrName.azurecr.io/dotnet-app:1.0.0" -r $acrName .
+az acr build -t "$acrName.azurecr.io/dotnet-app:1.0.0" -r $acrName ../app-dotnet
 ```
 
 This will build and push the image to ACR.
-
-az aks attach
 
 ### 4.3. Deploying an image from ACR
 
