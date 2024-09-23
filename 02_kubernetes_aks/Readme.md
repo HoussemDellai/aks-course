@@ -104,7 +104,7 @@ Follow this link to create an `ACR` using the portal: [docs.microsoft.com/en-us/
 Or this link to create it through the command line: [docs.microsoft.com/en-us/azure/container-registry/container-registry-event-grid-quickstart](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-event-grid-quickstart).
 
 ```sh
-az acr create --name acraks013579 --sku Standard
+az acr create --name acraks013579 -g rg-aks-cluster --sku Standard
 ```
 
 ### 4.2. Building an image in ACR
