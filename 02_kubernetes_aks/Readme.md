@@ -24,8 +24,8 @@ https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough-portal
 Another simple option would be to use the Azure CLI.
 
 ```sh
-az group create --name myResourceGroup --location eastus
-az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 3
+az group create --name rg-aks-cluster --location swedencentral
+az aks create --resource-group rg-aks-cluster --name aks-cluster --node-count 3
 ```
 
 Next, the kubectl CLI will be used to deploy applications to the cluster.
@@ -33,7 +33,7 @@ This command needs to be connected to AKS.
 To do that we use the following command:
 
 ```sh
-az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
 ```
 
 Check that the connection was successfull by listing the nodes inside the cluster:
