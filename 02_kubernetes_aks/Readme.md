@@ -96,12 +96,16 @@ kubectl get svc
 
 ## 4. Building and deploying container images in ACR
 
-Instead of using a public registry like Docker Hub, you can create your own private registry in Azure where you push your own private images.
+Instead of using a public registry like `Docker Hub`, you can create your own private registry in Azure where you push your own private images.
 
 ### 4.1. Creating a container registry in Azure (ACR)
 
-Follow this link to create an ACR using the portal: [docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal).
+Follow this link to create an `ACR` using the portal: [docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal).
 Or this link to create it through the command line: [docs.microsoft.com/en-us/azure/container-registry/container-registry-event-grid-quickstart](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-event-grid-quickstart).
+
+```sh
+az acr create --name acraks013579 --sku Standard
+```
 
 ### 4.2. Building an image in ACR
 
@@ -115,6 +119,8 @@ az acr build -t "$acrName.azurecr.io/dotnet-app:1.0.0" -r $acrName .
 ```
 
 This will build and push the image to ACR.
+
+az aks attach
 
 ### 4.3. Deploying an image from ACR
 
