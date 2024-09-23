@@ -40,26 +40,29 @@ Now open your browser on `http://localhost:3000` to access the `Open-WebUI` clie
 `ollama` and `Open-WebUI` can be deployed in AKS using Kubernetes manifests. The `ollama` server is deployed as a StatefulSet with one replica. The `Open-WebUI` client app is deployed as a Deployment with one replica. The `ollama` server and client app are deployed in the `ollama` namespace.
 
 ```sh
-$AKS_RG="rg-aks-ollama-llm"
+$AKS_RG="rg-aks-ollama-llm-510"
 $AKS_NAME="aks-cluster"
 
 # create resource group
 az group create -n $AKS_RG -l swedencentral
 
 # create an AKS cluster 
-az aks create -n $AKS_NAME -g $AKS_RG --network-plugin azure --network-plugin-mode overlay -k 1.30.3 --node-vm-size Standard_D4s_v5
+az aks create -n $AKS_NAME -g $AKS_RG --network-plugin azure --network-plugin-mode overlay -k 1.30.3 --node-vm-size Standard_D2s_v5
 
 # get credentials
 az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
+
+# check AKS Sconnection
+kubectl get nodes
 
 # deploy Ollama server and client app (Open-WebUI) into AKS
 kubectl apply -f .
 
 # check the install
-kubectl get all -n ollama
+kubectl get all,pv,pvc -n ollama
 
-# install LLM model likw phi3 or llama3.1 into ollama server
-kubectl exec ollama-0 -n ollama -it -- ollama run phi3
+# install LLM model likw phi3.5 or llama3.1 into ollama server
+kubectl exec ollama-0 -n ollama -it -- ollama run phi3.5
 
 # or you can run another model like llama3.1
 kubectl exec ollama-0 -n ollama -it -- ollama run llama3.1

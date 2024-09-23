@@ -25,7 +25,7 @@ Another simple option would be to use the Azure CLI.
 
 ```sh
 az group create --name myResourceGroup --location eastus
-az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 3 --enable-addons monitoring --generate-ssh-keys
+az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 3
 ```
 
 Next, the kubectl CLI will be used to deploy applications to the cluster.

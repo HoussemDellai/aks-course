@@ -29,7 +29,8 @@ spec:
         - name: OLLAMA_BASE_URL
           value: "http://ollama-service.ollama.svc.cluster.local:11434"
         - name: WEBUI_AUTH
-          value: "False"
+          value: "True"
+        
         tty: true
         volumeMounts:
         - name: webui-volume
