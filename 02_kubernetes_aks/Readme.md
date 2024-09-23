@@ -25,7 +25,7 @@ Another simple option would be to use the Azure CLI.
 
 ```sh
 az group create --name rg-aks-cluster --location swedencentral
-az aks create --resource-group rg-aks-cluster --name aks-cluster --node-count 3
+az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay
 ```
 
 Next, the kubectl CLI will be used to deploy applications to the cluster.
