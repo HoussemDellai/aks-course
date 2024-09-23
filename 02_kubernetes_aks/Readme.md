@@ -107,6 +107,14 @@ Or this link to create it through the command line: [docs.microsoft.com/en-us/az
 az acr create --name acraks013579 -g rg-aks-cluster --sku Standard
 ```
 
+### 4.1. Attach the ACR to the AKS cluster
+
+`AKS` needs to be attached to the `ACR` to be able to pull images from it.
+
+```sh
+az aks update --name aks-cluster --resource-group rg-aks-cluster --attach-acr acraks013579
+```
+
 ### 4.2. Building an image in ACR
 
 You can use `docker build` to build an image in your local machine, assuming you have docker installed.
