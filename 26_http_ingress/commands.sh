@@ -1,10 +1,10 @@
 # create an AKS cluster
-AKS_RG="AKS_RG-aks-we"
+AKS_RG="rg-aks-cluster"
 AKS_NAME="aks-cluster"
 
-az group create -n $AKS_RG -l westeurope
+az group create -n $AKS_RG -l swedencentral
 
-az aks create -g $AKS_RG -n $AKS_NAME --network-plugin azure --kubernetes-version "1.25.2" --node-count 2
+az aks create -g $AKS_RG -n $AKS_NAME --network-plugin azure --network-plugin-mode overlay
 
 az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 
