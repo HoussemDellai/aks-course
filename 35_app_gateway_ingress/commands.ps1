@@ -1,6 +1,6 @@
 # create an AKS cluster with Azure CNI network plugin
 
-az group create -n rg-aks-cluster -l westeurope
+az group create -n rg-aks-cluster -l swedencentral
 
 az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure
 
@@ -15,7 +15,7 @@ az aks addon enable -n aks-cluster -g rg-aks-cluster `
 
 # connect to AKS cluster
 
-az aks get-credentials -n aks-cluster -g rg-aks-cluster
+az aks get-credentials -n aks-cluster -g rg-aks-cluster --overwrite-existing
 
 # view the ingress class created by AGIC
 

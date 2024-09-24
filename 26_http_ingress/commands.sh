@@ -197,8 +197,8 @@ kubectl get pods,svc,ingress --namespace $NAMESPACE_APP_01
 
 # check app is running behind Nginx Ingress Controller (with no HTTPS)
 curl http://$INGRESS_PUPLIC_IP
-curl http://$INGRESS_PUPLIC_IP/aks-helloworld-one
-curl http://$INGRESS_PUPLIC_IP/aks-helloworld-two
+curl http://$INGRESS_PUPLIC_IP/hello-world-one
+curl http://$INGRESS_PUPLIC_IP/hello-world-two
 
 # Mapping a domain name (Azure Public IP)
 

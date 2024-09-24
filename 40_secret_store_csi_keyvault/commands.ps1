@@ -10,7 +10,6 @@ $AKS_NAME="aks-cluster"
 az group create -n $AKS_RG -l westeurope
 
 az aks create -g $AKS_RG -n $AKS_NAME `
-              --kubernetes-version "1.26.3" `
               --enable-managed-identity `
               --node-count 3 `
               --network-plugin azure `

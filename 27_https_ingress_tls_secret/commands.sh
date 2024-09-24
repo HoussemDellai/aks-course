@@ -4,7 +4,7 @@ AKS="aks-cluster"
 
 az group create -n $RG -l westeurope
 
-az aks create -g $RG -n $AKS --network-plugin azure --kubernetes-version "1.25.2" --node-count 2
+az aks create -g $RG -n $AKS --network-plugin azure --network-plugin-mode overlay
 
 az aks get-credentials --name $AKS -g $RG --overwrite-existing
 
