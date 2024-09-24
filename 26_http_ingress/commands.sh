@@ -129,7 +129,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-taAKS_RGet: /\$2
+    nginx.ingress.kubernetes.io/rewrite-target: /\$2
 spec:
   ingressClassName: nginx
   rules:
@@ -163,7 +163,7 @@ metadata:
   name: hello-world-ingress-static
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-taAKS_RGet: /static/\$2
+    nginx.ingress.kubernetes.io/rewrite-target: /static/\$2
 spec:
   ingressClassName: nginx
   rules:
