@@ -24,7 +24,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: aks-helloworld-one  
+  name: aks-helloworld-one
 spec:
   type: ClusterIP
   ports:

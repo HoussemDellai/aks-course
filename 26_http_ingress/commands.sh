@@ -205,7 +205,8 @@ curl http://$INGRESS_PUPLIC_IP/aks-helloworld-two
 DNS_NAME="aks-app-01"
 
 ###########################################################
-# Option 1: Name to associate with Azure Public IP address
+
+# Option 1: Name to associate with Azure Public IP address for Ingress
 
 # Get the resource-id of the public IP
 AZURE_PUBLIC_IP_ID=$(az network public-ip list --query "[?ipAddress!=null]|[?contains(ipAddress, '$INGRESS_PUPLIC_IP')].[id]" -o tsv)
@@ -219,7 +220,10 @@ echo $DOMAIN_NAME_FQDN
 # aks-app-01.westeurope.cloudapp.azure.com
 
 ###########################################################
+
 # Option 2: Name to associate with Azure DNS Zone
+
+# Make sure you have a DNS zone created in Azure with valid domain name
 
 # Add an A record to your DNS zone
 az network dns record-set a add-record \
