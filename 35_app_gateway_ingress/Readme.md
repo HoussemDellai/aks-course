@@ -181,8 +181,8 @@ Change the values accordingly and choose an IP within the range of the App Gatew
 
 ```sh
 az network application-gateway frontend-ip create `
-           --name frontendIp `
-           --gateway-name gateway `
+           --name frontend-ip `
+           --gateway-name ingress-appgateway `
            --resource-group MC_rg-aks-cluster_aks-cluster_westeurope `
            --vnet-name aks-vnet-11733080 `
            --subnet gateway-subnet `
