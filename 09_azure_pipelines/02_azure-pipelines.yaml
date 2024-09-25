@@ -164,7 +164,6 @@ stages:
         ArtifactName: 'drop\helm_chart'
         publishLocation: 'Container'
 
-
 - stage: Release_DEV
   displayName: Deploy to DEV
   jobs:

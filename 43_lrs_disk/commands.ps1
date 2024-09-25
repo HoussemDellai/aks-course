@@ -5,11 +5,11 @@
 ## 0. Setup demo environment
 
 # Variables
-$AKS_RG="rg-aks-az"
+$AKS_RG="rg-aks-az-swc"
 $AKS_NAME="aks-cluster"
 
 # Create and connect to AKS cluster
-az group create --name $AKS_RG --location westeurope
+az group create --name $AKS_RG --location swedencentral
 
 az aks create --name $AKS_NAME --resource-group $AKS_RG --node-count 3 --zones 1 2 3 
 

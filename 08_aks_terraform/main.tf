@@ -11,11 +11,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = var.cluster_name
 
   default_node_pool {
-    name                = "systempool"
-    node_count          = var.system_node_count
-    vm_size             = "Standard_DS2_v2"
-    type                = "VirtualMachineScaleSets"
-    enable_auto_scaling = false
+    name       = "systempool"
+    node_count = var.system_node_count
+    vm_size    = "standard_d2ads_v5"
   }
 
   identity {
@@ -23,8 +21,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    load_balancer_sku = "standard"
-    network_plugin    = "kubenet" # CNI
+    load_balancer_sku   = "standard"
+    network_plugin      = "azure" # CNI
+    network_plugin_mode = "overlay"
   }
 }
 
