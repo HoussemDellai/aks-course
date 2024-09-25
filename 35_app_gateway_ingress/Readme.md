@@ -247,8 +247,6 @@ Here are some of the possibilities:
 - Rewrite HTTP headers and URL.
 - Enabling Cookie affinity.
 
-Note: there is some limitations to App Gateway. For example, the public IP could not be disabled.
-
 ## More resources:
 
 https://azure.github.io/application-gateway-kubernetes-ingress/

@@ -18,7 +18,8 @@ spec:
       - name: aspnetapp
         image: mcr.microsoft.com/dotnet/samples:aspnetapp
         ports:
-        - containerPort: 80
+        - containerPort: 8080
+          protocol: TCP
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +31,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
