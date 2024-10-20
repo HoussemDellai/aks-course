@@ -1,11 +1,6 @@
-# Private Azure Grafana, Prometheus and Log Analytics with AKS
+# AKS Backup with Terraform and Velero
 
 ## Introduction
-
-With AKS, you can use `Azure Monitor Workspace for Prometheus` and `Azure Managed Grafana` to collect, query and visualize the metrics from AKS.
-And to collect logs, you can use `Azure Log Analytics`.
-
-This lab will provide an implementation for monitoring and logging.
 
 ## Architecture
 
@@ -37,4 +32,4 @@ terraform destroy
 
 ## More readings
 
-https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/azure-monitor-workspace-manage?tabs=azure-portal
+https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_protection_backup_instance_kubernetes_cluster

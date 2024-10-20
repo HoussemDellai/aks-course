@@ -3,22 +3,29 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks"
-  kubernetes_version  = "1.29.0"
+  kubernetes_version  = "1.30.5"
 
   network_profile {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
-    ebpf_data_plane     = "cilium"
   }
 
   default_node_pool {
-    name           = "systempool"
-    node_count     = 3
-    vm_size        = "standard_b2als_v2"
+    name                        = "systempool"
+    temporary_name_for_rotation = "syspool"
+    node_count                  = 3
+    vm_size                     = "standard_b2als_v2"
+    zones                       = [1, 2, 3]
   }
 
   identity {
     type = "SystemAssigned"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      default_node_pool.0.upgrade_settings
+    ]
   }
 }
 

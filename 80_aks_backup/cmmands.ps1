@@ -16,14 +16,14 @@ $AKS_RG_02="rg-aks-2"
 $VAULT_NAME="backup-vault"
 $VAULT_RG="rg-backup-vault"
 
-$SA_NAME="storage4aks1backup13"
+$SA_NAME="storage4aks1backup17"
 $SA_RG="rg-backup-storage"
 $BLOB_CONTAINER_NAME="aks-backup"
 $SUBSCRIPTION_ID=$(az account list --query [?isDefault].id -o tsv)
 
 # 2. Create Backup Vault resource group and Backup Vault
 
-az group create --name $VAULT_RG --location westeurope
+az group create --name $VAULT_RG --location swedencentral
 
 az dataprotection backup-vault create `
    --vault-name $VAULT_NAME `
@@ -32,7 +32,7 @@ az dataprotection backup-vault create `
    
 # 3. Create storage acount and Blob container for storing Backup data
 
-az group create --name $SA_RG --location westeurope
+az group create --name $SA_RG --location swedencentral
 
 az storage account create `
    --name $SA_NAME `
@@ -48,11 +48,11 @@ az storage container create `
 
 # 4. Create first AKS cluster with CSI Disk Driver and Snapshot Controller
 
-az aks get-versions -l westeurope -o table
+az aks get-versions -l swedencentral -o table
 
-az group create --name $AKS_RG_01 --location westeurope
+az group create --name $AKS_RG_01 --location swedencentral
 
-az aks create -g $AKS_RG_01 -n $AKS_NAME_01 -k "1.27.3" --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
+az aks create -g $AKS_RG_01 -n $AKS_NAME_01 -k "1.30.5" --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
 
 # Verify that CSI Disk Driver and Snapshot Controller are installed
 
@@ -63,9 +63,9 @@ az aks show -g $AKS_RG_01 -n $AKS_NAME_01 --query storageProfile
 
 # 5. Create second AKS cluster with CSI Disk Driver and Snapshot Controller
 
-az group create --name $AKS_RG_02 --location westeurope
+az group create --name $AKS_RG_02 --location swedencentral
 
-az aks create -g $AKS_RG_02 -n $AKS_NAME_02 -k "1.27.3" --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
+az aks create -g $AKS_RG_02 -n $AKS_NAME_02 -k "1.30.5" --zones 1 2 3 --node-vm-size "Standard_B2als_v2"
 
 # Verify that CSI Disk Driver and Snapshot Controller are installed
 

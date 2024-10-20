@@ -1,0 +1,9 @@
+apiVersion: containerstorage.azure.com/v1
+kind: StoragePool
+metadata:
+  name: ephemeraldisk-nvme
+  namespace: acstor
+spec:
+  poolType:
+    ephemeralDisk:
+      diskType: nvme

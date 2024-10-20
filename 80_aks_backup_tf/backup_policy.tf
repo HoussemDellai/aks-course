@@ -1,4 +1,4 @@
-resource "azurerm_data_protection_backup_policy_kubernetes_cluster" "backup-policy-aks" {
+resource "azurerm_data_protection_backup_policy_kubernetes_cluster" "backup_policy_aks" {
   name                = "backup-policy-aks"
   resource_group_name = azurerm_data_protection_backup_vault.backup-vault.resource_group_name
   vault_name          = azurerm_data_protection_backup_vault.backup-vault.name

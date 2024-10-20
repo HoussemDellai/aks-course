@@ -1,5 +1,5 @@
 variable "prefix" {
-  default = "80"
+  default = "80-dev"
 }
 
 variable "location" {
