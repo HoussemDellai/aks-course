@@ -1,6 +1,6 @@
-resource "azurerm_kubernetes_cluster_extension" "extension" {
+resource "azurerm_kubernetes_cluster_extension" "extension-1" {
   name              = "backup-extension"
-  cluster_id        = azurerm_kubernetes_cluster.aks.id
+  cluster_id        = azurerm_kubernetes_cluster.aks-1.id
   extension_type    = "Microsoft.DataProtection.Kubernetes"
   release_train     = "stable"
   release_namespace = "dataprotection-microsoft"
@@ -13,10 +13,10 @@ resource "azurerm_kubernetes_cluster_extension" "extension" {
   }
 }
 
-resource "azurerm_role_assignment" "extension_storage_account_contributor" {
+resource "azurerm_role_assignment" "extension_1_storage_account_contributor" {
   scope                = azurerm_storage_account.storage.id
   role_definition_name = "Storage Account Contributor"
-  principal_id         = azurerm_kubernetes_cluster_extension.extension.aks_assigned_identity[0].principal_id
+  principal_id         = azurerm_kubernetes_cluster_extension.extension-1.aks_assigned_identity[0].principal_id
 }
 
 data "azurerm_client_config" "current" {}

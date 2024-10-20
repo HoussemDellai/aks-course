@@ -1,7 +1,11 @@
 variable "prefix" {
-  default = "80-dev"
+  default = "80"
 }
 
-variable "location" {
+variable "location1" {
+  default = "swedencentral"
+}
+
+variable "location2" {
   default = "swedencentral"
 }

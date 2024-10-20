@@ -56,7 +56,7 @@ resource "azurerm_role_assignment" "extension_2_storage_account_contributor" {
   principal_id         = azurerm_kubernetes_cluster_extension.extension-2.aks_assigned_identity[0].principal_id
 }
 
-resource "azurerm_kubernetes_cluster_trusted_access_role_binding" "aks_cluster_2_trusted_access" {
+resource "azurerm_kubernetes_cluster_trusted_access_role_binding" "aks_2_trusted_access" {
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks-2.id
   name                  = "trusted-access"
   roles                 = ["Microsoft.DataProtection/backupVaults/backup-operator"]

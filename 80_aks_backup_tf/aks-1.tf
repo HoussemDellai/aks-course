@@ -1,7 +1,7 @@
-resource "azurerm_kubernetes_cluster" "aks" {
+resource "azurerm_kubernetes_cluster" "aks-1" {
   name                = "aks-cluster"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg-1.location
+  resource_group_name = azurerm_resource_group.rg-1.name
   dns_prefix          = "aks"
   kubernetes_version  = "1.30.5"
 
@@ -32,5 +32,5 @@ resource "azurerm_kubernetes_cluster" "aks" {
 resource "azurerm_role_assignment" "cluster_msi_contributor_on_snap_rg" {
   scope                = azurerm_resource_group.rg-backup.id
   role_definition_name = "Contributor"
-  principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+  principal_id         = azurerm_kubernetes_cluster.aks-1.identity[0].principal_id
 }
