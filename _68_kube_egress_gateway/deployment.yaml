@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubernetes.azure.com/static-gateway-configuration: my-static-egress-gateway # required
+        kubernetes.azure.com/static-gateway-configuration: my-static-egress-gateway
       labels:
         app: nginx
     spec:
@@ -19,7 +19,3 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-      # tolerations:
-      # - key: kubeegressgateway.azure.com/mode
-      #   effect: NoSchedule
-      

@@ -7,13 +7,21 @@ az group create --name $AKS_RG --location swedencentral
 
 az aks create -g $AKS_RG -n $AKS_NAME --enable-static-egress-gateway --network-plugin azure --network-plugin-mode overlay -k 1.30.5 --node-vm-size standard_d2pds_v6 --vm-set-type VirtualMachineScaleSets
 
-az aks nodepool add -g $AKS_RG --cluster-name $AKS_NAME --name $NODEPOOL_NAME --mode gateway --node-count 2 --gateway-prefix-size $GW_PREFIX_SIZE --node-vm-size standard_d2pds_v6
-
 az aks get-credentials -g $AKS_RG -n $AKS_NAME --overwrite-existing
+
+# check default egress IP
+# that is load balancer's outbound IP
+kubectl run nginx --image=nginx
+kubectl exec nginx -it -- curl ifconf.me
+# 74.241.184.101
+
+az aks nodepool add -g $AKS_RG --cluster-name $AKS_NAME --name $NODEPOOL_NAME --mode gateway --node-count 2 --gateway-prefix-size $GW_PREFIX_SIZE --node-vm-size standard_d2pds_v6
 
 # create public IP prefix
 
 az network public-ip prefix create -g $AKS_RG -n pip-prefix-egress --length $GW_PREFIX_SIZE
+# get prefix
+az network public-ip prefix show -g $AKS_RG -n pip-prefix-egress --query ipPrefix -o tsv
 $IP_PREFIX_ID=$(az network public-ip prefix show -g $AKS_RG -n pip-prefix-egress --query id -o tsv)
 echo $IP_PREFIX_ID
 
@@ -41,3 +49,5 @@ az role assignment create --role "Network Contributor" --assignee $AKS_PRINCIPAL
 kubectl apply -f static_gateway_config.yaml
 
 kubectl get staticgatewayconfigurations my-static-egress-gateway -n default -o yaml
+
+kubectl apply -f deployment.yaml
