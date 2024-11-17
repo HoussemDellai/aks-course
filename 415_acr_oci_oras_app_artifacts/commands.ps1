@@ -2,6 +2,7 @@
 
 winget install oras --version 1.2.0
 
+$RG="rg-acr-oci"
 $ACR_NAME="acrociregistry13"
 $REGISTRY="$ACR_NAME.azurecr.io"
 $REPO="net-monitor"
@@ -9,8 +10,8 @@ $TAG="v1"
 $IMAGE="$REGISTRY/${REPO}:$TAG"
 
 az login
-az group create -n rg-acr -l swedencentral
-az acr create -n $ACR_NAME -g rg-acr --sku Standard # --admin-enabled true
+az group create -n $RG -l swedencentral
+az acr create -n $ACR_NAME -g $RG --sku Standard
 az acr login -n $REGISTRY --expose-token
 
 $TOKEN=$(az acr login -n $REGISTRY --expose-token --output tsv --query accessToken)

@@ -51,3 +51,7 @@ kubectl apply -f static_gateway_config.yaml
 kubectl get staticgatewayconfigurations my-static-egress-gateway -n default -o yaml
 
 kubectl apply -f deployment.yaml
+
+kubectl get pods
+
+kubectl exec <pod name> -it -- curl ifconfig.me
