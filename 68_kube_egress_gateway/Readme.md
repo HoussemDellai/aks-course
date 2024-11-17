@@ -3,7 +3,7 @@
 
 ## Introduction
 
-By deafault, `AKS` uses a public IP attached to the Load Balancer for outbound traffic. This IP address is by default provisioned by AKS. But you can also bring your own IP address for the outbound traffic. This is useful when you want to whitelist the IP address for the outbound traffic. All applications in the cluster will use that IP address for egress traffic. But, if you want two or more applications/pods to use a specific IP address for each, then there is no solution.
+By deafault, `AKS` uses a public IP attached to the Load Balancer for outbound traffic. This IP address is by default provisioned by AKS. But you can also bring your own IP address for the outbound traffic using `--load-balancer-outbound-ips` or `--load-balancer-outbound-ip-prefixes`. This is useful when you want to whitelist the IP address for the outbound traffic. All applications in the cluster will use that IP address for egress traffic. But, if you want two or more applications/pods to use a specific IP address for each, then there is no solution.
 
 This is where `Static Egress Gateway` comes into play.
 
