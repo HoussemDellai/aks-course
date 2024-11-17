@@ -3,7 +3,13 @@
 
 ## Introduction
 
-Static Egress Gateway in AKS provides a streamlined solution for configuring fixed source IP addresses for outbound traffic from your AKS workloads. This feature allows you to route egress traffic through a dedicated "gateway node pool". By using the Static Egress Gateway, you can efficiently manage and control outbound IP addresses and ensure that your AKS workloads can communicate with external systems securely and consistently, using predefined IPs.
+By deafault, `AKS` uses a public IP attached to the Load Balancer for outbound traffic. This IP address is by default provisioned by AKS. But you can also bring your own IP address for the outbound traffic. This is useful when you want to whitelist the IP address for the outbound traffic. All applications in the cluster will use that IP address for egress traffic. But, if you want two or more applications/pods to use a specific IP address for each, then there is no solution.
+
+This is where `Static Egress Gateway` comes into play.
+
+![](images/aks-default-egress.png)
+
+`Static Egress Gateway` in AKS provides a streamlined solution for configuring fixed source IP addresses for outbound traffic from your AKS workloads. This feature allows you to route egress traffic through a dedicated `gateway node pool`. By using the Static Egress Gateway, you can efficiently manage and control outbound IP addresses and ensure that your AKS workloads can communicate with external systems securely and consistently, using predefined IPs.
 
 ![](images/architecture.png)
 
