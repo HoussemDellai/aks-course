@@ -115,7 +115,7 @@ az role assignment create --role "Network Contributor" --assignee $AKS_PRINCIPAL
 Deploy a sample application to the AKS cluster to use static egress gateway through annotation `kubernetes.azure.com/static-gateway-configuration: my-static-egress-gateway`. And verify that the egress traffic is routed through the static egress gateway.
 
 ```sh
-kubectl apply -f deployment.yaml
+kubectl apply -f nginx-deployment.yaml
 kubectl get pods
 kubectl exec <pod name> -it -- curl ifconfig.me
 ```

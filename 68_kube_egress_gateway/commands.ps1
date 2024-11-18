@@ -1,5 +1,5 @@
 $AKS_NAME = "aks-cluster"
-$AKS_RG = "rg-aks-cluster-egress-gw"
+$AKS_RG = "rg-aks-cluster-egress-gateway"
 $NODEPOOL_NAME = "npegress"
 $GW_PREFIX_SIZE = 30
 
@@ -50,7 +50,7 @@ kubectl apply -f static_gateway_config.yaml
 
 kubectl get staticgatewayconfigurations my-static-egress-gateway -n default -o yaml
 
-kubectl apply -f deployment.yaml
+kubectl apply -f nginx-deployment.yaml
 
 kubectl get pods
 
