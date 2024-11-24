@@ -55,3 +55,9 @@ kubectl apply -f nginx-deployment.yaml
 kubectl get pods
 
 kubectl exec <pod name> -it -- curl ifconfig.me
+
+# test private IP
+
+az aks nodepool add -g $AKS_RG --cluster-name $AKS_NAME --name npegresspr --mode gateway --node-count 2 --gateway-prefix-size $GW_PREFIX_SIZE --node-vm-size standard_d2pds_v6
+
+kubectl apply -f static_gateway_config_private.yaml
