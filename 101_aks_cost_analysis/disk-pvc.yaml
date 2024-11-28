@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: azure-disk
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: azure-managed-disk
+  namespace: azure-disk
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: managed-csi
+  resources:
+    requests:
+      storage: 5Gi
+---
+# create pv
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: azure-managed-disk
+#   namespace: azure-disk
+# spec:
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: managed-csi
+#   persistentVolumeReclaimPolicy: Retain
+  # csi:
+  #   driver: disk.csi.azure.com
+  # azureDisk:
+  #   kind: Managed
+  #   diskName: azure-managed-disk
+  #   diskURI: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MC_aks-rg_aks-cluster_westus/providers/Microsoft.Compute/disks/azure-managed-disk
+  #   cachingMode: None
+  #   fsType: ext4
+  #   readOnly: false
+  #   maxShares: 1
+  #   diskIOPSReadWrite: 120
+  #   diskMBpsReadWrite: 25
+  #   diskSizeGB: 5
+  #   diskEncryptionSetID: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Compute/diskEncryptionSets/des1
+  #   diskType: Standard_LRS
+  #   diskState: Unattached
+  #   diskProvisioningState: Succeeded
+  #   diskLocation: westus
+  #   diskCreationData:
+  #     createOption: Empty
+  #     diskSizeGB: 5
+  #     diskType: Standard_LRS
+  #     diskEncryptionSetID: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Compute/diskEncryptionSets/des1
+  #   diskSKU:
+  #     name: Standard_LRS
+  #     tier: Standard
+  #   diskTags:
+  #     diskTag1: diskTagValue1
+  #     diskTag2: diskTagValue2
+  #   diskEncryption:
+  #     diskEncryptionSetID: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg1/providers/Microsoft.Compute/diskEncryptionSets/des1
+  #     keyEncryptionKeyURL: https://keyvault1.vault.azure.net/keys/key1
+  #     keyEncryptionKeyVaultURL: https://keyvault1.vault.azure.net
+  #     keyEncryptionAlgorithm: RSA-OAEP
+  #     keyEncryptionKeyVersion: 7c7d7f7e7d7c7b7a79787776757473727170706f6e6d6c6b6a69686766656463
+  #     keyEncryptionKeyVaultID: /subscriptions/00000000-0000-0000-0000-

@@ -1,0 +1,27 @@
+# Replace the placeholders before running `kubectl apply -f pod.yaml`
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sc-demo-storage-identity
+  namespace: default
+  labels:
+    azure.workload.identity/use: "true"
+spec:
+  restartPolicy: Never
+  serviceAccountName: <ServiceAccountCreatedByServiceConnector> # E.g., sc-account-ccd6321c-c451-4936-8407-2d382f4fc850
+  containers:
+  - name: demoapp
+    image: <YourContainerImage>                                 # E.g., mydemo.azurecr.io/sc-demo-storage-identity:latest
+    ports:
+    - containerPort: 80
+    envFrom:
+    - secretRef:
+        name: <SecretCreatedByServiceConnector>                 # E.g., sc-account412a8-secret
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
