@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ServiceLinker/linkers",
+            "apiVersion": "2024-07-01-preview",
+            "scope": "Microsoft.App/containerApps/nginx-consumption",
+            "name": "storageblob_b2db0",
+            "properties": {
+                "clientType": "python",
+                "targetService": {
+                    "type": "AzureResource",
+                    "id": "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-service-connector-aks-250/providers/Microsoft.Storage/storageAccounts/storaks250/blobServices/default"
+                },
+                "authInfo": {
+                    "authType": "systemAssignedIdentity",
+                    "roles": [
+                        "2a2b9908-6ea1-4ae2-8e65-a410df84e7d1"
+                    ]
+                },
+                "scope": "nginx",
+                "configurationInfo": {
+                    "customizedKeys": {},
+                    "daprProperties": {
+                        "version": "",
+                        "componentType": "",
+                        "metadata": [],
+                        "scopes": []
+                    }
+                }
+            },
+            "dependsOn": []
+        }
+    ]
+}

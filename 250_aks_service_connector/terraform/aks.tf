@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
   dns_prefix                = "aks"
-  kubernetes_version        = "1.31.1"
+  kubernetes_version        = "1.30.5"
   oidc_issuer_enabled       = true
   workload_identity_enabled = true
 
@@ -13,11 +13,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   default_node_pool {
-    name           = "mainpool"
-    node_count     = 2
-    vm_size        = "standard_d2pds_v6"
-    os_sku         = "AzureLinux"
-    vnet_subnet_id = azurerm_subnet.snet-aks.id
+    name                        = "mainpool"
+    node_count                  = 2
+    vm_size                     = "standard_d2pds_v6"
+    os_sku                      = "Ubuntu"
+    vnet_subnet_id              = azurerm_subnet.snet-aks.id
   }
 
   identity {

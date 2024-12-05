@@ -10,7 +10,7 @@ resource "azurerm_federated_identity_credential" "federated-cred" {
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
   parent_id           = azurerm_user_assigned_identity.identity-aks-app.id
-  subject             = "system:serviceaccount:default:sacc"
+  subject             = "system:serviceaccount:default:sc-account-01"
 }
 
 resource "azurerm_role_assignment" "storage-blob-data-reader" {
