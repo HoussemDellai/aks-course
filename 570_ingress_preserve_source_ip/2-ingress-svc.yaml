@@ -4,6 +4,7 @@ metadata:
   name: webapp
 spec:
   type: ClusterIP
+  externalTrafficPolicy: Cluster # Local
   ports:
     - port: 80
       targetPort: 80
@@ -16,8 +17,6 @@ metadata:
   name: app-ingress
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    # nginx.ingress.kubernetes.io/use-proxy-protocol: "true"
-    # nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
 spec:
   ingressClassName: nginx
   rules:
