@@ -63,7 +63,7 @@ curl $INGRESS_PUPLIC_IP
 # check the "X-Forwarded-For" and "X-Real-IP" headers in the response. They should contain the original client IP address.
 ```
 
-## More resources
+## More resources and references
 
 https://kubernetes.io/docs/tutorials/services/source-ip/
 https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
