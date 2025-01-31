@@ -11,6 +11,8 @@ spec.externalTrafficPolicy: Local
 
 This way the original IP address of the client will be carried by the headers: `X-Forwarded-For` and `X-Real-IP`.
 
+![](images/architecture.png)
+
 Here is a step-by-step guide to demonstrate how to preserve the client's IP address.
 
 ```sh

@@ -20,7 +20,7 @@ resource "azurerm_key_vault_certificate" "aks-ingress-tls-012" {
     password = ""
   }
 
-  depends_on = [ azurerm_role_assignment.keyvault-secrets-officer ]
+  depends_on = [ azurerm_role_assignment.keyvault-secrets-officer2 ]
 }
 
 resource "azurerm_role_assignment" "keyvault-secrets-officer2" {

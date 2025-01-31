@@ -19,7 +19,7 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
   data_sources {
     syslog {
       name = "example-syslog"
-      #   streams = ["Microsoft-Syslog"]
+      streams = ["Microsoft-Syslog"]
       facility_names = [
         "*"
       ]

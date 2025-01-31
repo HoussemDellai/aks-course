@@ -8,7 +8,7 @@ resource "azapi_resource" "appservice_domain" {
   schema_validation_enabled = true
   response_export_values    = ["*"] # ["id", "name", "properties.nameServers"]
 
-  body = jsonencode({
+  body = {
 
     properties = {
       autoRenew = false
@@ -78,6 +78,6 @@ resource "azapi_resource" "appservice_domain" {
         }
       }
     }
-  })
+  }
 }
 

@@ -4,6 +4,7 @@ resource "terraform_data" "import-grafana-dashboard" {
   }
 
   triggers_replace = [ azurerm_dashboard_grafana.grafana.id ]
+  depends_on = [ azurerm_role_assignment.role_grafana_admin ]
 }
 
 resource "terraform_data" "import-grafana-dashboard2" {
@@ -12,4 +13,5 @@ resource "terraform_data" "import-grafana-dashboard2" {
   }
 
   triggers_replace = [ azurerm_dashboard_grafana.grafana.id ]
+  depends_on = [ azurerm_role_assignment.role_grafana_admin ]
 }
