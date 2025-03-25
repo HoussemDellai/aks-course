@@ -3,20 +3,21 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                = azurerm_resource_group.rg.location
   resource_group_name     = azurerm_resource_group.rg.name
   dns_prefix              = "aks"
-  kubernetes_version      = "1.30.0"
+  kubernetes_version      = "1.32.0"
   private_cluster_enabled = false
 
   network_profile {
     network_plugin      = "azure"
-    network_plugin_mode = "overlay"
+    # network_plugin_mode = "overlay"
+    outbound_type       = "loadBalancer"
   }
 
   default_node_pool {
-    name                  = "mainpool"
-    node_count            = 3
-    vm_size               = "Standard_B2als_v2"
-    os_sku                = "AzureLinux"
-    vnet_subnet_id        = azurerm_subnet.snet-aks.id
+    name           = "systemnp"
+    node_count     = 2
+    vm_size        = "Standard_B2als_v2"
+    os_sku         = "AzureLinux"
+    vnet_subnet_id = azurerm_subnet.snet-aks.id
   }
 
   identity {
@@ -24,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   web_app_routing {
-    dns_zone_ids = null
+    dns_zone_ids = []
   }
 
   lifecycle {
@@ -36,7 +37,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # Required to create internal Load Balancer for Nginx Ingress Controller
 resource "azurerm_role_assignment" "network-contributor" {
-  scope                = azurerm_subnet.snet-aks.id
+  scope                = azurerm_subnet.snet-lb.id
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.identity.0.principal_id
 }

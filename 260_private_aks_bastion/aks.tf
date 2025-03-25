@@ -3,14 +3,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                = azurerm_resource_group.rg.location
   resource_group_name     = azurerm_resource_group.rg.name
   dns_prefix              = "aks"
-  kubernetes_version      = "1.30.3"
-  private_cluster_enabled = true
-  private_dns_zone_id     = "System"
+  kubernetes_version      = "1.32.0"
+  private_cluster_enabled = false
+  # private_dns_zone_id     = "System"
 
   network_profile {
-    network_plugin      = "azure"
-    network_plugin_mode = "overlay"
-    outbound_type       = "loadBalancer"
+    network_plugin = "azure"
+    outbound_type  = "loadBalancer"
+    # network_plugin_mode = "overlay"
   }
 
   default_node_pool {
@@ -23,6 +23,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   identity {
     type = "SystemAssigned"
+  }
+
+  web_app_routing {
+    dns_zone_ids = []
   }
 
   lifecycle {

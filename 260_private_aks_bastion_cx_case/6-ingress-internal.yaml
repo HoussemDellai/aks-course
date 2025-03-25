@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: inspectorgadget-internal
+  namespace: webapp
+spec:
+  ingressClassName: nginx-internal
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: inspectorgadget
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
