@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-inspector-gadget
+  namespace: webapp
+  annotations:
+    alb.networking.azure.io/alb-id: "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-aks-agc-261-poc/providers/Microsoft.ServiceNetworking/trafficControllers/agc-aks"
+    alb.networking.azure.io/alb-frontend: "agc-frontend"
+spec:
+  ingressClassName: azure-alb-external
+  # tls:
+  # - hosts:
+  #   - contoso.com
+  #   secretName: contoso.com
+  rules:
+  - host: contoso.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: inspectorgadget
+            port:
+              number: 80
