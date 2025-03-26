@@ -13,7 +13,7 @@ spec:
   #   - contoso.com
   #   secretName: contoso.com
   rules:
-  - host: contoso.com
+  - host: inspector-gadget.aks-apps.com
     http:
       paths:
       - path: /
