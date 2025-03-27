@@ -16,7 +16,7 @@ resource "azurerm_subnet" "snet-agc" {
   name                 = "snet-agc"
   resource_group_name  = azurerm_virtual_network.vnet.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.10.4.0/24"]
+  address_prefixes     = ["10.10.1.0/24"]
 
   delegation {
     name = "delegation-agc"
