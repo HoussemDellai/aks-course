@@ -47,3 +47,6 @@ terraform.rc
 
 # ignore .infracost
 .infracost/*
+
+*bin
+*obj

@@ -26,7 +26,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size               = "Standard_B2als_v2"
     os_sku                = "AzureLinux"
     vnet_subnet_id        = azurerm_subnet.snet-spoke-aks.id
-    enable_node_public_ip = false
   }
 
   identity {

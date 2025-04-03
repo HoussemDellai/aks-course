@@ -11,5 +11,5 @@
         "!erlang",
         "!git-commit"
     ],
-    "dotnet.defaultSolution": "disable"
+    "dotnet.defaultSolution": "k8s-orchestrator-pods.sln"
 }
