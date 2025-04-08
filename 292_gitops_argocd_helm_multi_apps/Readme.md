@@ -111,6 +111,10 @@ Check the app is installed correctly.
 kubectl get application -n argocd
 ```
 
+## Deploying a second application
+
+This second app uses the same Helm chart but with different values specified directly in the `Application` object.
+
 ## Exploring ArgoCD CLI
 
 Installing ArgoCD CLI on Windows
