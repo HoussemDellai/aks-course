@@ -20,6 +20,14 @@ Argo CD provides a browser-based user interface. You can use it to add applicati
 
 By default, the Argo CD user interface and the API server aren't exposed. To access them, we recommend that you create an ingress controller that has an internal IP address. Or, you can use an internal load balancer to expose them.
 
+## Create an AKS cluster
+
+```sh
+az group create -n rg-aks-cluster -l swedencentral
+az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay -k 1.32.0 --node-vm-size standard_d2ads_v5
+az aks get-credentials -n aks-cluster -g rg-aks-cluster --overwrite-existing
+```
+
 ## Installing ArgoCD into the cluster
 
 ```sh
