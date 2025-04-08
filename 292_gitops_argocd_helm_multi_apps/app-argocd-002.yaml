@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app002
+  namespace: argocd
+spec:
+  project: project-apps
+  source:
+    path: 292_gitops_argocd_helm_multi_apps/helm/
+    repoURL: https://github.com/HoussemDellai/aks-course/
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        env:
+          DATABASE_FQDN: "sqlserver-poc-001.database.windows.net"
+          DATABASE_NAME: "inspectorgadget"
+          DATABASE_USERNAME: "sqladmin"
+          DATABASE_PASSWORD: "P@ssw0rd"
+          DATABASE_PORT: "1433"
+  destination:
+    namespace: app002
+    server: https://kubernetes.default.svc

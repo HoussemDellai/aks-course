@@ -7,8 +7,11 @@ spec:
   project: project-apps
   source:
     path: 291_gitops_argocd_helm/helm
-    repoURL: https://github.com/HoussemDellai/aks-course
+    repoURL: https://github.com/HoussemDellai/aks-course/
     targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
-    namespace: app01
+    namespace: app02
     server: https://kubernetes.default.svc
