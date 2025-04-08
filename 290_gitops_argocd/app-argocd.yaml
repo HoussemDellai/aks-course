@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapp
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app01
+  namespace: argocd
+spec:
+  destination:
+    namespace: webapp
+    server: https://kubernetes.default.svc
+  source:
+    path: guestbook
+    repoURL: https://github.com/argoproj/argocd-example-apps
+    targetRevision: HEAD
+  project: default

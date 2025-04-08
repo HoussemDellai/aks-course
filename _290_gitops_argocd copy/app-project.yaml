@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: project-apps
+  namespace: argocd
+spec:
+  sourceRepos:
+    # # Do not use the test repo in argoproj
+    # - '!ssh://git@GITHUB.com:argoproj/test'
+    # # Nor any Gitlab repo under group/ 
+    # - '!https://gitlab.com/group/**'
+    # Any other repo is fine though
+    - '*'
+  destinations:
+  # Do not allow any app to be installed in `kube-system`  
+  - namespace: '!kube-system'
+    server: '*'
+  # # Or any cluster that has a URL of `team1-*`   
+  # - namespace: '*'
+  #   server: '!https://team1-*'
+  #   # Any other namespace or server is fine though.
+  # - namespace: '*'
+  #   server: '*'
+  # clusterResourceWhitelist:
+  # - group: '*'
+  #   kind: '*'
+  # roles:
+  # - description: some-role
+  #   groups:
+  #   - some-user
+  #   name: admin
+  #   policies:
+  #   - p, proj:sample-test-project:some-role, applications, *, *, allow
