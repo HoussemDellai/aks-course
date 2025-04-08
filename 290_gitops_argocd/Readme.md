@@ -7,19 +7,65 @@ kubectl create namespace argocd
 
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
+# Expose ArgoCD on public IP
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 
 # get password then decode base64
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
 ```
 
-## install ArgoCD CLI on Windows
+## Deploying a sample application
+
+We'll deploy the sample application prvided in `kubernetes` folder.
+
+First create the namespace for the application.
+
+```sh
+kubectl create namespace webapp
+```
+
+Then deploy the app through ArgoCD.
+
+The ArgoCD's `Application` object will be used to create the app. Here is its configuration.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app01
+  namespace: argocd
+spec:
+  destination:
+    namespace: webapp
+    server: https://kubernetes.default.svc
+  source:
+    path: kubernetes
+    repoURL: https://github.com/HoussemDellai/aks-course
+    targetRevision: HEAD
+  project: default
+```
+
+Let's deploy it to AKS through ArgoCD server.
+
+```sh
+kubectl apply -f app-argocd.yaml
+```
+
+Check the app is installed correctly.
+
+```sh
+kubectl get application -n argocd
+```
+
+## Installing ArgoCD CLI on Windows
 
 ```sh
 winget install -e --id argoproj.argocd
 ```
 
-## login to argocd server
+## Login to ArgoCD server
+
+Replace the IP with your ArgoCD server IP.
 
 ```sh
 argocd login 4.178.217.48:80
@@ -29,5 +75,3 @@ argocd login 4.178.217.48:80
 # 'admin:login' logged in successfully
 # Context '4.178.217.48:80' updated
 ```
-
->Note: Before v2.6 of Argo CD, Values files must be in the same git repository as the Helm chart. The files can be in a different location in which case it can be accessed using a relative path relative to the root directory of the Helm chart. As of v2.6, values files can be sourced from a separate repository than the Helm chart by taking advantage of multiple sources for Applications.
