@@ -57,7 +57,9 @@ Check the app is installed correctly.
 kubectl get application -n argocd
 ```
 
-## Installing ArgoCD CLI on Windows
+## Exploring ArgoCD CLI
+
+Installing ArgoCD CLI on Windows
 
 ```sh
 winget install -e --id argoproj.argocd
@@ -74,4 +76,25 @@ argocd login 4.178.217.48:80
 # Password:
 # 'admin:login' logged in successfully
 # Context '4.178.217.48:80' updated
+```
+
+```sh
+argocd app get app01
+# Name:               argocd/app01
+# Project:            default
+# Server:             https://kubernetes.default.svc
+# Namespace:          webapp
+# URL:                https://4.178.217.48:80/applications/app01
+# Source:
+# - Repo:             https://github.com/HoussemDellai/aks-course
+#   Target:           HEAD
+#   Path:             290_gitops_argocd/kubernetes
+# SyncWindow:         Sync Allowed
+# Sync Policy:        Manual
+# Sync Status:        Synced to HEAD (932985c)
+# Health Status:      Healthy
+
+# GROUP  KIND        NAMESPACE  NAME             STATUS  HEALTH   HOOK  MESSAGE
+#        Service     webapp     inspectorgadget  Synced  Healthy        service/inspectorgadget created
+# apps   Deployment  webapp     inspectorgadget  Synced  Healthy        deployment.apps/inspectorgadget created
 ```
