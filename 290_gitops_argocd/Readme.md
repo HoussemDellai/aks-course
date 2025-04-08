@@ -1,5 +1,25 @@
 # Deploying apps into AKS using ArgoCD
 
+## Introduction to ArgoCD
+
+Application definitions, configurations, and environments should be declarative and version controlled. Application deployment and lifecycle management should be automated, auditable, and easy to understand.
+
+The Kubernetes administrator can change Kubernetes configuration objects, such as secrets and ConfigMaps, and commit the changes directly to the GitHub repository.
+
+![](images/architecture.png)
+
+The data flow for this scenario is:
+
+1. The Kubernetes administrator makes configuration changes in YAML files and commits the changes to the GitHub repository.
+2. Argo CD pulls the changes from the Git repository.
+3. Argo CD reconciles the configuration changes to the AKS cluster.
+
+Argo CD doesn't have to automatically sync the desired target state to the AKS cluster. It's implemented as a Kubernetes controller that continuously monitors running applications. It compares the current, live state of the AKS cluster against the desired target state that's specified in the Git repository. Argo CD reports and visualizes the differences, while providing facilities to automatically or manually sync the live state back to the desired target state.
+
+Argo CD provides a browser-based user interface. You can use it to add application configurations, observe the synchronization state with respect to the cluster, and initiate synchronization against the cluster. You can also use the Argo CD command line to do these things. Both the user interface and command line interface provide features to view the history of configuration changes and to roll back to a previous version.
+
+By default, the Argo CD user interface and the API server aren't exposed. To access them, we recommend that you create an ingress controller that has an internal IP address. Or, you can use an internal load balancer to expose them.
+
 ## Installing ArgoCD into the cluster
 
 ```sh
