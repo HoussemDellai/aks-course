@@ -8,7 +8,7 @@ spec:
     namespace: webapp
     server: https://kubernetes.default.svc
   source:
-    path: kubernetes
+    path: 290_gitops_argocd/kubernetes
     repoURL: https://github.com/HoussemDellai/aks-course
     targetRevision: HEAD
   project: default
