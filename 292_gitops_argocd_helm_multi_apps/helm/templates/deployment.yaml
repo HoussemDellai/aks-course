@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inspectorgadget  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inspectorgadget
+  template:
+    metadata:
+      labels:
+        app: inspectorgadget
+    spec:
+      containers:
+      - name: inspectorgadget
+        image: ghcr.io/jelledruyts/inspectorgadget:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: DATABASE_FQDN
+          value: "{{ .Values.env.DATABASE_FQDN }}"
+        - name: DATABASE_NAME
+          value: "{{ .Values.env.DATABASE_NAME }}"
+        - name: DATABASE_USERNAME
+          value: "{{ .Values.env.DATABASE_USERNAME }}"
+        - name: DATABASE_PASSWORD
+          value: "{{ .Values.env.DATABASE_PASSWORD }}"
+        - name: DATABASE_PORT
+          value: "{{ .Values.env.DATABASE_PORT }}"

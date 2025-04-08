@@ -1,0 +1,10 @@
+# Default values for webapp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+env:
+  DATABASE_FQDN: "sqlserver-poc-001.database.windows.net"
+  DATABASE_NAME: "inspectorgadget"
+  DATABASE_USERNAME: "sqladmin"
+  DATABASE_PASSWORD: "P@ssw0rd"
+  DATABASE_PORT: "1433"
