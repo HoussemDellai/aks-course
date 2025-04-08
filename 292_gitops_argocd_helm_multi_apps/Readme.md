@@ -64,7 +64,7 @@ We'll deploy the sample application prvided in `helm` folder.
 First create the namespace for the application.
 
 ```sh
-kubectl create namespace app01
+kubectl create namespace app001
 ```
 
 Then deploy the app through ArgoCD.
@@ -78,23 +78,31 @@ Here is its configuration.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app01
+  name: app001
   namespace: argocd
 spec:
-  destination:
-    namespace: app01
-    server: https://kubernetes.default.svc
-  source:
-    path: 291_gitops_argocd_helm/helm
-    repoURL: https://github.com/HoussemDellai/aks-course
-    targetRevision: HEAD
   project: project-apps
+  source:
+    path: 292_gitops_argocd_helm_multi_apps/helm/
+    repoURL: https://github.com/HoussemDellai/aks-course/
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        env:
+          DATABASE_FQDN: "sqlserver-poc-001.database.windows.net"
+          DATABASE_NAME: "inspectorgadget"
+          DATABASE_USERNAME: "sqladmin"
+          DATABASE_PASSWORD: "P@ssw0rd"
+          DATABASE_PORT: "1433"
+  destination:
+    namespace: app001
+    server: https://kubernetes.default.svc
 ```
 
 Let's deploy it to AKS through ArgoCD server.
 
 ```sh
-kubectl apply -f app-argocd.yaml
+kubectl apply -f app-argocd-001.yaml
 ```
 
 Check the app is installed correctly.
@@ -125,22 +133,22 @@ argocd login 4.178.217.48:80
 ```
 
 ```sh
-argocd app get app01
-# Name:               argocd/app01
+# argocd app get app001
+# Name:               argocd/app001
 # Project:            project-apps
 # Server:             https://kubernetes.default.svc
-# Namespace:          app01
-# URL:                https://4.178.217.48:80/applications/app01
+# Namespace:          app001
+# URL:                https://4.178.217.48:80/applications/app001
 # Source:
-# - Repo:             https://github.com/HoussemDellai/aks-course
+# - Repo:             https://github.com/HoussemDellai/aks-course/
 #   Target:           HEAD
-#   Path:             291_gitops_argocd_helm/helm
+#   Path:             292_gitops_argocd_helm_multi_apps/helm/
 # SyncWindow:         Sync Allowed
 # Sync Policy:        Manual
-# Sync Status:        Synced to HEAD (d91b8ff)
+# Sync Status:        Synced to HEAD (e77dd42)
 # Health Status:      Healthy
 
 # GROUP  KIND        NAMESPACE  NAME             STATUS  HEALTH   HOOK  MESSAGE
-#        Service     app01      inspectorgadget  Synced  Healthy        service/inspectorgadget created
-# apps   Deployment  app01      inspectorgadget  Synced  Healthy        deployment.apps/inspectorgadget created
+#        Service     app001     inspectorgadget  Synced  Healthy        service/inspectorgadget created
+# apps   Deployment  app001     inspectorgadget  Synced  Healthy        deployment.apps/inspectorgadget created
 ```
