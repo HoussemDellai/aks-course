@@ -72,7 +72,7 @@ We'll deploy the sample application prvided in `helm` folder.
 First create the namespace for the application.
 
 ```sh
-kubectl create namespace app01
+kubectl create namespace app02
 ```
 
 Then deploy the app through ArgoCD.
@@ -86,11 +86,11 @@ Here is its configuration.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app01
+  name: app02
   namespace: argocd
 spec:
   destination:
-    namespace: app01
+    namespace: app02
     server: https://kubernetes.default.svc
   source:
     path: 291_gitops_argocd_helm/helm
@@ -133,12 +133,12 @@ argocd login 4.178.217.48:80
 ```
 
 ```sh
-argocd app get app01
-# Name:               argocd/app01
+argocd app get app02
+# Name:               argocd/app02
 # Project:            project-apps
 # Server:             https://kubernetes.default.svc
-# Namespace:          app01
-# URL:                https://4.178.217.48:80/applications/app01
+# Namespace:          app02
+# URL:                https://4.178.217.48:80/applications/app02
 # Source:
 # - Repo:             https://github.com/HoussemDellai/aks-course
 #   Target:           HEAD
@@ -149,6 +149,6 @@ argocd app get app01
 # Health Status:      Healthy
 
 # GROUP  KIND        NAMESPACE  NAME             STATUS  HEALTH   HOOK  MESSAGE
-#        Service     app01      inspectorgadget  Synced  Healthy        service/inspectorgadget created
-# apps   Deployment  app01      inspectorgadget  Synced  Healthy        deployment.apps/inspectorgadget created
+#        Service     app02      inspectorgadget  Synced  Healthy        service/inspectorgadget created
+# apps   Deployment  app02      inspectorgadget  Synced  Healthy        deployment.apps/inspectorgadget created
 ```

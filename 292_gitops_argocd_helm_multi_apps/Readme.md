@@ -123,6 +123,11 @@ kubectl get application -n argocd
 
 This second app uses the same Helm chart but with different values specified directly in the `Application` object.
 
+```sh
+kubectl create namespace app002
+kubectl apply -f app-argocd-002.yaml
+```
+
 ## Exploring ArgoCD CLI
 
 Installing ArgoCD CLI on Windows
