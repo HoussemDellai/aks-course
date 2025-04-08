@@ -14,20 +14,40 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
 ```
 
-## Deploying a sample application
+## Deploying an ArgoCD project
 
-We'll deploy the sample application prvided in `kubernetes` folder.
+Each team should have its own project to deploy its own apps.
+A project config looks like this:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: project-apps
+  namespace: argocd
+spec:
+  sourceRepos:
+    - '*'
+  destinations:
+  - namespace: '!kube-system' # Do not allow any app to be installed in `kube-system`
+    server: 'https://kubernetes.default.svc'
+```
+
+## Deploying a Helm application
+
+We'll deploy the sample application prvided in `helm` folder.
 
 First create the namespace for the application.
 
 ```sh
-kubectl create namespace webapp
+kubectl create namespace app01
 ```
 
 Then deploy the app through ArgoCD.
 
 The ArgoCD's `Application` object will be used to create the app. 
 It describes where to deploy the app, in which namespace and from which repo to get manifest files.
+
 Here is its configuration.
 
 ```yaml
@@ -38,13 +58,13 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: webapp
+    namespace: app01
     server: https://kubernetes.default.svc
   source:
-    path: kubernetes
+    path: 291_gitops_argocd_helm/helm
     repoURL: https://github.com/HoussemDellai/aks-course
     targetRevision: HEAD
-  project: default
+  project: project-apps
 ```
 
 Let's deploy it to AKS through ArgoCD server.

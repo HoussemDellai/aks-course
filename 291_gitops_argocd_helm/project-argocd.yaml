@@ -14,7 +14,7 @@ spec:
   destinations:
   # Do not allow any app to be installed in `kube-system`  
   - namespace: '!kube-system'
-    server: '*'
+    server: 'https://kubernetes.default.svc'
   # # Or any cluster that has a URL of `team1-*`   
   # - namespace: '*'
   #   server: '!https://team1-*'
