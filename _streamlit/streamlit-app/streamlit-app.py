@@ -9,10 +9,10 @@ st.title("ChatGPT Streamlit Demo")
 load_dotenv(override=False)
 
 with st.sidebar.expander("Environment Variables"):
-    st.write("AZURE_OPENAI_ENDPOINT", os.getenv("AZURE_OPENAI_ENDPOINT"))
-    st.write("AZURE_OPENAI_API_KEY", os.getenv("AZURE_OPENAI_API_KEY"))
-    st.write("AZURE_OPENAI_CHATGPT_DEPLOYMENT", os.getenv("AZURE_OPENAI_CHATGPT_DEPLOYMENT"))
-    st.write("AZURE_OPENAI_API_VERSION", os.getenv("AZURE_OPENAI_API_VERSION"))
+    st.write("AZURE_OPENAI_ENDPOINT : ", os.getenv("AZURE_OPENAI_ENDPOINT"))
+    st.write("AZURE_OPENAI_API_KEY : ", os.getenv("AZURE_OPENAI_API_KEY"))
+    st.write("AZURE_OPENAI_CHATGPT_DEPLOYMENT : ", os.getenv("AZURE_OPENAI_CHATGPT_DEPLOYMENT"))
+    st.write("AZURE_OPENAI_API_VERSION : ", os.getenv("AZURE_OPENAI_API_VERSION"))
 
 default_prompt = """
 You are an AI assistant that helps users.
