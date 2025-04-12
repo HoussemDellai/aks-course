@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-deployment
+  labels:
+    app: streamlit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlit
+  template:
+    metadata:
+      labels:
+        app: streamlit
+    spec:
+      containers:
+        - name: streamlit
+          image: acr4aks173.azurecr.io/streamlit-app:1.0.11
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8501
+          env:
+          - name: AZURE_OPENAI_ENDPOINT
+            value: "https://ai-service-aks173.cognitiveservices.azure.com"
+          - name: AZURE_OPENAI_API_KEY
+            value: "4239fa0bba324b8b96b28564414c4136"
+          - name: AZURE_OPENAI_API_VERSION
+            value: "2024-12-01-preview"
+          livenessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+              scheme: HTTP
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+              scheme: HTTP
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 745Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamlit-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: streamlit
+  ports:
+    - name: streamlit-port
+      port: 80
+      targetPort: 8501
