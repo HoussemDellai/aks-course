@@ -8,10 +8,23 @@ st.title("ChatGPT Streamlit Demo")
 
 load_dotenv(override=False)
 
+with st.sidebar.expander("Environment Variables"):
+    st.write("AZURE_OPENAI_ENDPOINT", os.getenv("AZURE_OPENAI_ENDPOINT"))
+    st.write("AZURE_OPENAI_API_KEY", os.getenv("AZURE_OPENAI_API_KEY"))
+    st.write("AZURE_OPENAI_CHATGPT_DEPLOYMENT", os.getenv("AZURE_OPENAI_CHATGPT_DEPLOYMENT"))
+    st.write("AZURE_OPENAI_API_VERSION", os.getenv("AZURE_OPENAI_API_VERSION"))
+
+default_prompt = """
+You are an AI assistant that helps users.
+"""
+
+system_prompt = st.sidebar.text_area("System Prompt", default_prompt, height=200)
+seed_message = {"role": "system", "content": system_prompt}
+
 client = AzureOpenAI(
-    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
 )
 
 if "openai_model" not in st.session_state:
