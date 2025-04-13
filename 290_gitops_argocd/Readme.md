@@ -37,6 +37,9 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 
 # Expose ArgoCD on public IP
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+# if using Powershell
+# kubectl patch svc argocd-server -n argocd -p '{\"spec\": {\"type\": \"LoadBalancer\"}}'
+
 
 # get password then decode base64
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml

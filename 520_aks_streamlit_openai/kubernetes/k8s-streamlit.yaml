@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: streamlit
-          image: acr4aks173.azurecr.io/streamlit-app:1.0.13
+          image: acr4aks173.azurecr.io/streamlit-app:1.0.15
           imagePullPolicy: Always
           ports:
             - containerPort: 8501
@@ -25,6 +25,8 @@ spec:
             value: "https://ai-service-aks173.cognitiveservices.azure.com"
           - name: AZURE_OPENAI_API_KEY
             value: "4239fa0bba324b8b96b28564414c4136"
+          - name: AZURE_OPENAI_CHATGPT_DEPLOYMENT
+            value: "gpt-4o"
           - name: AZURE_OPENAI_API_VERSION
             value: "2024-12-01-preview"
           livenessProbe:
@@ -59,3 +61,7 @@ spec:
     - name: streamlit-port
       port: 80
       targetPort: 8501
+---
+# secret for Azure OpenAI API key
+apiVersion: v1
+  
