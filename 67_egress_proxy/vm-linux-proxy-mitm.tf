@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "nic-vm-proxy" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
-  enable_ip_forwarding = true
+  ip_forwarding_enabled = true
 
   ip_configuration {
     name                          = "internal"
@@ -25,7 +25,7 @@ resource "azurerm_linux_virtual_machine" "vm-proxy" {
   name                            = "vm-linux-mitmproxy"
   resource_group_name             = azurerm_resource_group.rg.name
   location                        = azurerm_resource_group.rg.location
-  size                            = "Standard_B2ats_v2"
+  size                            = "Standard_D2ads_v5"
   disable_password_authentication = false
   admin_username                  = "azureuser"
   admin_password                  = "@Aa123456789"

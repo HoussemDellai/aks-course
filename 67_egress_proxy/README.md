@@ -21,7 +21,7 @@ By default, MITM6-Proxy generates a certificate when it starts. You can get this
 But, for an enterprise use case, they will create their own certificate and then import it into MITM-Proxy.
 That is what you will do here.
 
-Refer to the script ``generate-cert.sh` to generate a certificate for MITM-Proxy and print it as base64 encoded.
+Refer to the script `generate-cert.sh` to generate a certificate for MITM-Proxy and print it as base64 encoded.
 
 ```sh
 openssl genrsa -out cert.key 2048
