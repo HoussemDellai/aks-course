@@ -196,7 +196,7 @@ Following is the simplified architecture.
 
 ![](images\24_private_cluster__architecture_public_cluster_vnet_integration.png)
 
-Let us see how that works.
+Let's see how that works.
 
 ```sh
 # create public cluster with VNET Integration
@@ -351,4 +351,4 @@ More details on how to [connect to private cluster](https://learn.microsoft.com/
 This article is also available in a video format on youtube:
 https://www.youtube.com/watch?v=8e8vBLZiIhQ&list=PLpbcUe4chE79sB7Jg7B4z3HytqUUEwcNE&index=60&t=772s
 
-<a href="https://www.youtube.com/watch?v=8e8vBLZiIhQ&list=PLpbcUe4chE79sB7Jg7B4z3HytqUUEwcNE&index=60&t=772s) ![](images\24_private_cluster__video-youtube.png) </a>
+<a href="https://www.youtube.com/watch?v=8e8vBLZiIhQ&list=PLpbcUe4chE79sB7Jg7B4z3HytqUUEwcNE&index=60&t=772s"> ![](images\24_private_cluster__video-youtube.png)"</a>

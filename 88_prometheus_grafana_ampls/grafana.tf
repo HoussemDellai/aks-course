@@ -6,7 +6,7 @@ resource "azurerm_dashboard_grafana" "grafana" {
   deterministic_outbound_ip_enabled = true
   sku                               = "Standard"
   zone_redundancy_enabled           = false
-  grafana_major_version             = "10" # 9
+  grafana_major_version             = "11" # 10
   public_network_access_enabled     = false
 
   azure_monitor_workspace_integrations {

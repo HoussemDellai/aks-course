@@ -1,10 +1,9 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-aks-monitoring-${var.prefix}"
+  name     = "rg-aks-monitoring-ampls-${var.prefix}"
   location = var.location
 }
 
 resource "azurerm_resource_group" "rg-jumpbox" {
-  name     = "rg-jumpbox-${var.prefix}"
+  name     = "rg-vm-jumpbox-${var.prefix}"
   location = var.location
 }
-

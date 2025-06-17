@@ -1,22 +1,24 @@
 resource "azurerm_monitor_private_link_scope" "ampls" {
-  name                = "ampls-monitoring"
-  resource_group_name = azurerm_resource_group.rg.name
+  name                  = "ampls-monitoring"
+  resource_group_name   = azurerm_resource_group.rg.name
+  ingestion_access_mode = "PrivateOnly" # Open
+  query_access_mode     = "PrivateOnly" # Open
 }
 
-resource "azapi_update_resource" "ampls-access-mode" {
-  type        = "Microsoft.Insights/privateLinkScopes@2021-07-01-preview"
-  resource_id = azurerm_monitor_private_link_scope.ampls.id
+# resource "azapi_update_resource" "ampls-access-mode" {
+#   type        = "Microsoft.Insights/privateLinkScopes@2021-07-01-preview"
+#   resource_id = azurerm_monitor_private_link_scope.ampls.id
 
-  body = jsonencode({
-    properties = {
-      accessModeSettings = {
-        queryAccessMode     = "PrivateOnly" # "Open"
-        ingestionAccessMode = "PrivateOnly"  # "Open"
-        exclusions          = []
-      }
-    }
-  })
-}
+#   body = jsonencode({
+#     properties = {
+#       accessModeSettings = {
+#         queryAccessMode     = "PrivateOnly" # "Open"
+#         ingestionAccessMode = "PrivateOnly"  # "Open"
+#         exclusions          = []
+#       }
+#     }
+#   })
+# }
 
 resource "azurerm_monitor_private_link_scoped_service" "ampls-log-analytics" {
   name                = "ampls-log-analytics"
