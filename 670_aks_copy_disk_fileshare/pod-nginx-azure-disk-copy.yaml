@@ -1,0 +1,36 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nginx-azuredisk-copy
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  containers:
+    - image: mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine
+      name: nginx
+      command:
+        - "/bin/sh"
+        - "-c"
+        - while true; do echo $(date) >> /mnt/azuredisk/outfile; sleep 60; done
+      volumeMounts:
+        - name: azuredisk01
+          mountPath: "/mnt/azuredisk"
+  volumes:
+    - name: azuredisk01
+      persistentVolumeClaim:
+        claimName: pvc-azuredisk-copy
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-azuredisk-copy
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: managed-csi
+  dataSource:
+    kind: PersistentVolumeClaim
+    name: pvc-azuredisk

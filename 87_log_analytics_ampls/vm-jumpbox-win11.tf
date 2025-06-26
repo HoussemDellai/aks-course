@@ -14,27 +14,28 @@ resource "azurerm_windows_virtual_machine" "vm" {
   name                  = "vm-jumpbox-w11"
   resource_group_name   = azurerm_resource_group.rg-jumpbox.name
   location              = azurerm_resource_group.rg-jumpbox.location
-  size                  = "Standard_B2als_v2" # "Standard_B2ats_v2"
+  size                  = "Standard_D4ads_v6" # "Standard_B2ats_v2"
   admin_username        = "azureuser"
   admin_password        = "@Aa123456789"
   network_interface_ids = [azurerm_network_interface.nic-vm.id]
   priority              = "Spot"
-  eviction_policy       = "Deallocate"
+  eviction_policy       = "Delete"
+  disk_controller_type  = "NVMe"
 
   os_disk {
     name                 = "os-disk-vm"
-    caching              = "ReadWrite"
+    caching              = "ReadOnly"
     storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
     offer     = "windows-11"
-    sku       = "win11-23h2-pro"
+    sku       = "win11-24h2-pro"
     version   = "latest"
   }
 
-  boot_diagnostics {
-    storage_account_uri = null
+  lifecycle {
+    ignore_changes = [identity]
   }
 }

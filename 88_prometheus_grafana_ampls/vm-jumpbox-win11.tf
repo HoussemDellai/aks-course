@@ -22,8 +22,6 @@ resource "azurerm_windows_virtual_machine" "vm" {
   eviction_policy       = "Delete"
   disk_controller_type  = "NVMe"
 
-  #   custom_data = filebase64("../scripts/install-tools-windows.ps1")
-
   os_disk {
     name                 = "os-disk-vm"
     caching              = "ReadOnly"
@@ -41,16 +39,3 @@ resource "azurerm_windows_virtual_machine" "vm" {
     ignore_changes = [identity]
   }
 }
-
-# resource "azurerm_virtual_machine_extension" "cloudinit" {
-#   name                 = "cloudinit"
-#   virtual_machine_id   = azurerm_windows_virtual_machine.vm.id
-#   publisher            = "Microsoft.Compute"
-#   type                 = "CustomScriptExtension"
-#   type_handler_version = "1.10"
-#   settings             = <<SETTINGS
-#     {
-#         "commandToExecute": "powershell -ExecutionPolicy unrestricted -NoProfile -NonInteractive -command \"cp c:/azuredata/customdata.bin c:/azuredata/install.ps1; c:/azuredata/install.ps1\""
-#     }
-#     SETTINGS
-# }

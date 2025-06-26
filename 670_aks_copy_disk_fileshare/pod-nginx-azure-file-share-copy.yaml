@@ -1,0 +1,36 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nginx-azurefileshare-copy
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  containers:
+    - image: mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine
+      name: nginx
+      command:
+        - "/bin/sh"
+        - "-c"
+        - while true; do echo $(date) >> /mnt/azurefileshare/outfile; sleep 60; done
+      volumeMounts:
+        - name: azurefileshare01
+          mountPath: "/mnt/azurefileshare"
+  volumes:
+    - name: azurefileshare01
+      persistentVolumeClaim:
+        claimName: pvc-azurefileshare-copy
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-azurefileshare-copy
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: azurefile-csi
+  dataSource:
+    kind: PersistentVolumeClaim
+    name: pvc-azurefileshare

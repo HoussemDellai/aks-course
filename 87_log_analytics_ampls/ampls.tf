@@ -17,7 +17,6 @@ resource "azurerm_monitor_private_link_scoped_service" "ampls-dce-log-analytics"
   linked_resource_id  = azurerm_monitor_data_collection_endpoint.dce-log-analytics.id
 }
 
-
 # # not required
 # # resource "azurerm_monitor_private_link_scoped_service" "prometheus" {
 # #   name                = "ampls-prometheus"
