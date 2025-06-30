@@ -552,4 +552,27 @@ kubectl apply -f ingress.yaml
 You can check the status of the Ingress resource using the command:
 
 ```sh
-kubectl get ingress inspectorgadget
+kubectl get ingress
+# NAME              CLASS                                HOSTS   ADDRESS   PORTS   AGE
+# inspectorgadget   webapprouting.kubernetes.azure.com   *                 80      12s
+```
+
+Navigate to the public IP address of the Ingress controller in your browser to see the Inspectorgadget application. You should see the same application as before, but now it is being served through the Ingress controller.
+
+Note thet here the the inspectorgadget services is running under public IP address which is not recommended for production workloads. Ingress controller should be the only publicly exposed service. So you should disable public IP address for the inspectorgadget service and change it to ClusterIP type:
+
+```sh
+kubectl patch service inspectorgadget -n default -p '{\"spec\":{\"type\":\"ClusterIP\"}}'
+# service/inspectorgadget patched
+
+kubectl get svc
+# NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+# inspectorgadget   ClusterIP   10.0.169.190   <none>        80/TCP    35m
+# kubernetes        ClusterIP   10.0.0.1       <none>        443/TCP   3d18h
+```
+
+>Note that you can configure a custom domain name for the Ingress resource by specifying the `host` field in the `rules` section. You can also enable TLS by specifying the `tls` section with a secret that contains the certificate and key.
+
+## Summary
+
+In this lab, you learned how to create a Kubernetes cluster in Azure using AKS and deploy a simple web application using Nginx. You also learned how to expose the application using a Service and an Ingress controller.

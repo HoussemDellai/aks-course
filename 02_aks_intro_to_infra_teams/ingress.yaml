@@ -5,7 +5,7 @@ metadata:
   name: inspectorgadget
   namespace: default
 spec:
-  ingressClassName: webapprouting.kubernetes.azure.com
+  ingressClassName: nginx
   rules:
 #   - host: mycompany.com
   - http:
