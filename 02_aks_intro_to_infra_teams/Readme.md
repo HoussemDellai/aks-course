@@ -420,6 +420,78 @@ kubectl get services
 You can now open your browser and navigate to the public IP address of the Service to see the Inspectorgadget application.
 Refresh the page a few times and you will see that the hostname of the Pod that is serving the request changes. This is because the Service load balances the traffic across the Pods that are part of the Deployment.
 
+> Note the services are using IP adresses from a CIDR range that is defined in the AKS cluster configuration. You can view the CIDR range for the Services using the command:
+
+```sh
+az aks show -n aks-cluster -g rg-aks-cluster --query networkProfile.serviceCidr
+# "10.0.0.0/16"
+```
+
+How the traffic is routed from the public IP address to the Pods?
+
+Here you will need to take a look at the Load Balancer configuration on the Azure portal. The Load Balancer is created in the node resource group and it has a public IP address assigned to it. The Load Balancer listens on port 80 and forwards the traffic to the nodes of the cluster. Then kubernetes uses `kube-proxy` and `iptables` to route the traffic to the appropriate Pod.
+
+
+```sh
+kubectl get pods -n kube-system -l component=kube-proxy
+# NAME               READY   STATUS    RESTARTS   AGE
+# kube-proxy-4qv64   1/1     Running   0          6m51s
+# kube-proxy-5m8kj   1/1     Running   0          6m56s
+# kube-proxy-8wrmr   1/1     Running   0          6m57s
+
+kubectl exec -it -n kube-system kube-proxy-4qv64 -- iptables -L -n -v
+# Defaulted container "kube-proxy" out of: kube-proxy, kube-proxy-bootstrap (init)
+# Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+#  pkts bytes target     prot opt in     out     source               destination
+#  467K   28M KUBE-PROXY-FIREWALL  0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate NEW /* kubernetes load balancer firewall */
+# 9670K 2522M KUBE-NODEPORTS  0    --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes health check service ports */
+#  467K   28M KUBE-EXTERNAL-SERVICES  0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate NEW /* kubernetes externally-visible service portals */
+# 9676K 2686M KUBE-FIREWALL  0    --  *      *       0.0.0.0/0            0.0.0.0/0
+
+# Chain FORWARD (policy ACCEPT 93239 packets, 5575K bytes)
+#  pkts bytes target     prot opt in     out     source               destination
+# 94827 5657K KUBE-PROXY-FIREWALL  0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate NEW /* kubernetes load balancer firewall */
+# 9148K 4924M KUBE-FORWARD  0    --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes forwarding rules */
+# 93239 5575K KUBE-SERVICES  0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate NEW /* kubernetes service portals */
+# 93239 5575K KUBE-EXTERNAL-SERVICES  0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate NEW /* kubernetes externally-visible service portals */
+#     0     0 DROP       6    --  *      *       0.0.0.0/0            168.63.129.16        tcp dpt:32526
+#     0     0 DROP       6    --  *      *       0.0.0.0/0            168.63.129.16        tcp dpt:80
+
+# Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+#  pkts bytes target     prot opt in     out     source               destination
+# 1179K   71M KUBE-PROXY-FIREWALL  0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate NEW /* kubernetes load balancer firewall */
+# 1179K   71M KUBE-SERVICES  0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate NEW /* kubernetes service portals */
+#   11M 3721M KUBE-FIREWALL  0    --  *      *       0.0.0.0/0            0.0.0.0/0
+
+# Chain KUBE-EXTERNAL-SERVICES (2 references)
+#  pkts bytes target     prot opt in     out     source               destination
+
+# Chain KUBE-FIREWALL (2 references)
+#  pkts bytes target     prot opt in     out     source               destination
+#     0     0 DROP       0    --  *      *      !127.0.0.0/8          127.0.0.0/8          /* block incoming localnet connections */ ! ctstate RELATED,ESTABLISHED,DNAT
+
+# Chain KUBE-FORWARD (1 references)
+#  pkts bytes target     prot opt in     out     source               destination
+#     0     0 DROP       0    --  *      *       0.0.0.0/0            0.0.0.0/0            ctstate INVALID nfacct-name  ct_state_invalid_dropped_pkts
+#   550 28592 ACCEPT     0    --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes forwarding rules */ mark match 0x4000/0x4000
+# 57889   26M ACCEPT     0    --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes forwarding conntrack rule */ ctstate RELATED,ESTABLISHED
+
+# Chain KUBE-KUBELET-CANARY (0 references)
+#  pkts bytes target     prot opt in     out     source               destination
+
+# Chain KUBE-NODEPORTS (1 references)
+#  pkts bytes target     prot opt in     out     source               destination
+
+# Chain KUBE-PROXY-CANARY (0 references)
+#  pkts bytes target     prot opt in     out     source               destination
+
+# Chain KUBE-PROXY-FIREWALL (3 references)
+#  pkts bytes target     prot opt in     out     source               destination
+
+# Chain KUBE-SERVICES (2 references)
+#  pkts bytes target     prot opt in     out     source               destination
+```
+
 So now the app is exposed through a Load Balancer public IP address which is Layer 4 (TCP).
 
 Can we expose the app through a Layer 7 (HTTP/S) load balancer?
@@ -572,6 +644,23 @@ kubectl get svc
 ```
 
 >Note that you can configure a custom domain name for the Ingress resource by specifying the `host` field in the `rules` section. You can also enable TLS by specifying the `tls` section with a secret that contains the certificate and key.
+
+We have seen the ingress traffic, what about egress traffic?
+
+## Egress Traffic
+
+Egress traffic refers to the outbound traffic from the Pods in your cluster to external services or the internet. By default, Kubernetes allows egress traffic from Pods to any destination.
+
+Lets run a command inside one of the Pods to check the external IP address of the cluster. You can use the `ifconf.me` service to get the external IP address of the cluster.
+
+```sh
+kubectl exec -it nginx -- curl ifconf.me
+# 9.223.252.156
+```
+
+The IP address returned is the external IP address of the cluster, which is the public IP address of the Load Balancer that is created by default when the cluster was created. This IP address is used only for egress traffic from the Pods to the internet.
+
+>Note that you can control egress traffic using Network Policies or by configuring an `Azure Firewall` or `NAT Gateway`.
 
 ## Summary
 
