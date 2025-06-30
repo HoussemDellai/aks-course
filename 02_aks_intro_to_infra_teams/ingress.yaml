@@ -1,0 +1,23 @@
+# ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: inspectorgadget
+  namespace: default
+spec:
+  ingressClassName: webapprouting.kubernetes.azure.com
+  rules:
+#   - host: mycompany.com
+  - http:
+      paths:
+      - backend:
+          service:
+            name: inspectorgadget
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+#   tls:
+#   - hosts:
+#     - mycompany.com
+#     secretName: secret-tls

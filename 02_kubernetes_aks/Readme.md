@@ -24,8 +24,8 @@ https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough-portal
 Another simple option would be to use the Azure CLI.
 
 ```sh
-az group create --name rg-aks-cluster --location swedencentral
-az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay
+az group create --name rg-aks-cluster --location francecentral
+az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay -k 1.32.4 --node-vm-size standard_d2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 64 --enable-apiserver-vnet-integration
 ```
 
 Next, the kubectl CLI will be used to deploy applications to the cluster.
@@ -33,7 +33,7 @@ This command needs to be connected to AKS.
 To do that we use the following command:
 
 ```sh
-az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
+az aks get-credentials -n aks-cluster -g rg-aks-cluster --overwrite-existing
 ```
 
 Check that the connection was successfull by listing the nodes inside the cluster:
