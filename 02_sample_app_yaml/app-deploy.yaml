@@ -15,19 +15,19 @@ spec:
       containers:
       - name: webapp
         # image: __acr_name__.azurecr.io/webapp:__tag__
-        image: acraks013579.azurecr.io/dotnet-app:1.0.0
-        # image: houssemdocker/webapp:111
+        # image: acraks013579.azurecr.io/dotnet-app:1.0.0
+        image: houssemdocker/webapp:111
         # image: ACR_NAME/DOCKER_IMAGE:TAG
         # image: __ACR_NAME__.azurecr.io/__DOCKER_IMAGE__:__TAG__
         ports:
         - containerPort: 80
         resources:
-          limits:
-            cpu: 300m
-            memory: "100Mi"
           requests:
             cpu: 100m
             memory: "50Mi"
+          limits:
+            cpu: 300m
+            memory: "100Mi"
         env:
           - name: ConnectionStrings__WebAppContext
             valueFrom:
@@ -49,4 +49,4 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
-  type: LoadBalancer #NodePort
+  type: LoadBalancer

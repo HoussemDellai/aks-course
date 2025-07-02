@@ -15,8 +15,8 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: mssql
-        image: mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04
-      # image: microsoft/mssql-server-linux
+        # image: mcr.microsoft.com/mssql/server:2017-CU20-ubuntu-16.04
+        image: microsoft/mssql-server-linux
         resources:
           limits:
             cpu: "2"
