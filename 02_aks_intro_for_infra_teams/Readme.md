@@ -662,6 +662,74 @@ The IP address returned is the external IP address of the cluster, which is the 
 
 >Note that you can control egress traffic using Network Policies or by configuring an `Azure Firewall` or `NAT Gateway`.
 
+## Getting container logs
+
+You can view the logs of a container running in a Pod using the `kubectl logs` command. For example, to view the logs of the Nginx container in the `nginx` Pod, you can run the following command:
+
+```sh
+kubectl logs nginx
+# /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+# /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+# /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+# 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+# 10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+# /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+# /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+# /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+# /docker-entrypoint.sh: Configuration complete; ready for start up
+# 2025/07/02 03:43:12 [notice] 1#1: using the "epoll" event method
+# 2025/07/02 03:43:12 [notice] 1#1: nginx/1.29.0
+# 2025/07/02 03:43:12 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14+deb12u1)
+# 2025/07/02 03:43:12 [notice] 1#1: OS: Linux 5.15.0-1090-azure
+# 2025/07/02 03:43:12 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+# 2025/07/02 03:43:12 [notice] 1#1: start worker processes
+# 2025/07/02 03:43:12 [notice] 1#1: start worker process 28
+# 2025/07/02 03:43:12 [notice] 1#1: start worker process 29
+```
+
+These logs are saved in the node where the Pod is running under the folder `/var/log/containers/`.
+
+```sh
+kubectl debug node/aks-nodepool1-13675161-vmss000000 -it --image=mcr.microsoft.com/azurelinux/busybox:1.36
+
+/chroot /host
+
+ls /var/log/containers/
+# azure-cns-2tlsb_kube-system_cni-installer-59fbcf850052acdb8733fd4a6b731485e26d77cf03e9160adc86def15338c0a6.log
+# azure-cns-2tlsb_kube-system_cns-container-6b7f572e3075d1388c935a8be8e00274085358205c2aa7b0367bef2ced48e60d.log
+# azure-ip-masq-agent-w7z65_kube-system_azure-ip-masq-agent-f1974721c20fc61a62446d209ab25af3697e0733980a58dd6ade127df82f26f0.log
+# cloud-node-manager-vqtnb_kube-system_cloud-node-manager-6c4a3e4bd716603ee8d7c8372c09b00eaea22aad0f5364c1363b1920bfa3cdf6.log
+# csi-azuredisk-node-5559k_kube-system_azuredisk-c1f080d3da35cec8469ae42b94ce072ca3a1328d82e583599090a6e6035ff92f.log
+# csi-azuredisk-node-5559k_kube-system_liveness-probe-82f3fbb41ce97f1e5ed8bf3cd9019de9b0aa18116059e8e0ff0869f99d96d7f5.log
+# csi-azuredisk-node-5559k_kube-system_node-driver-registrar-c6fa93aa9b9187ee97b32d08beb54c856a6c85b0eaaab685f3df1a9d18da8455.log
+# csi-azurefile-node-4hl6r_kube-system_azurefile-02dc16c7e3cca2e2c33b93413ad84334aeab48d46b5103657d21893a231bdf5c.log
+# csi-azurefile-node-4hl6r_kube-system_liveness-probe-ced0a651259e788a7c9c94a76151758e13d0cfb1dccf442b05d8cb276ec9c3c8.log
+# csi-azurefile-node-4hl6r_kube-system_node-driver-registrar-09d3832895f4ad86275194212acbcaf95015ff6b30d8e8a8c2def52d4763ff48.log
+# kube-proxy-7m4fc_kube-system_kube-proxy-48501681f16035779d6d912bbd2c4f4b8d30823b10630a298edbde385e230a09.log
+# kube-proxy-7m4fc_kube-system_kube-proxy-bootstrap-d07fbcb951bea9aa0650c0c57f47c73de5a2c4d5b28a2dab97e4865748372d3c.log
+# nginx_default_nginx-fc19dd28749ecb46034d5ca8ff0d958716e524b580e06b4eee6e0b568ebf34b9.log
+# node-debugger-aks-nodepool1-13675161-vmss000000-hhqs4_default_debugger-96375efb4e0d218ed1d77c10a8e47e0f648f59b9d13d18e85c56a922a1646293.log
+
+cat /var/log/containers/nginx_default_nginx-fc19dd28749ecb46034d5ca8ff0d958716e524b580e06b4eee6e0b568ebf34b9.log
+# 2025-07-02T03:43:12.760654049Z stdout F /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+# 2025-07-02T03:43:12.760672176Z stdout F /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+# 2025-07-02T03:43:12.76163443Z stdout F /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+# 2025-07-02T03:43:12.765257335Z stdout F 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+# 2025-07-02T03:43:12.770192253Z stdout F 10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+# 2025-07-02T03:43:12.770372706Z stdout F /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+# 2025-07-02T03:43:12.770484855Z stdout F /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+# 2025-07-02T03:43:12.772483015Z stdout F /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+# 2025-07-02T03:43:12.773562456Z stdout F /docker-entrypoint.sh: Configuration complete; ready for start up
+# 2025-07-02T03:43:12.777800831Z stderr F 2025/07/02 03:43:12 [notice] 1#1: using the "epoll" event method
+# 2025-07-02T03:43:12.777811377Z stderr F 2025/07/02 03:43:12 [notice] 1#1: nginx/1.29.0
+# 2025-07-02T03:43:12.777815673Z stderr F 2025/07/02 03:43:12 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14+deb12u1)
+# 2025-07-02T03:43:12.777819259Z stderr F 2025/07/02 03:43:12 [notice] 1#1: OS: Linux 5.15.0-1090-azure
+# 2025-07-02T03:43:12.777822964Z stderr F 2025/07/02 03:43:12 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+# 2025-07-02T03:43:12.777848463Z stderr F 2025/07/02 03:43:12 [notice] 1#1: start worker processes
+# 2025-07-02T03:43:12.777975144Z stderr F 2025/07/02 03:43:12 [notice] 1#1: start worker process 28
+# 2025-07-02T03:43:12.778115607Z stderr F 2025/07/02 03:43:12 [notice] 1#1: start worker process 29
+```
+
 ## Summary
 
 In this lab, you learned how to create a Kubernetes cluster in Azure using AKS and deploy a simple web application using Nginx. You also learned how to expose the application using a Service and an Ingress controller.
