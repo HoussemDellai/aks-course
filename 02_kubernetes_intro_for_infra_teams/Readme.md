@@ -662,6 +662,74 @@ The IP address returned is the external IP address of the cluster, which is the 
 
 >Note that you can control egress traffic using Network Policies or by configuring an `Azure Firewall` or `NAT Gateway`.
 
+## Scaling the application
+
+Kubernetes allows you to scale your applications up or down easily. You can scale your application by changing the number of replicas in the Deployment resource.
+
+To scale the Inspectorgadget application to 5 replicas, you can run the following command:
+
+```sh
+kubectl scale deployment inspectorgadget --replicas=5
+# deployment.apps/inspectorgadget scaled
+```
+
+You can verify the scaling operation by checking the status of the Pods:
+
+```sh
+kubectl get pods
+# NAME                                READY   STATUS    RESTARTS   AGE
+# inspectorgadget-5c6b7c8f5c-abcde   1/1     Running   0          1m
+# inspectorgadget-5c6b7c8f5c-fghij   1/1     Running   0          1m
+# inspectorgadget-5c6b7c8f5c-klmno   1/1     Running   0          1m
+# inspectorgadget-5c6b7c8f5c-pqrst   1/1     Running   0          1m
+# inspectorgadget-5c6b7c8f5c-uvwxy   1/1     Running   0          1m
+```
+
+Now lets scale the application to 100 replicas.
+
+```sh
+kubectl scale deployment inspectorgadget --replicas=100
+# deployment.apps/inspectorgadget scaled
+```
+
+You can verify the scaling operation by checking the status of the Pods:
+
+```sh
+kubectl get deploy -w
+```
+
+Lets push forward and scale out to 1000 replicas:
+
+```sh
+kubectl scale deployment inspectorgadget --replicas=1000
+# deployment.apps/inspectorgadget scaled
+
+kubectl get deploy -w
+```
+
+Note that autoscaling will hit the limits allowed by `max pods per node`.
+
+```sh
+kubectl get nodes -o=jsonpath='{.items[*].status.allocatable.pods}'
+# 110
+```
+
+This should trigger the cluster autoscaler to add more nodes to the cluster to accommodate the new Pods. The cluster autoscaler will monitor the resource usage and scale the cluster up or down based on the demand.
+
+Check the number of nodes in the cluster:
+
+```sh
+kubectl get nodes
+```
+
+Note how new nodes are being created.
+
+## Auto scaling the cluster
+
+You can manually set up the number of nodes on the cluster or you can enable the cluster autoscaler to automatically scale the number of nodes in the cluster based on the resource usage.
+
+Explore these features in the Azure portal or using the Azure CLI. You can set the minimum and maximum number of nodes in the node pool, and the cluster autoscaler will automatically add or remove nodes based on the resource usage of the Pods in the cluster.
+
 ## Getting container logs
 
 You can view the logs of a container running in a Pod using the `kubectl logs` command. For example, to view the logs of the Nginx container in the `nginx` Pod, you can run the following command:
