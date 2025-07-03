@@ -596,7 +596,7 @@ metadata:
   name: inspectorgadget
   namespace: default
 spec:
-  ingressClassName: webapprouting.kubernetes.azure.com
+  ingressClassName: nginx
   rules:
 #   - host: mycompany.com
   - http:
@@ -760,7 +760,7 @@ These logs are saved in the node where the Pod is running under the folder `/var
 ```sh
 kubectl debug node/aks-nodepool1-13675161-vmss000000 -it --image=mcr.microsoft.com/azurelinux/busybox:1.36
 
-/chroot /host
+chroot /host
 
 ls /var/log/containers/
 # azure-cns-2tlsb_kube-system_cni-installer-59fbcf850052acdb8733fd4a6b731485e26d77cf03e9160adc86def15338c0a6.log

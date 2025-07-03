@@ -255,21 +255,31 @@ Now, verify the image is stored in the registry.
 
 ## 10. Working with Container Registry (Azure Container Registry)
 
-Create a new Azure Container Registry (ACR) in Azure portal.
+Create a new Azure Container Registry (ACR) in Azure portal or using the following command:
+
+```sh
+$acrName="myacr13579" # name must be unique across Azure
+# Create a resource group if you don't have one
+az group create --name rg-aks-cluster --location <your-location>
+az acr create -g rg-aks-cluster -n myacr13579 --sku Basic
+```
 
 Enable *Admin* credentials from ACR.
+
+```sh
+az acr update -n $acrName --admin-enabled true
+```
 
 Login to ACR:
 
 ```sh
-$acrName="myacr" # change with your own value
 az acr login -n $acrName --expose-token
 ```
 
 Build the image on ACR (Optional):
 
 ```sh
-az acr build -t "$acrName.azurecr.io/webapp:1.0" -r $acrName .
+az acr build -t "$acrName.azurecr.io/webapp:1.0" -r $acrName ../app-dotnet
 ```
 
 Note that image is already pushed to ACR by viewing the ACR resource in Azure portal.
