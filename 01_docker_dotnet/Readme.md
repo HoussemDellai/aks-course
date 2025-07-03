@@ -284,6 +284,18 @@ az acr build -t "$acrName.azurecr.io/webapp:1.0" -r $acrName ../app-dotnet
 
 Note that image is already pushed to ACR by viewing the ACR resource in Azure portal.
 
+If you have an AKS cluster, you can connect it to ACR so that the cluster can pull images from ACR without requiring credentials.
+
+```sh
+az aks update -n <your-aks-cluster-name> -g <your-resource-group> --attach-acr $acrName
+```
+
+Then you can run the image in your AKS cluster without providing credentials.
+
+```sh
+kubectl run webapp --image=$acrName.azurecr.io/webapp:1.0 --port=80
+```
+
 ## Conclusion
 
 In this lab, you learned how to create a container image from an existing application source code.
