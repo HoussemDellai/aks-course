@@ -25,7 +25,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   web_app_routing {
-    dns_zone_ids = [azurerm_dns_zone.dns_zone.id]
+    dns_zone_ids             = [azurerm_dns_zone.dns_zone.id]
+    # default_nginx_controller = "External" # None, Internal, External and AnnotationControlled. It defaults to AnnotationControlled
   }
 
   key_vault_secrets_provider {

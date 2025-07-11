@@ -26,6 +26,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   web_app_routing {
     dns_zone_ids = []
+    # default_nginx_controller = "External" # None, Internal, External and AnnotationControlled. It defaults to AnnotationControlled
   }
 
   lifecycle {

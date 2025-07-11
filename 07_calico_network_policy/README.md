@@ -24,8 +24,8 @@ Check the `commands.sh` file to get all the commands used in this workshop.
 We'll need a Kubernetes cluster (or Minikube) with Calico enabled.
 
 ```sh
-az group create -n rg-aks -l westeurope
-az aks create -n aks-cluster -g rg-aks --network-policy calico
+az group create -n rg-aks -l swedencentral
+az aks create -n aks-cluster -g rg-aks --network-policy calico --network-plugin azure --network-plugin-mode overlay
 az aks get-credentials -g rg-aks -n aks-cluster
 ```
 
@@ -130,7 +130,7 @@ kubectl apply -f 2-network-policy-allow-pod.yaml
 
 
 ```sh
-kubectl run --rm -it frontend --image=alpine --labels app=webapp,role=frontend --namespace development --generator=run-pod/v1  
+kubectl run --rm -it frontend --image=alpine --labels app=webapp,role=frontend --namespace development  
 wget -qO- http://backend  
 ```
 
@@ -138,7 +138,7 @@ wget -qO- http://backend
 
 
 ```sh
-kubectl run --rm -it --image=alpine frontend --namespace development --generator=run-pod/v1  
+kubectl run --rm -it --image=alpine frontend --namespace development 
 wget -qO- --timeout=2 http://backend  
 ```
 
@@ -150,7 +150,7 @@ wget -qO- --timeout=2 http://backend
 ```sh
 kubectl create namespace production  
 kubectl label namespace/production purpose=production  
-kubectl run --rm -it frontend --image=alpine --labels app=webapp,role=frontend --namespace production --generator=run-pod/v1  
+kubectl run --rm -it frontend --image=alpine --labels app=webapp,role=frontend --namespace production  
 wget -qO- http://backend.development  
 ```
 

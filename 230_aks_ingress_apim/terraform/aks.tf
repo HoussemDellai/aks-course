@@ -12,11 +12,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   default_node_pool {
-    name                  = "mainpool"
-    node_count            = 3
-    vm_size               = "Standard_B2als_v2"
-    os_sku                = "AzureLinux"
-    vnet_subnet_id        = azurerm_subnet.snet-aks.id
+    name           = "mainpool"
+    node_count     = 3
+    vm_size        = "Standard_B2als_v2"
+    os_sku         = "AzureLinux"
+    vnet_subnet_id = azurerm_subnet.snet-aks.id
   }
 
   identity {
@@ -24,7 +24,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   web_app_routing {
-    dns_zone_ids = null
+    dns_zone_ids             = null
+    # default_nginx_controller = "External" # None, Internal, External and AnnotationControlled. It defaults to AnnotationControlled
   }
 
   lifecycle {

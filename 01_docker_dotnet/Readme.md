@@ -260,8 +260,9 @@ Create a new Azure Container Registry (ACR) in Azure portal or using the followi
 ```sh
 $acrName="myacr13579" # name must be unique across Azure
 # Create a resource group if you don't have one
-az group create --name rg-aks-cluster --location <your-location>
-az acr create -g rg-aks-cluster -n myacr13579 --sku Basic
+az group create --name rg-aks-cluster --location francecentral
+
+az acr create -g rg-aks-cluster -n $acrName --sku Basic
 ```
 
 Enable *Admin* credentials from ACR.

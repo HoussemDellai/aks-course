@@ -15,7 +15,7 @@ resource "azurerm_linux_virtual_machine" "vm-linux" {
   name                            = "vm-linux-jumpbox"
   resource_group_name             = azurerm_resource_group.rg.name
   location                        = azurerm_resource_group.rg.location
-  size                            = "Standard_B2ats_v2"
+  size                            = "Standard_D4ads_v6"
   disable_password_authentication = false
   admin_username                  = "azureuser"
   admin_password                  = "@Aa123456789"
@@ -38,8 +38,8 @@ resource "azurerm_linux_virtual_machine" "vm-linux" {
 
   source_image_reference {
     publisher = "canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
+    offer     = "ubuntu-25_04" # "0001-com-ubuntu-server-jammy"
+    sku       = "minimal" # "22_04-lts-gen2"
     version   = "latest"
   }
 
