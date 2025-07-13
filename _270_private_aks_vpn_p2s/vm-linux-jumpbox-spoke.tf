@@ -1,25 +1,25 @@
-resource "azurerm_network_interface" "nic-vm" {
-  name                 = "nic-vm"
-  resource_group_name  = azurerm_resource_group.rg.name
-  location             = azurerm_resource_group.rg.location
+resource "azurerm_network_interface" "nic-vm-spoke" {
+  name                = "nic-vm"
+  resource_group_name = azurerm_resource_group.rg-spoke.name
+  location            = azurerm_resource_group.rg-spoke.location
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.snet-vm.id
+    subnet_id                     = azurerm_subnet.snet-spoke-vm.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = null
   }
 }
 
-resource "azurerm_linux_virtual_machine" "vm-linux" {
-  name                            = "vm-linux-jumpbox"
-  resource_group_name             = azurerm_resource_group.rg.name
-  location                        = azurerm_resource_group.rg.location
-  size                            = "Standard_D4ads_v6"
+resource "azurerm_linux_virtual_machine" "vm-linux-spoke" {
+  name                            = "vm-linux-jumpbox-spoke"
+  resource_group_name             = azurerm_resource_group.rg-spoke.name
+  location                        = azurerm_resource_group.rg-spoke.location
+  size                            = "Standard_D2ads_v6"
   disable_password_authentication = false
   admin_username                  = "azureuser"
   admin_password                  = "@Aa123456789"
-  network_interface_ids           = [azurerm_network_interface.nic-vm.id]
+  network_interface_ids           = [azurerm_network_interface.nic-vm-spoke.id]
   priority                        = "Spot"
   eviction_policy                 = "Delete"
   disk_controller_type            = "NVMe" # "SCSI" # "IDE" # "SCSI" is the default value. "NVMe" is only supported for Ephemeral OS Disk.
@@ -27,15 +27,14 @@ resource "azurerm_linux_virtual_machine" "vm-linux" {
   custom_data = filebase64("./install-tools.sh")
 
   identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.identity-vm.id]
+    type = "SystemAssigned"
   }
 
   os_disk {
     name                 = "os-disk-vm"
     caching              = "ReadOnly"        # "ReadWrite" # None, ReadOnly and ReadWrite.
     storage_account_type = "StandardSSD_LRS" # "Standard_LRS"
-    disk_size_gb         = 128
+    disk_size_gb         = 64
 
     diff_disk_settings {
       option    = "Local"    # Specifies the Ephemeral Disk Settings for the OS Disk. At this time the only possible value is Local.
@@ -46,11 +45,17 @@ resource "azurerm_linux_virtual_machine" "vm-linux" {
   source_image_reference {
     publisher = "canonical"
     offer     = "ubuntu-25_04" # "0001-com-ubuntu-server-jammy"
-    sku       = "minimal" # "22_04-lts-gen2"
+    sku       = "minimal"      # "22_04-lts-gen2"
     version   = "latest"
   }
 
   boot_diagnostics {
     storage_account_uri = null
   }
+}
+
+resource "azurerm_role_assignment" "vm-contributor-spoke" {
+  scope                = data.azurerm_subscription.current.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_linux_virtual_machine.vm-linux-spoke.identity[0].principal_id
 }
