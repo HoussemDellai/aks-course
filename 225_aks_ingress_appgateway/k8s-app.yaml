@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: ghcr.io/jelledruyts/inspectorgadget:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+spec:
+  selector:
+    app: webapp
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp
+spec:
+  ingressClassName: nginx-internal # webapprouting.kubernetes.azure.com # 
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: webapp
+            port:
+              number: 80
+        pathType: Exact
+---
+apiVersion: approuting.kubernetes.azure.com/v1alpha1
+kind: NginxIngressController
+metadata:
+  name: nginx-internal
+spec:
+  ingressClassName: nginx-internal
+  controllerNamePrefix: nginx-internal
+  loadBalancerAnnotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "snet-aks-lb" # "snet-aks" #  subnet name for internal load balancer
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: "10.10.1.10" # "10.10.0.10" # internal load balancer IP
