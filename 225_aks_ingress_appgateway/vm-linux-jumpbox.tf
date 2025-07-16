@@ -1,11 +1,3 @@
-# resource "azurerm_public_ip" "pip-vm-linux" {
-#   name                = "pip-vm-linux"
-#   location            = azurerm_resource_group.rg.location
-#   resource_group_name = azurerm_resource_group.rg.name
-#   allocation_method   = "Static"
-#   sku                 = "Standard"
-# }
-
 resource "azurerm_network_interface" "nic-vm-linux" {
   name                = "nic-vm-linux"
   resource_group_name = azurerm_resource_group.rg.name
@@ -34,8 +26,6 @@ resource "azurerm_linux_virtual_machine" "vm-linux-jumpbox" {
   eviction_policy                 = "Delete"
   disk_controller_type            = "NVMe" # "SCSI" # "IDE" # "SCSI" is the default value. "NVMe" is only supported for Ephemeral OS Disk.
 
-  # custom_data = filebase64("./install-openvpn.sh")
-
   os_disk {
     name                 = "os-disk-vm-linux"
     caching              = "ReadOnly"        # "ReadWrite" # None, ReadOnly and ReadWrite.
@@ -59,20 +49,3 @@ resource "azurerm_linux_virtual_machine" "vm-linux-jumpbox" {
     storage_account_uri = null
   }
 }
-
-# resource "azurerm_virtual_machine_extension" "install-networking-tools" {
-#   name                 = "install-networking-tools"
-#   virtual_machine_id   = azurerm_linux_virtual_machine.vm-linux-linux.id
-#   publisher            = "Microsoft.Azure.Extensions"
-#   type                 = "CustomScript"
-#   type_handler_version = "2.1"
-
-#   settings = <<SETTINGS
-#     {
-#         "fileUris": [
-#           "https://raw.githubusercontent.com/HoussemDellai/azure-network-hub-spoke/main/scripts/configure-networking.sh"
-#         ],
-#         "commandToExecute": "./configure-networking.sh"
-#     }
-# SETTINGS
-# }

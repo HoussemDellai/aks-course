@@ -44,7 +44,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # Required to create internal Load Balancer for Nginx Ingress Controller
 resource "azurerm_role_assignment" "network-contributor" {
-  scope                = azurerm_virtual_network.vnet-spoke.id # azurerm_subnet.snet-aks.id # azurerm_subnet.snet-aks-lb.id
+  scope                = azurerm_subnet.snet-aks-lb.id # azurerm_virtual_network.vnet-spoke.id # 
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.identity.0.principal_id
 }

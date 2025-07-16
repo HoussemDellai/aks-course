@@ -84,9 +84,6 @@ resource "azurerm_application_gateway" "appgateway" {
   }
 }
 
-# resource "azurerm_network_interface_application_gateway_backend_address_pool_association" "nic-assoc" {
-#   count                   = 2
-#   network_interface_id    = azurerm_network_interface.nic[count.index].id
-#   ip_configuration_name   = "nic-ipconfig-${count.index+1}"
-#   backend_address_pool_id = one(azurerm_application_gateway.main.backend_address_pool).id
-# }
+output "pip_app_gateway" {
+  value = azurerm_public_ip.pip-appgateway.ip_address
+}
