@@ -1,5 +1,6 @@
 locals {
   template_base_url = "https://raw.githubusercontent.com/${var.github_account}/azure_arc/${var.github_branch}/azure_arc_k8s_jumpstart/rancher_k3s/azure/terraform/"
+  # template_base_url = "https://raw.githubusercontent.com/${var.github_account}/azure_arc/${var.github_branch}/azure_arc_k8s_jumpstart/rancher_k3s/azure/terraform/"
 }
 
 resource "random_string" "guid" {
