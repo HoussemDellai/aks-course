@@ -11,11 +11,17 @@ sudo echo "staginguser:ArcPassw0rd" | sudo chpasswd
 # Injecting environment variables
 echo '#!/bin/bash' >> vars.sh
 echo $adminUsername:$1 | awk '{print substr($1,2); }' >> vars.sh
+echo $appId:$2 | awk '{print substr($1,2); }' >> vars.sh
+echo $password:$3 | awk '{print substr($1,2); }' >> vars.sh
+echo $tenantId:$4 | awk '{print substr($1,2); }' >> vars.sh
 echo $vmName:$5 | awk '{print substr($1,2); }' >> vars.sh
 echo $resourceGroupName:$6 | awk '{print substr($1,2); }' >> vars.sh
 echo $azureLocation:$7 | awk '{print substr($1,2); }' >> vars.sh
 echo $templateBaseUrl:$8 | awk '{print substr($1,2); }' >> vars.sh
 sed -i '2s/^/export adminUsername=/' vars.sh
+sed -i '3s/^/export appId=/' vars.sh
+sed -i '4s/^/export password=/' vars.sh
+sed -i '5s/^/export tenantId=/' vars.sh
 sed -i '6s/^/export vmName=/' vars.sh
 sed -i '7s/^/export resourceGroupName=/' vars.sh
 sed -i '8s/^/export azureLocation=/' vars.sh
