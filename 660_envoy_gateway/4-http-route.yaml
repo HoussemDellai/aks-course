@@ -5,8 +5,8 @@ metadata:
 spec:
   parentRefs:
     - name: eg
-  # hostnames:
-  #   - "www.example.com"
+  hostnames:
+    - "www.example.com"
   rules:
     - backendRefs:
         - group: ""

@@ -27,6 +27,13 @@ The following resources will be created.
 
 ![](images/resources.png)
 
+# Enable ACNS
+
+```sh
+az aks update --resource-group rg-aks-monitoring-85 --name aks-cluster --enable-acns --acns-advanced-networkpolicies L7
+```
+
+
 ## Cleanup resources
 
 To delete the creates resources, run the following command:

@@ -4,7 +4,7 @@
 
 ```sh
 az group create --name rg-aks-cluster --location francecentral
-az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay -k 1.32.4 --node-vm-size standard_d2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 64 --enable-apiserver-vnet-integration
+az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay -k 1.33.1 --node-vm-size standard_d2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 64 --enable-apiserver-vnet-integration
 az aks get-credentials -n aks-cluster -g rg-aks-cluster --overwrite-existing
 ```
 
@@ -19,17 +19,17 @@ helm install eg oci://docker.io/envoyproxy/gateway-helm --version v1.4.1 -n envo
 kubectl wait --timeout=5m -n envoy-gateway-system deployment/envoy-gateway --for=condition=Available
 ```
 
-Install and example app:
+Install an example app:
 
 ```sh
-kubectl apply -f app.yaml
+kubectl apply -f 1-ns-deploy-svc.yaml
 kubectl get all
 ```
 
 Insttall the GatewayClass, Gateway, and HTTPRoute:
 
 ```sh
-kubectl apply -f gateway-class.yaml,gateway.yaml,http-route.yaml
+kubectl apply -f 2-gateway-class.yaml,3-gateway.yaml,4-http-route.yaml
 ```
 
 Check the deployed components:

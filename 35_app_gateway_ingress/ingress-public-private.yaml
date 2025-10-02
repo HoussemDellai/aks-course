@@ -1,0 +1,111 @@
+
+# requires setting up the private IP in App Gateway
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-public
+  labels:
+    app: webapp-public
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp-public
+  template:
+    metadata:
+      labels:
+        app: webapp-public
+    spec:
+      containers:
+      - name: webapp-public
+        image: ghcr.io/jelledruyts/inspectorgadget:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-public
+spec:
+  selector:
+    app: webapp-public
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp-public
+  annotations:
+    appgw.ingress.kubernetes.io/use-private-ip: "false"
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - http:
+      paths:
+      - path: /public
+        pathType: Exact
+        backend:
+          service:
+            name: webapp-public
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-private
+  labels:
+    app: webapp-private
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp-private
+  template:
+    metadata:
+      labels:
+        app: webapp-private
+    spec:
+      containers:
+      - name: webapp-private
+        image: ghcr.io/jelledruyts/inspectorgadget:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-private
+spec:
+  selector:
+    app: webapp-private
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp-private
+  annotations:
+    appgw.ingress.kubernetes.io/use-private-ip: "true"
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - http:
+      paths:
+      - path: /private
+        pathType: Exact # Prefix # 
+        backend:
+          service:
+            name: webapp-private
+            port:
+              number: 80

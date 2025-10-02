@@ -20,7 +20,8 @@ crash.log
 # control as they are data points which are potentially sensitive and subject 
 # to change depending on the environment.
 #
-# *.tfvars
+*.tfvars
+!sample.terraform.tfvars
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in

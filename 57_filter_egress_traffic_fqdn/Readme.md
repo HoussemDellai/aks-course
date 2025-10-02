@@ -1,8 +1,8 @@
-# Restrict Egress/Outbound Layer 7 traffic using Cilium Network Policy  
+# Restrict Egress/Outbound Layer 7 traffic using Cilium (OSS) Network Policy  
 
 ## Introduction
 
-You will learn how to use Cilium Network Policy to filter egress traffic based on FQDN.
+You will learn how to use Cilium (OSS) Network Policy to filter egress traffic based on FQDN.
 
 ![](images/architecture.png)
 

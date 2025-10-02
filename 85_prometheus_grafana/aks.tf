@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "aks"
-  kubernetes_version  = "1.29.4"
+  kubernetes_version  = "1.33.2"
 
   network_profile {
     network_plugin      = "azure"
@@ -37,5 +37,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
     ignore_changes = [
       default_node_pool.0.upgrade_settings,
     ]
+  }
+}
+
+resource "terraform_data" "aks-get-credentials" {
+  triggers_replace = [
+    azurerm_kubernetes_cluster.aks.id
+  ]
+
+  provisioner "local-exec" {
+    command = "az aks get-credentials -n ${azurerm_kubernetes_cluster.aks.name} -g ${azurerm_kubernetes_cluster.aks.resource_group_name} --overwrite-existing"
   }
 }

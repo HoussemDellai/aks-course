@@ -1,7 +1,7 @@
 # source: https://docs.microsoft.com/en-us/azure/application-gateway/tutorial-ingress-controller-add-on-new
 
 # create resource group
-az group create --name rg-aks-cluster --location westeurope
+az group create --name rg-aks-cluster --location swedencentral
 
 # create Aan AKS cluster with AGIC enabled
 # this will create a new App Gateway instance

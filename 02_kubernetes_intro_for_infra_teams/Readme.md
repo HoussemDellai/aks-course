@@ -12,7 +12,7 @@ Let's start by creating an AKS cluster in Azure. This cluster will be used to de
 
 ```sh
 az group create --name rg-aks-cluster --location francecentral
-az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay -k 1.32.4 --node-vm-size standard_d2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 64 --enable-apiserver-vnet-integration
+az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure --network-plugin-mode overlay -k 1.33.3 --node-vm-size standard_d2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 64 --enable-apiserver-vnet-integration
 ```
 
 >Note: The -k option specifies the Kubernetes version to use. You can check the available versions with `az aks get-versions --location francecentral --output table`.
