@@ -110,8 +110,6 @@ resource "azurerm_linux_virtual_machine" "vm_linux_k3s" {
   }
 }
 
-# role assignment
-
 resource "azurerm_role_assignment" "rg_contributor" {
   principal_id         = azurerm_linux_virtual_machine.vm_linux_k3s.identity.0.principal_id
   role_definition_name = "Contributor"

@@ -21,6 +21,16 @@ sed -i '7s/^/export resourceGroupName=/' vars.sh
 sed -i '8s/^/export azureLocation=/' vars.sh
 sed -i '9s/^/export templateBaseUrl=/' vars.sh
 
+echo $adminUsername
+echo $vmName
+echo $resourceGroupName
+echo $azureLocation
+echo $templateBaseUrl
+
+echo "vars.sh content:"
+
+cat vars.sh
+
 chmod +x vars.sh
 . ./vars.sh
 
