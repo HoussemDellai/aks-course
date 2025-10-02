@@ -1,5 +1,5 @@
 locals {
-  template_base_url = "https://raw.githubusercontent.com/${var.github_account}/azure_arc/${var.github_branch}/azure_arc_k8s_jumpstart/rancher_k3s/azure/terraform/"
+  template_base_url = "https://raw.githubusercontent.com/HoussemDellai/aks-course/refs/heads/main/750_azure_arc_kubernetes/"
   # template_base_url = "https://raw.githubusercontent.com/${var.github_account}/azure_arc/${var.github_branch}/azure_arc_k8s_jumpstart/rancher_k3s/azure/terraform/"
 }
 
@@ -125,9 +125,9 @@ resource "azurerm_virtual_machine_extension" "custom_script" {
   protected_settings = <<PROTECTED_SETTINGS
     {
       "fileUris": [
-          "${local.template_base_url}scripts/installK3s.sh"
+          "${local.template_base_url}scripts/install-k3s-msi.sh"
       ],
-  "commandToExecute": "bash installK3s.sh ${azurerm_linux_virtual_machine.vm_linux_k3s.admin_username} ${var.client_id} ${var.client_secret} ${var.tenant_id} ${azurerm_linux_virtual_machine.vm_linux_k3s.name} ${azurerm_resource_group.rg.location} ${local.template_base_url}"    }
+  "commandToExecute": "bash install-k3s-msi.sh ${azurerm_linux_virtual_machine.vm_linux_k3s.admin_username} ${var.client_id} ${var.client_secret} ${var.tenant_id} ${azurerm_linux_virtual_machine.vm_linux_k3s.name} ${azurerm_resource_group.rg.location} ${local.template_base_url}"    }
 PROTECTED_SETTINGS
 }
 
