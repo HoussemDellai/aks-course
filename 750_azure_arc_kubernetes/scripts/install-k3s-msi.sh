@@ -59,7 +59,7 @@ sudo -u $adminUsername az extension add --name "k8s-configuration"
 sudo -u $adminUsername az extension add --name "k8s-extension"
 sudo -u $adminUsername az extension add --name "customlocation"
 
-sudo -u $adminUsername az login --identity --allow-no-subscriptions
+sudo -u $adminUsername az login --identity
 
 # Onboard the cluster to Azure Arc and enabling Container Insights using Kubernetes extension
 echo ""
