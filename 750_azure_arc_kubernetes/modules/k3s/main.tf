@@ -110,11 +110,13 @@ resource "azurerm_linux_virtual_machine" "vm_linux_k3s" {
   }
 }
 
-resource "azurerm_role_assignment" "rg_contributor" {
+resource "azurerm_role_assignment" "vm_contributor_on_subscription" {
   principal_id         = azurerm_linux_virtual_machine.vm_linux_k3s.identity.0.principal_id
   role_definition_name = "Contributor"
-  scope                = azurerm_resource_group.rg.id
+  scope                = data.azurerm_subscription.current.id
 }
+
+data "azurerm_subscription" "current" {}
 
 resource "azurerm_virtual_machine_extension" "custom_script" {
   name                       = "sce"
@@ -138,7 +140,7 @@ PROTECTED_SETTINGS
     create = "60m"
   }
 
-  depends_on = [azurerm_role_assignment.rg_contributor]
+  depends_on = [azurerm_role_assignment.vm_contributor_on_subscription]
 }
 
 output "vm_pip" {
