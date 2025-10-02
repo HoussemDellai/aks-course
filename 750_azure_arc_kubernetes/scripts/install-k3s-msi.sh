@@ -27,16 +27,6 @@ sed -i '7s/^/export resourceGroupName=/' vars.sh
 sed -i '8s/^/export azureLocation=/' vars.sh
 sed -i '9s/^/export templateBaseUrl=/' vars.sh
 
-echo $adminUsername
-echo $vmName
-echo $resourceGroupName
-echo $azureLocation
-echo $templateBaseUrl
-
-echo "vars.sh content:"
-
-cat vars.sh
-
 chmod +x vars.sh
 . ./vars.sh
 
@@ -81,8 +71,7 @@ sudo -u $adminUsername az login --identity
 
 # Onboard the cluster to Azure Arc and enabling Container Insights using Kubernetes extension
 echo ""
-# resourceGroup=$(sudo -u $adminUsername az resource list --query "[?name=='$vmName']".[resourceGroup] --resource-type "Microsoft.Compute/virtualMachines" -o tsv)
-echo "az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a""
+
 sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a"
 
 sudo -u $adminUsername az k8s-extension create -n "azuremonitor-containers" --cluster-name $vmName --resource-group $resourceGroupName --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers
