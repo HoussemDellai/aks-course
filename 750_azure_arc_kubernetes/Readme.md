@@ -26,17 +26,65 @@ Example:
 az k8s-extension create --name azuremonitor-metrics --cluster-name vm-linux-k3s --resource-group rg-arc-k8s-k3s-francecentral-750-001 --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers.Metrics --configuration-settings azure-monitor-workspace-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Monitor/accounts/monitor-workspace-prometheus-750" grafana-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Dashboard/grafana/grafana-750"
 ```
 
+Check the AMA-metrics agent was deployed successfully:
+
+```sh
+kubectl get pods -A
+# NAMESPACE     NAME                                                  READY   STATUS    RESTARTS      AGE
+# ... removed for brievity ...
+# kube-system   azuremonitor-metrics-prometheus-node-exporter-llcww   1/1     Running   0             25m
+# kube-system   ama-metrics-ksm-5dd95ddc94-7vb9t                      1/1     Running   0             25m
+# kube-system   ama-metrics-operator-targets-777749d58-9b8bv          2/2     Running   1 (25m ago)   25m
+# kube-system   ama-metrics-797468f4c9-8lcfr                          2/2     Running   1 (22m ago)   25m
+# kube-system   ama-metrics-node-cz8nn                                2/2     Running   1 (22m ago)   25m
+# kube-system   ama-metrics-797468f4c9-kp55d                          2/2     Running   1 (22m ago)   25m
+```
+
 It is also possible to customize settings for collecting logs en metrics by creating a ConfigMap as described here: https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml
 
 ```sh
 kubectl apply -f https://raw.githubusercontent.com/HoussemDellai/aks-course/refs/heads/main/750_azure_arc_kubernetes/k8s/container-azm-ms-agentconfig.yaml
 ```
 
+>The configuration change can take a few minutes to finish before taking effect. Then all Azure Monitor Agent pods in the cluster will restart. The restart is a rolling restart for all Azure Monitor Agent pods, so not all of them restart at the same time.
+
+You can now view metrics in the Managed Grafana workspace.
+
 * Azure Monitor to collect logs and send it to Log Analytics workspace:
 
 ```sh
 az k8s-extension create --name azuremonitor-containers --cluster-name <cluster-name> --resource-group <resource-group> --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers --configuration-settings amalogs.useAADAuth=true --configuration-settings logAnalyticsWorkspaceResourceID=<workspace-resource-id>
 ```
+
+Example:
+
+```sh
+az k8s-extension create --name azuremonitor-containers --cluster-name vm-linux-k3s --resource-group rg-arc-k8s-k3s-francecentral-750-001 --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers --configuration-settings amalogs.useAADAuth=true --configuration-settings logAnalyticsWorkspaceResourceID="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.OperationalInsights/workspaces/log-analytics-750"
+```
+
+Check the AMA-logs agent was deployed successfully:
+
+```sh
+kubectl get pods -n kube-system
+# NAME                                                  READY   STATUS    RESTARTS      AGE
+# ... removed for brievity ...
+# ama-logs-85qh6                                        3/3     Running   0             77s
+# ama-logs-rs-55965cf96-xfxbh                           2/2     Running   0             77s
+```
+
+Let's deploy a pod that generates logs:
+
+```sh
+kubectl apply -f https://raw.githubusercontent.com/HoussemDellai/aks-course/refs/heads/main/750_azure_arc_kubernetes/k8s/logger-pod.yaml
+```
+
+You can check the logs of the pod:
+
+```sh
+kubectl logs logger
+```
+
+You can also view these logs on Log Analytics.
 
 * Azure Key vault Secrets Store CSI Driver: 
 
