@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: counter
+  name: logger
 spec:
   containers:
-  - name: count
+  - name: logger
     image: busybox
     args: [/bin/sh, -c, 'i=0; while true; do echo "This is demo log $i: $(date)"; i=$((i+1)); sleep 10; done']

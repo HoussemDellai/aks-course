@@ -18,8 +18,18 @@ Topics:
 
 ```sh
 az k8s-extension create --name azuremonitor-metrics --cluster-name <cluster-name> --resource-group <resource-group> --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers.Metrics --configuration-settings azure-monitor-workspace-resource-id=<workspace-name-resource-id> grafana-resource-id=<grafana-workspace-name-resource-id>
+```
 
+Example:
+
+```sh
 az k8s-extension create --name azuremonitor-metrics --cluster-name vm-linux-k3s --resource-group rg-arc-k8s-k3s-francecentral-750-001 --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers.Metrics --configuration-settings azure-monitor-workspace-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Monitor/accounts/monitor-workspace-prometheus-750" grafana-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Dashboard/grafana/grafana-750"
+```
+
+It is also possible to customize settings for collecting logs en metrics by creating a ConfigMap as described here: https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml
+
+```sh
+kubectl apply -f https://raw.githubusercontent.com/HoussemDellai/aks-course/refs/heads/main/750_azure_arc_kubernetes/k8s/container-azm-ms-agentconfig.yaml
 ```
 
 * Azure Monitor to collect logs and send it to Log Analytics workspace:
