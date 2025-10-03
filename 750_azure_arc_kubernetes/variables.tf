@@ -1,14 +1,13 @@
-variable "location" {
-  description = "The Azure region to deploy resources in"
-  type        = string
-  default     = "francecentral" # "swedencentral"
-
-}
-
 variable "prefix" {
   description = "The prefix to use for resources"
   type        = string
   default     = "750"
+}
+
+variable "location" {
+  description = "The Azure region to deploy resources in"
+  type        = string
+  default     = "francecentral" # "swedencentral"
 }
 
 variable "client_id" {
