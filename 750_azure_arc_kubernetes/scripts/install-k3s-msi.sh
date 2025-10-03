@@ -72,6 +72,8 @@ sudo -u $adminUsername az login --identity
 # Onboard the cluster to Azure Arc and enabling Container Insights using Kubernetes extension
 echo ""
 
-sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a"
+sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --enable-wi --enable-workload-identity --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a"
+
+# sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a"
 
 # sudo -u $adminUsername az k8s-extension create -n "azuremonitor-containers" --cluster-name $vmName --resource-group $resourceGroupName --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers
