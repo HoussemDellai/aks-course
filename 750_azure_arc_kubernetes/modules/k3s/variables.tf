@@ -1,4 +1,7 @@
-# Declare Azure variables
+variable "prefix" {
+  type        = string
+  description = "Prefix for all resources."
+}
 
 variable "location" {
   type        = string
@@ -20,19 +23,42 @@ variable "tenant_id" {
   description = "Unique SPN tenant ID"
 }
 
-variable "azure_resource_group" {
+variable "rg_name" {
   type        = string
   description = "Resource Group name."
 }
 
-variable "azure_vnet_address_space" {
+variable "vm_name" {
+  type        = string
+  description = "Virtual Machine name."
+}
+
+variable "vnet_address_space" {
   type        = string
   description = "Address prefix of the virtual network."
-  default     = "10.100.0.0/16"
 }
   
-variable "azure_subnet_address_prefix" {
+variable "subnet_address_prefix" {
   type        = string
   description = "Address prefix of the subnet in the virtual network."
-  default     = "10.100.0.0/24"
+}
+
+variable "firewall_private_ip" {
+  type        = string
+  description = "Private IP address of the Azure Firewall."
+}
+
+variable "vnet_hub_rg" {
+  type        = string
+  description = "Resource Group name of the hub virtual network."
+}
+
+variable "vnet_hub_name" {
+  type        = string
+  description = "Name of the hub virtual network."
+} 
+
+variable "vnet_hub_id" {
+  type        = string
+  description = "ID of the hub virtual network."
 }
