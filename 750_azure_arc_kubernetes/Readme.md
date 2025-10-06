@@ -17,13 +17,25 @@ Topics:
 * Azure Monitor for Containers to collect metrics and send it to Managed Prometheus workspace and Grafana: 
 
 ```sh
-az k8s-extension create --name azuremonitor-metrics --cluster-name <cluster-name> --resource-group <resource-group> --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers.Metrics --configuration-settings azure-monitor-workspace-resource-id=<workspace-name-resource-id> grafana-resource-id=<grafana-workspace-name-resource-id>
+az k8s-extension create --name azuremonitor-metrics \
+   --cluster-name <cluster-name> \
+   --resource-group <resource-group> \
+   --cluster-type connectedClusters \
+   --extension-type Microsoft.AzureMonitor.Containers.Metrics \
+   --configuration-settings azure-monitor-workspace-resource-id=<workspace-name-resource-id> \
+   --configuration-settings grafana-resource-id=<grafana-workspace-name-resource-id>
 ```
 
 Example:
 
 ```sh
-az k8s-extension create --name azuremonitor-metrics --cluster-name vm-linux-k3s --resource-group rg-arc-k8s-k3s-francecentral-750-001 --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers.Metrics --configuration-settings azure-monitor-workspace-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Monitor/accounts/monitor-workspace-prometheus-750" grafana-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Dashboard/grafana/grafana-750"
+az k8s-extension create --name azuremonitor-metrics \
+   --cluster-name vm-ubuntu-k3s-francecentral-750-001 \
+   --resource-group rg-arc-k8s-francecentral-750-001 \
+   --cluster-type connectedClusters \
+   --extension-type Microsoft.AzureMonitor.Containers.Metrics \
+   --configuration-settings azure-monitor-workspace-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Monitor/accounts/monitor-workspace-prometheus-750" \
+   --configuration-settings grafana-resource-id="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.Dashboard/grafana/grafana-750"
 ```
 
 Check the AMA-metrics agent was deployed successfully:
@@ -53,13 +65,25 @@ You can now view metrics in the Managed Grafana workspace.
 * Azure Monitor to collect logs and send it to Log Analytics workspace:
 
 ```sh
-az k8s-extension create --name azuremonitor-containers --cluster-name <cluster-name> --resource-group <resource-group> --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers --configuration-settings amalogs.useAADAuth=true --configuration-settings logAnalyticsWorkspaceResourceID=<workspace-resource-id>
+az k8s-extension create --name azuremonitor-containers \
+   --cluster-name <cluster-name> \
+   --resource-group <resource-group> \
+   --cluster-type connectedClusters \
+   --extension-type Microsoft.AzureMonitor.Containers \
+   --configuration-settings amalogs.useAADAuth=true \
+   --configuration-settings logAnalyticsWorkspaceResourceID=<workspace-resource-id>
 ```
 
 Example:
 
 ```sh
-az k8s-extension create --name azuremonitor-containers --cluster-name vm-linux-k3s --resource-group rg-arc-k8s-k3s-francecentral-750-001 --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers --configuration-settings amalogs.useAADAuth=true --configuration-settings logAnalyticsWorkspaceResourceID="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.OperationalInsights/workspaces/log-analytics-750"
+az k8s-extension create --name azuremonitor-containers \
+   --cluster-name vm-ubuntu-k3s-francecentral-750-001 \
+   --resource-group rg-arc-k8s-francecentral-750-001 \
+   --cluster-type connectedClusters \
+   --extension-type Microsoft.AzureMonitor.Containers \
+   --configuration-settings amalogs.useAADAuth=true \
+   --configuration-settings logAnalyticsWorkspaceResourceID="/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750/providers/Microsoft.OperationalInsights/workspaces/log-analytics-750"
 ```
 
 Check the AMA-logs agent was deployed successfully:
@@ -89,25 +113,39 @@ You can also view these logs on Log Analytics.
 * Azure Key vault Secrets Store CSI Driver: 
 
 ```sh
-az k8s-extension create --name akvsecretsprovider  --extension-type Microsoft.AzureKeyVaultSecretsProvider --scope cluster --cluster-name <clusterName> --resource-group <resourceGroupName> --cluster-type connectedClusters
+az k8s-extension create --name akvsecretsprovider \
+   --extension-type Microsoft.AzureKeyVaultSecretsProvider \
+   --scope cluster \
+   --cluster-name <clusterName> \
+   --resource-group <resourceGroupName> \
+   --cluster-type connectedClusters
 ```
 
 * Enable Workload Identity:
 
 ```sh
-az connectedk8s update --name "${CLUSTER_NAME}" --resource-group "${RESOURCE_GROUP}" --enable-oidc-issuer --enable-workload-identity
+az connectedk8s update --name "${CLUSTER_NAME}" \
+   --resource-group "${RESOURCE_GROUP}" \
+   --enable-oidc-issuer \
+   --enable-workload-identity
 ```
 
 Example:
 
 ```sh
-az connectedk8s update --name vm-linux-k3s --resource-group rg-arc-k8s-k3s-francecentral-750-001 --enable-oidc-issuer --enable-workload-identity
+az connectedk8s update --name vm-ubuntu-k3s-francecentral-750-001 \
+   --resource-group rg-arc-k8s-francecentral-750-001 \
+   --enable-oidc-issuer \
+   --enable-workload-identity
 ```
 
 Get the OIDC issuer URL:
 
 ```sh
-az connectedk8s show --name vm-linux-k3s --resource-group rg-arc-k8s-k3s-francecentral-750-001 --query "oidcIssuerProfile.issuerUrl" -o tsv
+az connectedk8s show --name vm-ubuntu-k3s-francecentral-750-001 \
+   --resource-group rg-arc-k8s-francecentral-750-001 \
+   --query "oidcIssuerProfile.issuerUrl" \
+   -o tsv
 # https://europe.oic.prod-arc.azure.com/93139d1e-a3c1-4d78-9ed5-878be090eba4/49da22e6-9baa-4608-aea4-c5ce45ffab3c/
 ```
 
@@ -118,14 +156,19 @@ More details on how to use it with your apps here: https://learn.microsoft.com/e
 Get the cluster MSI identity
 
 ```sh
-az connectedk8s show -n vm-linux-k3s -g rg-arc-k8s-k3s-francecentral-750-001 --query identity.principalId -o tsv
+az connectedk8s show -n vm-ubuntu-k3s-francecentral-750-001 \
+   -g rg-arc-k8s-francecentral-750-001 \
+   --query identity.principalId \
+   -o tsv
 # 203f77e4-d4e3-4274-95b7-a09abcce0d8d
 ```
 
 Assign the `Connected Cluster Managed Identity CheckAccess Reader` role to the cluster MSI:
 
 ```sh
-az role assignment create --role "Connected Cluster Managed Identity CheckAccess Reader" --assignee "<Cluster MSI ID>" --scope <cluster ARM ID>
+az role assignment create --role "Connected Cluster Managed Identity CheckAccess Reader" \
+   --assignee "<Cluster MSI ID>" \
+   --scope <cluster ARM ID>
 ```
 
 Run this command from an account that have the `Owner` role on the subscription.
@@ -133,31 +176,41 @@ Run this command from an account that have the `Owner` role on the subscription.
 Example:
 
 ```sh
-az role assignment create --role "Connected Cluster Managed Identity CheckAccess Reader" --assignee "203f77e4-d4e3-4274-95b7-a09abcce0d8d" --scope "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-k3s-francecentral-750-001/providers/Microsoft.Kubernetes/connectedClusters/vm-linux-k3s"
+az role assignment create --role "Connected Cluster Managed Identity CheckAccess Reader" \
+   --assignee "203f77e4-d4e3-4274-95b7-a09abcce0d8d" \
+   --scope "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750-001/providers/Microsoft.Kubernetes/connectedClusters/vm-ubuntu-k3s-francecentral-750-001"
 ```
 
 Enable Azure role-based access control (RBAC) on your Azure Arc-enabled Kubernetes cluster:
 
 ```sh
-az connectedk8s enable-features -n <clusterName> -g <resourceGroupName> --features azure-rbac
+az connectedk8s enable-features -n <clusterName> \
+   -g <resourceGroupName> \
+   --features azure-rbac
 ```
 
 Example:
 
 ```sh
-az connectedk8s enable-features -n vm-linux-k3s -g rg-arc-k8s-k3s-francecentral-750-001 --features azure-rbac
+az connectedk8s enable-features -n vm-ubuntu-k3s-francecentral-750-001 \
+   -g rg-arc-k8s-francecentral-750-001 \
+   --features azure-rbac
 ```
 
 Assign Azure roles to users or groups to grant them access to the cluster. For example, to assign the `Azure Kubernetes Service RBAC Cluster Admin` role to a user:
 
 ```sh
-az role assignment create --role "Azure Arc Kubernetes Cluster Admin" --assignee <AZURE-AD-ENTITY-ID> --scope $ARM_ID
+az role assignment create --role "Azure Arc Kubernetes Cluster Admin" \
+   --assignee <AZURE-AD-ENTITY-ID> \
+   --scope $ARM_ID
 ```
 
 Example:
 
 ```sh
-az role assignment create --role "Azure Arc Kubernetes Cluster Admin" --assignee "admin@MngEnvMCAP784683.onmicrosoft.com" --scope "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-k3s-francecentral-750-001/providers/Microsoft.Kubernetes/connectedClusters/vm-linux-k3s"
+az role assignment create --role "Azure Arc Kubernetes Cluster Admin" \
+   --assignee "admin@MngEnvMCAP784683.onmicrosoft.com" \
+   --scope "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-arc-k8s-francecentral-750-001/providers/Microsoft.Kubernetes/connectedClusters/vm-ubuntu-k3s-francecentral-750-001"
 ```
 
 * Azure Policy: 

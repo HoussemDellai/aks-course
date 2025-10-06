@@ -18,6 +18,9 @@ echo $vmName:$5 | awk '{print substr($1,2); }' >> vars.sh
 echo $resourceGroupName:$6 | awk '{print substr($1,2); }' >> vars.sh
 echo $azureLocation:$7 | awk '{print substr($1,2); }' >> vars.sh
 echo $templateBaseUrl:$8 | awk '{print substr($1,2); }' >> vars.sh
+echo $prometheusResourceId:$9 | awk '{print substr($1,2); }' >> vars.sh
+echo $grafanaResourceId:${10} | awk '{print substr($1,2); }' >> vars.sh
+echo $logAnalyticsResourceId:${11} | awk '{print substr($1,2); }' >> vars.sh
 sed -i '2s/^/export adminUsername=/' vars.sh
 sed -i '3s/^/export appId=/' vars.sh
 sed -i '4s/^/export password=/' vars.sh
@@ -26,6 +29,9 @@ sed -i '6s/^/export vmName=/' vars.sh
 sed -i '7s/^/export resourceGroupName=/' vars.sh
 sed -i '8s/^/export azureLocation=/' vars.sh
 sed -i '9s/^/export templateBaseUrl=/' vars.sh
+sed -i '10s/^/export prometheusResourceId=/' vars.sh
+sed -i '11s/^/export grafanaResourceId=/' vars.sh
+sed -i '12s/^/export logAnalyticsResourceId=/' vars.sh
 
 chmod +x vars.sh
 . ./vars.sh
@@ -72,8 +78,26 @@ sudo -u $adminUsername az login --identity
 # Onboard the cluster to Azure Arc and enabling Container Insights using Kubernetes extension
 echo ""
 
-sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --enable-wi --enable-workload-identity --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a"
+sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --enable-oidc-issuer --enable-workload-identity --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a"
 
 # sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $resourceGroupName --location $azureLocation --kube-config /home/${adminUsername}/.kube/config --tags 'Project=jumpstart_azure_arc_k8s' --correlation-id "d009f5dd-dba8-4ac7-bac9-b54ef3a6671a"
 
 # sudo -u $adminUsername az k8s-extension create -n "azuremonitor-containers" --cluster-name $vmName --resource-group $resourceGroupName --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers
+
+
+
+sudo -u $adminUsername az k8s-extension create --name azuremonitor-metrics \
+   --cluster-name $vmName \
+   --resource-group $resourceGroupName \
+   --cluster-type connectedClusters \
+   --extension-type Microsoft.AzureMonitor.Containers.Metrics \
+   --configuration-settings azure-monitor-workspace-resource-id=$prometheusResourceId \
+   --configuration-settings grafana-resource-id=$grafanaResourceId
+
+az k8s-extension create --name azuremonitor-containers \
+   --cluster-name $vmName \
+   --resource-group $resourceGroupName \
+   --cluster-type connectedClusters \
+   --extension-type Microsoft.AzureMonitor.Containers \
+   --configuration-settings amalogs.useAADAuth=true \
+   --configuration-settings logAnalyticsWorkspaceResourceID=$logAnalyticsResourceId

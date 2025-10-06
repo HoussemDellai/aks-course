@@ -62,3 +62,18 @@ variable "vnet_hub_id" {
   type        = string
   description = "ID of the hub virtual network."
 }
+
+variable "prometheus_resource_id" {
+  type        = string
+  description = "Resource ID of the Prometheus workspace."
+}
+
+variable "grafana_resource_id" {
+  type        = string
+  description = "Resource ID of the Grafana workspace."
+}
+
+variable "log_analytics_resource_id" {
+  type        = string
+  description = "Resource ID of the Log Analytics workspace."
+}
