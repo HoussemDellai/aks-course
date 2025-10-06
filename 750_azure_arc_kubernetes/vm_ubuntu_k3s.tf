@@ -22,7 +22,7 @@ module "azure_ubuntu_vm_k3s_001" {
 module "azure_ubuntu_vm_k3s_002" {
   source = "./modules/k3s"
 
-  prefix                    = var.prefix
+  prefix                    = "${var.prefix}-002"
   client_id                 = var.client_id
   client_secret             = var.client_secret
   tenant_id                 = var.tenant_id
@@ -45,7 +45,7 @@ module "azure_ubuntu_vm_k3s_002" {
 module "azure_ubuntu_vm_k3s_003" {
   source = "./modules/k3s"
 
-  prefix                    = var.prefix
+  prefix                    = "${var.prefix}-003"
   client_id                 = var.client_id
   client_secret             = var.client_secret
   tenant_id                 = var.tenant_id

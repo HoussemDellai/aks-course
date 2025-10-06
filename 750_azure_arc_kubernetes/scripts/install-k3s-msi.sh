@@ -94,7 +94,7 @@ sudo -u $adminUsername az k8s-extension create --name azuremonitor-metrics \
    --configuration-settings azure-monitor-workspace-resource-id=$prometheusResourceId \
    --configuration-settings grafana-resource-id=$grafanaResourceId
 
-az k8s-extension create --name azuremonitor-containers \
+sudo -u $adminUsername az k8s-extension create --name azuremonitor-containers \
    --cluster-name $vmName \
    --resource-group $resourceGroupName \
    --cluster-type connectedClusters \
