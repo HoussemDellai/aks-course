@@ -211,6 +211,24 @@ az connectedk8s enable-features -n $clusterName \
    --features cluster-connect custom-locations
 ```
 
+Get the Azure Resource Manager identifier of the Azure Arc-enabled Kubernetes cluster
+
+```sh
+export connectedClusterId=$(az connectedk8s show -n $clusterName -g $rgName --query id -o tsv)
+```
+
+Get the Azure Resource Manager identifier of the cluster extension you deployed to the Azure Arc-enabled Kubernetes cluster
+
+```sh
+export extensionId=$(az k8s-extension show -c $clusterName -g $rgName --cluster-type connectedClusters -n <extensionInstanceName> --query id -o tsv)
+```
+
+Create the custom location by referencing the Azure Arc-enabled Kubernetes cluster and the extension
+
+```sh
+az customlocation create -n $clusterName -g $rgName$ --namespace customLocation001 --host-resource-id $connectedClusterId --cluster-extension-ids $extensionId
+```
+
 ## Resources
 
 * Terraform template was taken and modified from here: https://jumpstart.azure.com/azure_arc_jumpstart/azure_arc_k8s/rancher_k3s/azure_terraform

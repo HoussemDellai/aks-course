@@ -89,6 +89,6 @@ sudo -u $adminUsername az k8s-extension create --name azuremonitor-metrics --clu
 sudo -u $adminUsername az k8s-extension create --name azuremonitor-containers --cluster-name $vmName --resource-group $resourceGroupName --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers --configuration-settings --configuration-settings logAnalyticsWorkspaceResourceID=$logAnalyticsResourceId
 # sudo -u $adminUsername az k8s-extension create --name azuremonitor-containers --cluster-name $vmName --resource-group $resourceGroupName --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers --configuration-settings amalogs.useAADAuth=true --configuration-settings logAnalyticsWorkspaceResourceID=$logAnalyticsResourceId
 
-sudo -u $adminUsername az k8s-configuration flux create -c $clusterName -g $rgName -n cluster-config --namespace cluster-config -t connectedClusters --scope cluster -u https://github.com/Azure/gitops-flux2-kustomize-helm-mt --branch main --kustomization name=infra path=./infrastructure prune=true --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
+# sudo -u $adminUsername az k8s-configuration flux create -c $clusterName -g $rgName -n cluster-config --namespace cluster-config -t connectedClusters --scope cluster -u https://github.com/Azure/gitops-flux2-kustomize-helm-mt --branch main --kustomization name=infra path=./infrastructure prune=true --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
 
-sudo -u $adminUsername az connectedk8s enable-features -n $clusterName -g $rgName --features cluster-connect custom-locations
+# sudo -u $adminUsername az connectedk8s enable-features -n $clusterName -g $rgName --features cluster-connect custom-locations
