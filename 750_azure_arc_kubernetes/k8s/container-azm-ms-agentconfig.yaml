@@ -24,7 +24,7 @@ data:
           # kube-system,gatekeeper-system log collection are disabled by default in the absence of 'log_collection_settings.stdout' setting. If you want to enable kube-system,gatekeeper-system, remove them from the following setting.
           # If you want to continue to disable kube-system,gatekeeper-system log collection keep the namespaces in the following setting and add any other namespace you want to disable log collection to the array.
           # In the absense of this configmap, default value for exclude_namespaces = ["kube-system","gatekeeper-system"]
-          # exclude_namespaces = ["kube-system","gatekeeper-system"]
+          exclude_namespaces = ["gatekeeper-system"] # ["kube-system","gatekeeper-system"]
           # If you want to collect logs from only selective pods inside system namespaces add them to the following setting. Provide namepace:controllerName of the system pod. NOTE: this setting is only for pods in system namespaces
           # Valid values for system namespaces are: kube-system, azure-arc, gatekeeper-system, kube-public, kube-node-lease, calico-system. The system namespace used should not be present in exclude_namespaces
           # collect_system_pod_logs = ["kube-system:coredns"]
@@ -36,7 +36,7 @@ data:
           # kube-system,gatekeeper-system log collection are disabled by default in the absence of 'log_collection_settings.stderr' setting. If you want to enable kube-system,gatekeeper-system, remove them from the following setting.
           # If you want to continue to disable kube-system,gatekeeper-system log collection keep the namespaces in the following setting and add any other namespace you want to disable log collection to the array.
           # In the absense of this configmap, default value for exclude_namespaces = ["kube-system","gatekeeper-system"]
-          # exclude_namespaces = ["kube-system","gatekeeper-system"]
+          exclude_namespaces = ["gatekeeper-system"] # ["kube-system","gatekeeper-system"]
           # If you want to collect logs from only selective pods inside system namespaces add them to the following setting. Provide namepace:controllerName of the system pod. NOTE: this setting is only for pods in system namespaces
           # Valid values for system namespaces are: kube-system, azure-arc, gatekeeper-system, kube-public, kube-node-lease, calico-system. The system namespace used should not be present in exclude_namespaces
           # collect_system_pod_logs = ["kube-system:coredns"]
@@ -58,17 +58,17 @@ data:
           # Supported values for this setting are "v1","v2"
           # See documentation at https://aka.ms/ContainerLogv2 for benefits of v2 schema over v1 schema
           containerlog_schema_version = "v2"
-       #[log_collection_settings.enable_multiline_logs]
+       [log_collection_settings.enable_multiline_logs]
           # fluent-bit based multiline log collection for .NET, Go, Java, and Python stacktraces. Update stacktrace_languages to specificy which languages to collect stacktraces for(valid inputs: "go", "java", "python", "dotnet").
           # NOTE: for better performance consider enabling only for languages that are needed. Dotnet is experimental and may not work in all cases.
           # If enabled will also stitch together container logs split by docker/cri due to size limits(16KB per log line) up to 64 KB.
           # Requires ContainerLogV2 schema to be enabled. See https://aka.ms/ContainerLogv2 for more details.
-          # enabled = "false"
+          enabled = "true"
           # stacktrace_languages = []
-       #[log_collection_settings.metadata_collection]
+       [log_collection_settings.metadata_collection]
           # kube_meta_cache_ttl_secs is a configurable option for K8s cached metadata. Default is 60s. You may adjust it in below section [agent_settings.k8s_metadata_config]. Reference link: https://docs.fluentbit.io/manual/pipeline/filters/kubernetes#configuration-parameters
           # if enabled will collect kubernetes metadata for ContainerLogv2 schema. Default is false.
-          # enabled = false
+          enabled = true
           # if include_fields commented out or empty, all fields will be included. If include_fields is set, only the fields listed will be included.
           # include_fields = ["podLabels","podAnnotations","podUid","image","imageID","imageRepo","imageTag"]
        #[log_collection_settings.filter_using_annotations]

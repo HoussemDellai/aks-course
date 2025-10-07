@@ -87,19 +87,3 @@ sudo -u $adminUsername az connectedk8s connect --name $vmName --resource-group $
 sudo -u $adminUsername az k8s-extension create --name azuremonitor-metrics --cluster-name $vmName --resource-group $resourceGroupName --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers.Metrics --configuration-settings azure-monitor-workspace-resource-id=$prometheusResourceId --configuration-settings grafana-resource-id=$grafanaResourceId
 
 sudo -u $adminUsername az k8s-extension create --name azuremonitor-containers --cluster-name $vmName --resource-group $resourceGroupName --cluster-type connectedClusters --extension-type Microsoft.AzureMonitor.Containers --configuration-settings amalogs.useAADAuth=true --configuration-settings logAnalyticsWorkspaceResourceID=$logAnalyticsResourceId
-
-echo "sudo -u $adminUsername az k8s-extension create --name azuremonitor-metrics \
-   --cluster-name $vmName \
-   --resource-group $resourceGroupName \
-   --cluster-type connectedClusters \
-   --extension-type Microsoft.AzureMonitor.Containers.Metrics \
-   --configuration-settings azure-monitor-workspace-resource-id=$prometheusResourceId \
-   --configuration-settings grafana-resource-id=$grafanaResourceId" > k8s-extension.log
-
-echo "sudo -u $adminUsername az k8s-extension create --name azuremonitor-containers \
-   --cluster-name $vmName \
-   --resource-group $resourceGroupName \
-   --cluster-type connectedClusters \
-   --extension-type Microsoft.AzureMonitor.Containers \
-   --configuration-settings amalogs.useAADAuth=true \
-   --configuration-settings logAnalyticsWorkspaceResourceID=$logAnalyticsResourceId" >> k8s-extension.log
