@@ -33,7 +33,6 @@ resource "azurerm_role_assignment" "role_grafana_admin" {
   scope                = azurerm_dashboard_grafana.grafana.id
   role_definition_name = "Grafana Admin"
   principal_id         = data.azurerm_client_config.current.object_id
-  # principal_id         = "4f932ce5-0f06-46ee-b3cf-3a6a1f3e26f1"
 }
 
 resource "azurerm_role_assignment" "role_monitoring_data_reader" {

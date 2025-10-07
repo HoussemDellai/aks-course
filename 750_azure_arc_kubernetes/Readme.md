@@ -188,15 +188,28 @@ az role assignment create --role "Azure Arc Kubernetes Cluster Admin" \
 
 ```
 
-* Enable custom locations as a Microsoft Entra user
+* Flux GitOps:
+
+```sh
+az k8s-configuration flux create -c $clusterName \
+   -g $rgName \
+   -n cluster-config \
+   --namespace cluster-config \
+   -t connectedClusters \
+   --scope cluster \
+   -u https://github.com/Azure/gitops-flux2-kustomize-helm-mt \
+   --branch main  \
+   --kustomization name=infra path=./infrastructure prune=true \
+   --kustomization name=apps path=./apps/staging prune=true dependsOn=\["infra"\]
+```
+
+* Custom location:
 
 ```sh
 az connectedk8s enable-features -n $clusterName \
    -g $rgName \
    --features cluster-connect custom-locations
 ```
-
-
 
 ## Resources
 
