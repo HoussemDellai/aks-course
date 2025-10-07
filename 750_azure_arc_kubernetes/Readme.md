@@ -189,7 +189,6 @@ az role assignment create --role "Azure Arc Kubernetes Cluster Admin" \
 ```
 
 * Enable custom locations as a Microsoft Entra user
-Sign into Azure CLI as a Microsoft Entra user and run the following command:
 
 ```sh
 az connectedk8s enable-features -n $clusterName \
