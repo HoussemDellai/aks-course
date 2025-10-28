@@ -9,5 +9,5 @@ This is the code repository for a YouTube series by Houssem Dellai.
 This repository is also used for an online course on Udemy:
 
 <a href="https://www.udemy.com/course/learn-aks-network-security">
-  <img src="https://github.com/HoussemDellai/docker-kubernetes-course/blob/main/udemy.jpg?raw=true" />
+  <img src="https://github.com/HoussemDellai/docker-kubernetes-course/blob/main/udemy.png?raw=true" />
 </a>
