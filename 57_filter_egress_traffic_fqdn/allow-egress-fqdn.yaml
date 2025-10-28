@@ -8,7 +8,7 @@ spec:
       run: nginx
   egress:
   - toFQDNs:
-    - matchName: aci-app-931.westeurope.azurecontainer.io # change to your own FQDN
+    - matchName: myservice.com
     - matchName: api.github.com
   - toEndpoints:
     - matchLabels:
