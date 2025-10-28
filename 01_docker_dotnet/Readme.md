@@ -72,21 +72,24 @@ With containers, the process will be:
 This process will be described into a file called `Dockerfile`. Let's see the following example:
 
 ```dockerfile
-# Dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER $APP_UID
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY "WebApp.csproj" .
-RUN dotnet restore "WebApp.csproj"
+COPY ["WebApp.csproj", "."]
+RUN dotnet restore "./WebApp.csproj"
 COPY . .
-RUN dotnet build "WebApp.csproj" -c Release -o /app/build
+WORKDIR "/src/."
+RUN dotnet build "./WebApp.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "WebApp.csproj" -c Release -o /app/publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./WebApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
@@ -111,7 +114,7 @@ Let's first make sure that we have Docker up and running:
 docker run hello-world
 ```
 
-Then we go to the application folder (app-dotnet) and run the following command to build the image (don't forget the dot "." at the end which references to the current folder):
+Navigate to the application folder (app-dotnet) and run the following command to build the image (don't forget the dot "." at the end which references to the current folder):
 
 ```sh
 docker build .
@@ -134,7 +137,7 @@ docker images
 Let's run a container based on the image created earlier:
 
 ```sh
-docker run --rm -d -p 5000:80/tcp webapp:1.0
+docker run --rm -d -p 5000:8080/tcp webapp:1.0
 ```
 
 Open web browser on `localhost:5000` to see the application running.
@@ -193,7 +196,7 @@ services:
       dockerfile: Dockerfile
       context: app-dotnet
     ports:
-      - "8008:80"
+      - "8008:8080"
     environment:
       ConnectionStrings__WebAppContext: "Server=db;Database=ProductsDB;User=sa;Password=@Aa123456;"
     depends_on:
@@ -218,7 +221,7 @@ docker-compose build
 docker-compose up
 ```
 
-Verify the application is running in your browser: `localhost:8080`.
+Verify the application is running in your browser: `localhost:8008`.
 
 ## 9. Working with Container Registry (Docker Hub)
 

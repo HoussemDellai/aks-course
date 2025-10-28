@@ -8,7 +8,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -29,23 +28,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "WebApp.dll"]
-
-# FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
-# WORKDIR /app
-# EXPOSE 80
-# EXPOSE 443
-
-# FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
-# WORKDIR /src
-# COPY "WebApp.csproj" .
-# RUN dotnet restore "WebApp.csproj"
-# COPY . .
-# RUN dotnet build "WebApp.csproj" -c Release -o /app/build
-
-# FROM build AS publish
-# RUN dotnet publish "WebApp.csproj" -c Release -o /app/publish
-
-# FROM base AS final
-# WORKDIR /app
-# COPY --from=publish /app/publish .
-# ENTRYPOINT ["dotnet", "WebApp.dll"]
