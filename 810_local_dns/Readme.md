@@ -1,5 +1,9 @@
 # AKS local DNS
 
+This example demonstrates how to set up and verify LocalDNS functionality in an Azure Kubernetes Service (AKS) cluster. LocalDNS enhances DNS resolution performance and reliability by deploying DNS resolvers directly on the nodes of your AKS cluster.
+
+![LocalDNS Architecture](./images/architecture.png)
+
 ## Creating an AKS cluster
 
 Let's start by creating an AKS cluster in Azure. This cluster will be used to deploy and manage your applications.
