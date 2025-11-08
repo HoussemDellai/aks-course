@@ -52,17 +52,13 @@ Lets simulate a pod trying to resolve DNS names using the `kube-dns` service. We
 ```sh
 kubectl run nginx --image=nginx
 kubectl exec nginx -it -- apt update
-kubectl exec nginx -it -- apt install dnsutils
+kubectl exec nginx -it -- apt install dnsutils -y
 ```
 
 Now, let's use the `nslookup` command to resolve an external DNS name, such as `microsoft.com`, from within the `nginx` pod:
 
 ```sh
 kubectl exec nginx -it -- nslookup microsoft.com
-# ;; Got recursion not available from 10.0.0.10
-# ;; Got recursion not available from 10.0.0.10
-# ;; Got recursion not available from 10.0.0.10
-# ;; Got recursion not available from 10.0.0.10
 # Server:         10.0.0.10
 # Address:        10.0.0.10#53
 
@@ -113,3 +109,44 @@ kubectl exec -it nginx -- nslookup kubernetes.default
 # ;; Got recursion not available from 169.254.10.11
 ```
 
+## Enabling monitoring for LocalDNS
+
+LocalDNS exposes metrics in Prometheus format on the node IP on port `9253`. You can access these metrics by querying the LocalDNS endpoint from within a pod in the cluster. Here is an example of how to retrieve the metrics using `curl` from the `nginx` pod:
+
+```sh
+kubectl exec nginx -it -- curl 10.224.0.5:9253/metrics
+# # HELP coredns_build_info A metric with a constant '1' value labeled by version, revision, and goversion from which CoreDNS was built.
+# # TYPE coredns_build_info gauge
+# coredns_build_info{goversion="go1.24.3 X:systemcrypto",revision="a7ed346585e30b99317d36e4d007b7b19a228ea5",version="1.11.3"} 1
+# # HELP coredns_cache_entries The number of elements in the cache.
+# # TYPE coredns_cache_entries gauge
+# coredns_cache_entries{server="dns://169.254.10.10:53",type="denial",view="",zones="."} 7
+# coredns_cache_entries{server="dns://169.254.10.10:53",type="denial",view="",zones="cluster.local."} 0
+# coredns_cache_entries{server="dns://169.254.10.10:53",type="success",view="",zones="."} 46
+# coredns_cache_entries{server="dns://169.254.10.10:53",type="success",view="",zones="cluster.local."} 1
+# coredns_cache_entries{server="dns://169.254.10.11:53",type="denial",view="",zones="."} 0
+# coredns_cache_entries{server="dns://169.254.10.11:53",type="denial",view="",zones="cluster.local."} 26
+# coredns_cache_entries{server="dns://169.254.10.11:53",type="success",view="",zones="."} 10
+# coredns_cache_entries{server="dns://169.254.10.11:53",type="success",view="",zones="cluster.local."} 3
+# # HELP coredns_cache_hits_total The count of cache hits.
+# # TYPE coredns_cache_hits_total counter
+# coredns_cache_hits_total{server="dns://169.254.10.10:53",type="denial",view="",zones="."} 2
+```
+
+To monitor LocalDNS performance and health, you can enable monitoring through Azure Monitor. This allows you to collect metrics and logs related to DNS queries, latency, and errors. The easiest way is to enable it from the Azure portal. Go to your AKS cluster, select `Insights` under the `Monitoring` section, and enable monitoring if it is not already enabled.
+
+Then you need to deploy a config map to enable LocalDNS metrics collection:
+
+```sh
+kubectl apply -f ama-metrics-prometheus-config-node.yaml
+```
+
+This config map configures the Azure Monitor Agent to collect LocalDNS metrics from the node on address `NODE_IP:9253/metrics`.
+
+## More resources
+
+Autoscale the DNS Service in a Cluster: https://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/
+
+DNS Resolution in Azure Kubernetes Service (AKS): https://learn.microsoft.com/en-us/azure/aks/dns-concepts
+
+Configure LocalDNS in Azure Kubernetes Service (Preview): https://learn.microsoft.com/en-us/azure/aks/localdns-custom
