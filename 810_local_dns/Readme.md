@@ -67,16 +67,7 @@ kubectl exec nginx -it -- nslookup microsoft.com
 # Address: 13.107.246.53
 # Name:   microsoft.com
 # Address: 13.107.213.53
-# Name:   microsoft.com
-# Address: 2603:1030:b:3::152
-# Name:   microsoft.com
-# Address: 2603:1020:201:10::10f
-# Name:   microsoft.com
-# Address: 2603:1010:3:3::5b
-# Name:   microsoft.com
-# Address: 2603:1030:c02:8::14
-# Name:   microsoft.com
-# Address: 2603:1030:20e:3::23c
+...
 ```
 
 The output shows that the `nginx` pod was able to successfully resolve the DNS name `microsoft.com` using the `kube-dns` service. This indicates that the DNS resolution is functioning correctly within the AKS cluster.
@@ -109,12 +100,24 @@ kubectl exec -it nginx -- nslookup kubernetes.default
 # ;; Got recursion not available from 169.254.10.11
 ```
 
+```sh
+kubectl exec nginx -it -- nslookup microsoft.com
+Server:         169.254.10.11
+Address:        169.254.10.11#53
+
+Name:   microsoft.com
+Address: 13.107.213.53
+Name:   microsoft.com
+Address: 13.107.246.53
+...
+```
+
 ## Enabling monitoring for LocalDNS
 
 LocalDNS exposes metrics in Prometheus format on the node IP on port `9253`. You can access these metrics by querying the LocalDNS endpoint from within a pod in the cluster. Here is an example of how to retrieve the metrics using `curl` from the `nginx` pod:
 
 ```sh
-kubectl exec nginx -it -- curl 10.224.0.5:9253/metrics
+kubectl exec nginx -it -- curl 10.224.0.5:9253/metrics # replace with your node IP
 # # HELP coredns_build_info A metric with a constant '1' value labeled by version, revision, and goversion from which CoreDNS was built.
 # # TYPE coredns_build_info gauge
 # coredns_build_info{goversion="go1.24.3 X:systemcrypto",revision="a7ed346585e30b99317d36e4d007b7b19a228ea5",version="1.11.3"} 1
