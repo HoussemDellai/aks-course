@@ -14,15 +14,17 @@ This lab guide will walk you through the process of creating a Kubernetes cluste
 A resource group is a logical container for resources deployed on Azure.
 
 ```sh
-az group create -n $rg --location eastus
+$rg="rg-aks-automatic-300"
+$aks="aks-cluster"
+az group create -n $rg --location swedencentral
 ```
 
-2. **Create a Kubernetes Cluster**
+2. **Create a Kubernetes Automatic Cluster**
 
 This command creates a Kubernetes cluster with Managed Prometheus and Container Insights integration enabled.
 
 ```sh
-az aks create -n $aks -g $rg --sku automatic
+az aks create -n $aks -g $rg --sku automatic --network-plugin azure --network-plugin-mode overlay --network-dataplane cilium -k 1.33.3 --node-vm-size standard_d2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 64 --enable-apiserver-vnet-integration
 ```
 
 3. **Connect to the Cluster**
@@ -30,7 +32,7 @@ az aks create -n $aks -g $rg --sku automatic
 This command retrieves credentials that kubectl uses to access the cluster.
 
 ```sh
-az aks get-credentials -n $aks -g $rg
+az aks get-credentials -n $aks -g $rg --overwrite-existing
 ```
 
 4. **Get Nodes**

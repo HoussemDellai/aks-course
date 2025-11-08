@@ -1,0 +1,47 @@
+{
+  "mode": "Required",
+  "vnetDNSOverrides": {
+    ".": {
+      "queryLogging": "Log",
+      "protocol": "PreferUDP",
+      "forwardDestination": "VnetDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
+    },
+    "cluster.local": {
+      "queryLogging": "Log",
+      "protocol": "ForceTCP",
+      "forwardDestination": "ClusterCoreDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
+    }
+  },
+  "kubeDNSOverrides": {
+    ".": {
+      "queryLogging": "Log",
+      "protocol": "PreferUDP",
+      "forwardDestination": "ClusterCoreDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
+    },
+    "cluster.local": {
+      "queryLogging": "Log",
+      "protocol": "ForceTCP",
+      "forwardDestination": "ClusterCoreDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
+    }
+  }
+}

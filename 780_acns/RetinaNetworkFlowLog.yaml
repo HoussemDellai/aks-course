@@ -1,0 +1,45 @@
+apiVersion: acn.azure.com/v1alpha1
+kind: RetinaNetworkFlowLog
+metadata:
+  name: sample-retinanetworkflowlog # Cluster scoped
+spec:
+  includefilters: # List of filters
+    - name: sample-filter # Filter name
+      from:
+        namespacedPod: # List of source namespace/pods. Prepend namespace with /
+          - sample-namespace/sample-pod
+        labelSelector: # Standard k8s label selector
+          matchLabels:
+            app: frontend
+            k8s.io/namespace: sample-namespace
+          matchExpressions:
+            - key: environment
+              operator: In
+              values:
+                - production
+                - staging
+        ip: # List of source IPs; can be CIDR
+          - "192.168.1.10"
+          - "10.0.0.1"
+      to:
+        namespacedPod:
+          - sample-namespace2/sample-pod2
+        labelSelector:
+          matchLabels:
+            app: backend
+            k8s.io/namespace: sample-namespace2
+          matchExpressions:
+            - key: tier
+              operator: NotIn
+              values:
+                - dev
+        ip:
+          - "192.168.1.20"
+          - "10.0.1.1"
+      protocol: # List of protocols; can be tcp, udp, dns
+        - tcp
+        - udp
+        - dns
+      verdict: # List of verdicts; can be forwarded, dropped
+        - forwarded
+        - dropped

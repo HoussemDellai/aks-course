@@ -29,7 +29,7 @@ $prometheus_id=$(az monitor account create -n azure-prometheus -g $RG --query id
 
 $grafana_id=$(az grafana create -n azure-grafana-15 -g $RG --query id -o tsv)
 
-az aks create -n aks-cluster -g $RG --network-plugin azure --network-plugin-mode overlay -k 1.29.0 --enable-azure-monitor-metrics --enable-addons monitoring --azure-monitor-workspace-resource-id $prometheus_id --grafana-resource-id $grafana_id --workspace-resource-id $log_analytics_id
+az aks create -n aks-cluster -g $RG --network-plugin azure --network-plugin-mode overlay -k 1.33.3 --enable-azure-monitor-metrics --enable-addons monitoring --azure-monitor-workspace-resource-id $prometheus_id --grafana-resource-id $grafana_id --workspace-resource-id $log_analytics_id
 
 az aks get-credentials -n aks-cluster -g $RG --overwrite-existing
 ```
