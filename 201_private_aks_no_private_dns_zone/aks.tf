@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = azurerm_resource_group.rg-spoke.location
   resource_group_name = azurerm_resource_group.rg-spoke.name
   dns_prefix          = "aks"
-  kubernetes_version  = "1.29.2"
+  kubernetes_version  = "1.30.1"
 
   private_cluster_enabled             = true
   private_cluster_public_fqdn_enabled = true
