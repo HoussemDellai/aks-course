@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks-2" {
   location            = azurerm_resource_group.rg-2.location
   resource_group_name = azurerm_resource_group.rg-2.name
   dns_prefix          = "aks"
-  kubernetes_version  = "1.30.5"
+  kubernetes_version  = "1.34.2"
 
   network_profile {
     network_plugin      = "azure"
@@ -14,8 +14,8 @@ resource "azurerm_kubernetes_cluster" "aks-2" {
     name                        = "systempool"
     temporary_name_for_rotation = "syspool"
     node_count                  = 3
-    vm_size                     = "standard_b2als_v2"
-    zones                       = [1, 2, 3]
+    vm_size                     = "Standard_D2ads_v6"
+    zones                       = [1, 2, 3] Q
   }
 
   identity {

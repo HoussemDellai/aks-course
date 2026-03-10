@@ -1,0 +1,41 @@
+variable "kaito_gpu_provisioner_version" {
+  type        = string
+  default     = "0.4.1"
+  description = "kaito gpu provisioner version"
+}
+
+variable "kaito_workspace_version" {
+  type        = string
+  default     = "0.9.0"
+  description = "kaito workspace version"
+}
+
+variable "registry_repository_name" {
+  type        = string
+  default     = "fine-tuned-adapters/kubernetes"
+  description = "container registry repository name"
+}
+
+variable "deploy_kaito_ragengine" {
+  type        = bool
+  default     = true
+  description = "whether to deploy the KAITO RAGEngine"
+}
+
+variable "kaito_ragengine_version" {
+  type        = string
+  default     = "0.9.0"
+  description = "KAITO RAGEngine version"
+}
+
+variable "kaito_workspace_features" {
+  type        = list(string)
+  default     = ["gatewayAPIInferenceExtension"]
+  description = "List of KAITO workspace features to enable"
+}
+
+variable "kaito_workspace_features_disable" {
+  type        = list(string)
+  default     = ["disableNodeAutoProvisioning"]
+  description = "List of KAITO workspace features to disable"
+}

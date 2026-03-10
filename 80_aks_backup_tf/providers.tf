@@ -6,18 +6,18 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 4.6.0"
+      version = ">= 4.6.0"
     }
 
     time = {
       source  = "hashicorp/time"
-      version = "0.10.0"
+      version = ">= 0.10.0"
     }
   }
 }
 
 provider "azurerm" {
-  subscription_id = "dcef7009-6b94-4382-afdc-17eb160d709a"
+  use_cli = true
   features {}
 }
 

@@ -1,0 +1,15 @@
+apiVersion: kaito.sh/v1beta1
+kind: Workspace
+metadata:
+  name: workspace-phi-4-mini-nogpu
+  # annotations:
+  #   kaito.sh/bypass-resource-checks: "True" # bypass GPU memory requirement checks
+  #   kaito.sh/enablelb: "True" # Exposing Service via LoadBalancer (Testing Only)
+resource:
+  instanceType: "Standard_d4ads_v6"
+  labelSelector:
+    matchLabels:
+      apps: phi-4
+inference:
+  preset:
+    name: phi-4-mini-instruct
