@@ -18,27 +18,15 @@ az aks nodepool add --name nc24adsa100g `
     --node-vm-size Standard_NC24ads_A100_v4 `
     --tags EnableManagedGPUExperience=true `
     --node-count 1 `
+    --enable‐cluster‐autoscaler `
+    --min‐count 1 `
+    --max‐count 3 `
     --priority Spot `
     --eviction-policy Delete
-
-# az aks nodepool add  --name nc24adsa100g `
-#     --resource-group $RG `
-#     --cluster-name $CLUSTER_NAME `
-#     --node-vm-size Standard_NC24ads_A100_v4 `
-#     --node‐taints sku=gpu:NoSchedule `
-#     --tags EnableManagedGPUExperience=true `
-#     --node-count 1 `
-#     --enable‐cluster‐autoscaler `
-#     --min‐count 1 `
-#     --max‐count 3 `
-#     --priority Spot `
-#     --eviction-policy Delete
 
 az aks get-credentials -g $RG -n $CLUSTER_NAME --overwrite-existing
 
 kubectl get nodes
-
-kubectl get deployment -n kube-system | grep kaito
 
 # install KAITO
 helm repo add kaito https://kaito-project.github.io/kaito/charts/kaito
@@ -50,10 +38,15 @@ helm upgrade --install kaito-workspace kaito/workspace `
   --set defaultNodeImageFamily="ubuntu" `
   --set featureGates.gatewayAPIInferenceExtension=true `
   --set featureGates.disableNodeAutoProvisioning=false `
+  --set gpu-feature-discovery.nfd.enabled=true `
+  --set gpu-feature-discovery.gfd.enabled=true `
+  --set nvidiaDevicePlugin.enabled=true `
   --wait `
   --take-ownership
 
 >Node Image Family could be either `ubuntu` or `azurelinux`.
+
+>`gpu-feature-discovery.nfd.enabled=true`, `gpu-feature-discovery.gfd.enabled=true` and `nvidiaDevicePlugin.enabled=true` are the default values in the chart.
 
 # Verify KAITO Installation
 # Check that the KAITO workspace controller is running:
@@ -61,64 +54,22 @@ helm upgrade --install kaito-workspace kaito/workspace `
 kubectl get pods -n kaito-workspace
 kubectl describe deploy kaito-workspace -n kaito-workspace
 
+# View the taints on the new node
+kubectl describe node aks-nc24adsa100g-10854801-vmss000000
+# Taints:             kubernetes.azure.com/scalesetpriority=spot:NoSchedule
+
 Add Toleration for Spot VMs to:
 1. workspace-phi-4-mini StatefulSet
-2. nvidia-device-plugin-daemonset DaemonSet
+That should be implemented by PG into here: https://github.com/kaito-project/kaito/blob/main/charts/kaito/workspace/templates/kaito.sh_workspaces.yaml
+2. nvidia-device-plugin-daemonset DaemonSet : https://github.com/kaito-project/kaito/blob/1e723e307fc390ec8dd42bad55b815a59f2f4019/charts/kaito/workspace/templates/nvidia-device-plugin-ds.yaml#L38
+
         - key: kubernetes.azure.com/scalesetpriority
           operator: Equal
           value: spot
           effect: NoSchedule
 
-# # install Nvidia GPU Operator
-# kubectl create ns gpu-operator
-# kubectl label --overwrite ns gpu-operator pod-security.kubernetes.io/enforce=privileged
-# helm repo add nvidia https://helm.ngc.nvidia.com/nvidia
-# helm repo update
-
-# helm upgrade --install gpu-operator-1773102157 `
-#     --wait `
-#     -n gpu-operator `
-#     --create-namespace `
-#     nvidia/gpu-operator
-
-
-    # --set node-feature-discovery.worker.tolerations[2].key="kubernetes.azure.com/scalesetpriority" `
-    # --set node-feature-discovery.worker.tolerations[2].operator="Equal" `
-    # --set node-feature-discovery.worker.tolerations[2].value="spot" `
-    # --set node-feature-discovery.worker.tolerations[2].effect="NoSchedule"
-
-
-
-  # tolerations:
-  # - key: nvidia.com/gpu
-  #   operator: Exists
-  #   effect: NoSchedule
-
-# Ensure that the GPU operator is installed by running the following command:
-
-# kubectl -n gpu-operator wait pod `
-#     --for=condition=Ready `
-#     -l app.kubernetes.io/component=gpu-operator `
-#     --timeout=300s
-
-# Deploy the Falcon 7B-instruct model from the KAITO model repository using the kubectl apply command.
-kubectl apply -f https://raw.githubusercontent.com/Azure/kaito/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml
-
-kubectl get workspace workspace-falcon-7b-instruct -w
-
-# View the taints on the new node
-kubectl describe node aks-nc24adsa100g-10854801-vmss000000
-# Taints:             kubernetes.azure.com/scalesetpriority=spot:NoSchedule
-
-# add this toleration to kaito-nvidia-device-plugin-daemonset and also to kaito-workspace-node-feature-discovery-worker to allow it to run on the spot nodepool: 
-# kubernetes.azure.com/scalesetpriority=spot:NoSchedule
-kubectl -n kube-system patch daemonset kaito-nvidia-device-plugin-daemonset -p '{"spec":{"template":{"spec":{"tolerations":[{"key":"kubernetes.azure.com/scalesetpriority","operator":"Equal","value":"spot","effect":"NoSchedule"}]}}}}'
-
-# apply these tolerations also to the daemonset
-# CriticalAddonsOnly op=Exists
-#                         nvidia.com/gpu:NoSchedule op=Exists
-#                         sku=gpu:NoSchedule
-
+# Deploy the Phi-4 model from the KAITO model repository using the kubectl apply command.
+kubectl apply -f .\kaito_workspace_phi_4_mini.yaml -n kaito-workspace
 
 # List your GPU nodes and verify that they are all present and ready.
 kubectl get nodes -l accelerator=nvidia

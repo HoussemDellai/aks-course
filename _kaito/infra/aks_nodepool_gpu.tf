@@ -7,7 +7,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "nc24ads_a100_v4" {
   auto_scaling_enabled  = true
   min_count             = 1
   max_count             = 3
-  gpu_driver            = "None" # "Install" or "None"
+  gpu_driver            = "Install" # "Install" or "None"
   os_type               = "Linux"
   zones                 = []
   priority              = "Spot"

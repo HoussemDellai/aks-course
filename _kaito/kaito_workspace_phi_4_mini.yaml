@@ -7,6 +7,7 @@ metadata:
   #   kaito.sh/enablelb: "True" # Exposing Service via LoadBalancer (Testing Only)
 resource:
   instanceType: "Standard_NC24ads_A100_v4"
+  # count: 1 # integer, the required number of GPU nodes.
   labelSelector:
     matchLabels:
       apps: phi-4
