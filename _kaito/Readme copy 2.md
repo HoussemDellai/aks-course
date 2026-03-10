@@ -52,35 +52,24 @@ helm upgrade --install kaito-workspace kaito/workspace `
 # Check that the KAITO workspace controller is running:
 
 kubectl get pods -n kaito-workspace
-# you should notice that DaemonSet is not deployed on Spot instance because of taint
+kubectl describe deploy kaito-workspace -n kaito-workspace
 
-# View the taints on the Spot instance node
+# View the taints on the new node
 kubectl describe node aks-nc24adsa100g-10854801-vmss000000
-# Taints: kubernetes.azure.com/scalesetpriority=spot:NoSchedule
+# Taints:             kubernetes.azure.com/scalesetpriority=spot:NoSchedule
 
-Add Toleration for Spot VMs to: nvidia-device-plugin-daemonset DaemonSet : https://github.com/kaito-project/kaito/blob/1e723e307fc390ec8dd42bad55b815a59f2f4019/charts/kaito/workspace/templates/nvidia-device-plugin-ds.yaml#L38
+Add Toleration for Spot VMs to:
+1. workspace-phi-4-mini StatefulSet
+That should be implemented by PG into here: https://github.com/kaito-project/kaito/blob/main/charts/kaito/workspace/templates/kaito.sh_workspaces.yaml
+2. nvidia-device-plugin-daemonset DaemonSet : https://github.com/kaito-project/kaito/blob/1e723e307fc390ec8dd42bad55b815a59f2f4019/charts/kaito/workspace/templates/nvidia-device-plugin-ds.yaml#L38
 
         - key: kubernetes.azure.com/scalesetpriority
           operator: Equal
           value: spot
           effect: NoSchedule
 
-
 # Deploy the Phi-4 model from the KAITO model repository using the kubectl apply command.
 kubectl apply -f .\kaito_workspace_phi_4_mini.yaml -n kaito-workspace
-
-# This creates a StatefulSet and a Pod should be deployed into the Spot instance, but get blocked because of node's taint
-kubectl get workspace -n kaito-workspace
-
-# check the stuck Pod
-kubectl get pods -n kaito-workspace
-
-# Add Toleration for Spot VMs to: workspace-phi-4-mini StatefulSet
-# That should be implemented by PG into here: https://github.com/kaito-project/kaito/blob/main/charts/kaito/workspace/templates/kaito.sh_workspaces.yaml
-# This will force the Pod recreation with new Toleration
-
-# Now verify that the Pod get deployed
-kubectl get pods -n kaito-workspace -w
 
 # List your GPU nodes and verify that they are all present and ready.
 kubectl get nodes -l accelerator=nvidia
@@ -94,7 +83,7 @@ kubectl label node aks-nc24adsa100g-10854801-vmss000000 apps=phi-4
 # Monitor Deployment
 # Track the workspace status to see when the model has been deployed successfully:
 
-kubectl get workspace
+kubectl get workspace workspace-phi-4-mini
 # NAME                   INSTANCE                   RESOURCEREADY   INFERENCEREADY   JOBSTARTED   WORKSPACESUCCEEDED   AGE
 # workspace-phi-4-mini   Standard_NC24ads_A100_v4   True            True                          True                 4h15m
 
@@ -105,12 +94,7 @@ kubectl get workspace
 
 # Get the service endpoint
 kubectl get svc workspace-phi-4-mini
-
-# Shell
-export CLUSTERIP=$(kubectl get svc workspace-phi-4-mini -n kaito-workspace -o jsonpath="{.spec.clusterIPs[0]}")
-
-# Powershell
-$CLUSTERIP = kubectl get svc workspace-phi-4-mini -n kaito-workspace -o jsonpath='{.spec.clusterIPs[0]}'
+export CLUSTERIP=$(kubectl get svc workspace-phi-4-mini -o jsonpath="{.spec.clusterIPs[0]}")
 
 # List available models
 kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s http://$CLUSTERIP/v1/models | jq
@@ -118,7 +102,6 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s htt
 # Make an Inference Call
 # Now make an inference call using the model:
 
-# Shell
 kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$CLUSTERIP/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -126,12 +109,10 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POS
     "messages": [{"role": "user", "content": "What is kubernetes?"}],
     "max_tokens": 50,
     "temperature": 0
-  }' | jq
+  }'
 ```
 
 ## Monitoring
-
-
 
 ## Important notes
 

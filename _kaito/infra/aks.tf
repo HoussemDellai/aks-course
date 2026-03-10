@@ -7,7 +7,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   workload_identity_enabled = true
 
   default_node_pool {
-    name       = "default"
+    name       = "systemnp"
     node_count = 2
     vm_size    = "Standard_D2ads_v6"
 

@@ -6,10 +6,11 @@ metadata:
   #   kaito.sh/bypass-resource-checks: "True" # bypass GPU memory requirement checks
   #   kaito.sh/enablelb: "True" # Exposing Service via LoadBalancer (Testing Only)
 resource:
-  instanceType: "Standard_NC24ads_A100_v4"
+  instanceType: Standard_NC24ads_A100_v4
   # count: 1 # integer, the required number of GPU nodes.
   labelSelector:
     matchLabels:
+      # node.kubernetes.io/instance-type: Standard_NC24ads_A100_v4
       apps: phi-4
 inference:
   preset:

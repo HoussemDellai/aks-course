@@ -69,6 +69,18 @@ resource "helm_release" "kaito_workspace" {
       name  = "featureGates.disableNodeAutoProvisioning"
       value = "false"
     },
+    {
+      name  = "gpu-feature-discovery.nfd.enabled"
+      value = "true"
+    },
+    {
+      name = "gpu-feature-discovery.gfd.enabled"
+      value = "true"
+    },
+    {
+      name  = "nvidiaDevicePlugin.enabled"
+      value = "true"
+    }
   ]
 
   depends_on = [azurerm_kubernetes_cluster_node_pool.nc24ads_a100_v4]
