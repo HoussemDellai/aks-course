@@ -24,7 +24,6 @@ resource:
   labelSelector:
     matchLabels:
       accelerator: nvidia
-      # apps: gpt-oss-120b
 inference:
   preset:
     name: gpt-oss-120b

@@ -28,13 +28,15 @@ az aks get-credentials -g $RG -n $CLUSTER_NAME --overwrite-existing
 
 kubectl get nodes
 
-# install KAITO
+# Install KAITO using Helm chart, the managed AKS addon doesn't yet support all input values
+# The Terraform template already installs Kaito, but if you want to use Helm instead, here is the config:
+
 helm repo add kaito https://kaito-project.github.io/kaito/charts/kaito
 helm repo update
 helm upgrade --install kaito-workspace kaito/workspace `
   --namespace kaito-workspace `
   --create-namespace `
-  --set clusterName="aks-cluster" `
+  --set clusterName=$CLUSTER_NAME `
   --set defaultNodeImageFamily="ubuntu" `
   --set featureGates.gatewayAPIInferenceExtension=true `
   --set featureGates.disableNodeAutoProvisioning=false `
@@ -135,10 +137,7 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POS
 
 ## Important notes
 
->You need to create GPU nodes in order to run a Workspace with KAITO. There are two mutually exclusive options:
-
-- Bring your own GPU (BYO) nodes: Create your own GPU nodes to run KAITO deployments on. When using BYO nodes, Node Auto Provisioning (NAP) must be disabled.
-- Auto-provisioning: Set up automatic GPU node provisioning for your cloud provider. This option cannot be used with BYO nodes.
+>You need to create GPU nodes in order to run a Workspace with KAITO. All NC, NV, ND series VMs are supported. If you want to add another VM sku, you should use the BYO mode.
 
 ## Resources
 

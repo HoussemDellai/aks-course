@@ -15,7 +15,7 @@ resource "azurerm_kubernetes_cluster" "aks-2" {
     temporary_name_for_rotation = "syspool"
     node_count                  = 3
     vm_size                     = "Standard_D2ads_v6"
-    zones                       = [1, 2, 3] Q
+    zones                       = [1, 2, 3]
   }
 
   identity {
