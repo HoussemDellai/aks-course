@@ -13,7 +13,11 @@ Why `KAITO` is useful here ?
 * Scale the infrastructure to meet customer demand
 * Monitor GPU usage
 
-## Instructions
+![](./images/architecture.png)
+
+>KAITO can also run RAG workloads using `RAG engine` which is based on `Haystack` framework, but in this lab we will focus on the LLM inference part.
+
+## Lab Instructions
 
 ### Provision the infrastructure
 
@@ -22,7 +26,7 @@ In this lab, you will create the following resources in Azure:
 * Managed GPU Nodepool with sku `Standard_NC24ads_A100_v4` that runs `Nvidia A100` GPU
 * Install KAITO using Helm chart
 
-These resources could be created either using `Terraform` or Azure cli.
+These resources could be created either using `Terraform` or Azure CLI.
 
 ### [Option 1] Provison the infrastructure using Terraform
 
