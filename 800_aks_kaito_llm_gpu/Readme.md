@@ -5,11 +5,11 @@
 In this lab you will learn how to run AI and LLM models like `Llama`, `Phi`, `Qwen`, `GPT-OSS` etc on `AKS` using `KAITO`.
 Why `KAITO` is useful here ?
 `KAITO` will make it easy to:
-* Provision the GPU vms (`NC*, NV*, ND*` sku)
+* Provision the GPU VMs (`NC*, NV*, ND*` sku)
 * Install `Nvidia GPU` drivers
 * Install `device plugin` for GPU
 * Run the model on the GPU VMs using `vLLM`
-* Expose qn endpoint for the inference through a Kubernetes Service
+* Expose an endpoint for the inference through a Kubernetes Service
 * Scale the infrastructure to meet customer demand
 * Monitor GPU usage
 
