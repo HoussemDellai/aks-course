@@ -63,10 +63,64 @@ az aks nodepool add --name nc24adsa100g `
 az aks get-credentials -g $RG -n $CLUSTER_NAME --overwrite-existing
 
 kubectl get nodes
+NAME                                  STATUS   ROLES    AGE     VERSION
+# aks-nc24adsa100-86536742-vmss000000   Ready    <none>   4m3s    v1.33.7
+# aks-systemnp-35024557-vmss000000      Ready    <none>   9m44s   v1.33.7
+# aks-systemnp-35024557-vmss000001      Ready    <none>   10m     v1.33.7
+```
 
-# Install KAITO using Helm chart, the managed AKS addon doesn't yet support all input values
-# The Terraform template already installs Kaito, but if you want to use Helm instead, here is the config:
+Verify that the GPU driver is installed correctly by running the following command where you should see `nvidia.com/gpu: "1"` in the output which means the GPU is available for scheduling.
 
+```sh
+kubectl get nodes aks-nc24adsa100-86536742-vmss000000 -o yaml
+  # capacity:
+  #   cpu: "24"
+  #   ephemeral-storage: 520125348Ki
+  #   hugepages-1Gi: "0"
+  #   hugepages-2Mi: "0"
+  #   memory: 226764656Ki
+  #   nvidia.com/gpu: "1"
+  #   pods: "250"
+```
+
+You can also check the GPU driver installation by running the `nvidia-smi` command on the GPU node using `kubectl debug`:
+
+```sh
+kubectl debug node/aks-nc24adsa100-86536742-vmss000000 --image=ubuntu -it --env="NVIDIA_VISIBLE_DEVICES=all" --env="NVIDIA_DRIVER_CAPABILITIES=compute, utility"
+
+root@aks-nc24adsa100-86536742-vmss000000:/# chroot /host
+
+nvidia-smi
+
+Fri Mar 13 08:02:22 2026
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.09             Driver Version: 580.126.09     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100 80GB PCIe          Off |   00000001:00:00.0 Off |                    0 |
+| N/A   30C    P0             45W /  300W |       0MiB /  81920MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
+
+### Install KAITO
+
+>You will install KAITO using Helm chart as the managed AKS addon doesn't yet support all input values.
+
+The Terraform template already installs Kaito, but if you want to use Helm instead, here is the config:
+
+```sh
 helm repo add kaito https://kaito-project.github.io/kaito/charts/kaito
 helm repo update
 helm upgrade --install kaito-workspace kaito/workspace `
@@ -216,3 +270,5 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POS
 - https://learn.microsoft.com/en-us/azure/aks/ai-toolchain-operator
 
 - https://kaito-project.github.io/kaito/docs/installation/
+
+- https://learn.microsoft.com/en-us/azure/aks/aks-managed-gpu-nodes?tabs=add-ubuntu-gpu-node-pool
