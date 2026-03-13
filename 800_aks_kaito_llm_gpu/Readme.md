@@ -13,9 +13,9 @@ Why `KAITO` is useful here ?
 * Scale the infrastructure to meet customer demand
 * Monitor GPU usage
 
-# Instructions
+## Instructions
 
-## Provision the infrastructure
+### Provision the infrastructure
 
 In this lab, you will create the following resources in Azure:
 * AKS cluster with a system nodepool
@@ -24,7 +24,7 @@ In this lab, you will create the following resources in Azure:
 
 These resources could be created either using `Terraform` or Azure cli.
 
-## [Option 1] Provison the infrastructure using Terraform
+### [Option 1] Provison the infrastructure using Terraform
 
 From within the `infra` folder, run the following Terraform commands:
 
@@ -34,7 +34,7 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-## [Option 2] Provison the infrastructure using Azure CLI
+### [Option 2] Provison the infrastructure using Azure CLI
 
 ```sh
 $RG = "rg-aks-kaito-swc1"
@@ -87,6 +87,8 @@ helm upgrade --install kaito-workspace kaito/workspace `
 
 >`gpu-feature-discovery.nfd.enabled=true`, `gpu-feature-discovery.gfd.enabled=true` and `nvidiaDevicePlugin.enabled=true` are the default values in the chart.
 
+>Make sure you have Quota for the GPU SKU in the region you are deploying, otherwise the GPU nodepool creation will fail. You can check the quota in Azure portal.
+
 Check that the KAITO workspace controller is running:
 
 ```sh
@@ -112,7 +114,7 @@ Add the following toleration to `nvidia-device-plugin-daemonset` DaemonSet in or
 Deploy the Phi-4 model from the KAITO model repository using the kubectl apply command.
 
 ```sh
-kubectl apply -f .\kaito_workspace_phi_4_mini.yaml -n kaito-workspace
+kubectl apply -f kaito_workspace_phi_4_mini.yaml -n kaito-workspace
 ```
 
 This creates a StatefulSet and a Pod should be deployed into the Spot instance, but get blocked because of node's taint
@@ -153,7 +155,7 @@ kubectl label node aks-nc24adsa100g-10854801-vmss000000 apps=phi-4
 # node/aks-nc24adsa100g-10854801-vmss000000 labeled
 ```
 
-# Monitor Deployment
+### Monitor Deployment
 
 Track the workspace status to see when the model has been deployed successfully:
 
@@ -165,22 +167,32 @@ kubectl get workspace
 
 When the WORKSPACESUCCEEDED column becomes True, the model has been deployed successfully.
 
-# Test the Model
-# Find the inference service's cluster IP and test it using a temporary curl pod:
+### Test the Model
 
-# Get the service endpoint
-kubectl get svc workspace-phi-4-mini
+Find the inference service's cluster IP and test it using a temporary curl pod.
+First, get the service endpoint.
 
-# Shell
+```sh
+kubectl get svc workspace-phi-4-mini -n kaito-workspace
+```
+
+In a Shell terminal, run the following command to set the CLUSTERIP environment variable:
+
+```sh
 export CLUSTERIP=$(kubectl get svc workspace-phi-4-mini -n kaito-workspace -o jsonpath="{.spec.clusterIPs[0]}")
+```
 
-# List available models
+List available models:
+
+```sh
 kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s http://$CLUSTERIP/v1/models | jq
+```
 
-# Make an Inference Call
-# Now make an inference call using the model:
+### Make an Inference Call
 
-# Shell
+Now make an inference call using the model:
+
+```sh
 kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$CLUSTERIP/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
@@ -191,15 +203,15 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POS
   }' | jq
 ```
 
-## Monitoring
+### Monitoring
 
-## Important notes
+### Important notes
 
 >You need to create GPU nodes in order to run a Workspace with KAITO. All NC, NV, ND series VMs are supported. If you want to add another VM sku, you should use the BYO mode.
 
 >At the end of the lab, don't forget to delete the resource group to avoid unnecessary high cost of the GPU nodes.
 
-## Resources
+## More resources
 
 - https://learn.microsoft.com/en-us/azure/aks/ai-toolchain-operator
 
