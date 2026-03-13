@@ -2,7 +2,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name       = azurerm_resource_group.rg.name
   location                  = azurerm_resource_group.rg.location
   name                      = "aks-cluster"
-  dns_prefix                = "aks-${random_integer.example.result}"
+  dns_prefix                = "aks"
   oidc_issuer_enabled       = true
   workload_identity_enabled = true
 
