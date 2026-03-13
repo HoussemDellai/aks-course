@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "nc24ads_a100_v4" {
 
   node_labels = {
     "kubernetes.azure.com/scalesetpriority" = "spot"
-    "apps"                                  = "gpt-oss-120b"
+    "apps"                                  = "phi-4"
   }
 
   node_taints = [
