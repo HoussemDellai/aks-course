@@ -172,6 +172,9 @@ kubectl describe node aks-nc24adsa100g-10854801-vmss000000
 
 >Note: The GPU nodes created in this lab runs under Spot instances and have a taint `kubernetes.azure.com/scalesetpriority=spot:NoSchedule` which means that no Pod can be scheduled on those nodes unless they have a toleration for that taint. This is to prevent non-GPU workloads from being scheduled on the expensive GPU nodes.
 
+
+>**Important note:** As per the time of writing this lab, KAITO didn't support Spot instances natively, so we are getting around this limitation by manually adding tolerations. But it should add support in future releases. For more details, refer to the KAITO github repository: https://github.com/kaito-project/kaito/
+
 Add the following toleration to `nvidia-device-plugin-daemonset` DaemonSet in order for it to be scheduled on Spot instances.
 
 ```yaml
@@ -206,8 +209,6 @@ Add the following toleration for Spot VMs to: `workspace-phi-4-mini` StatefulSet
           value: spot
           effect: NoSchedule
 ```
-
->Note: In a future release, KAITO will support Spot instances natively. For more details, refer to the KAITO github repository: https://github.com/kaito-project/kaito/
 
 This will force the Pod recreation with new Toleration, now verify that the Pod get deployed:
 
