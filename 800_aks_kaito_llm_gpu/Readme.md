@@ -151,7 +151,19 @@ Check that the KAITO workspace controller is running:
 
 ```sh
 kubectl get pods -n kaito-workspace
-# you should notice that DaemonSet is not deployed on Spot instance because of taint
+# NAME                                   READY   STATUS    RESTARTS   AGE
+# csi-local-manager-f954b6d6-njbh7       1/1     Running   0          39m
+# csi-local-manager-f954b6d6-pvgrc       1/1     Running   0          39m
+# csi-local-node-58z8t                   4/4     Running   0          39m
+# csi-local-node-cj94r                   4/4     Running   0          39m
+# csi-local-node-n7kzp                   4/4     Running   0          39m
+# helm-controller-5c98ff4f68-fn5bj       1/1     Running   0          39m
+# kaito-workspace-6fcd6f4fd7-5m7tk       1/1     Running   0          39m
+# nvidia-device-plugin-daemonset-4hdb5   1/1     Running   0          39m
+# nvidia-device-plugin-daemonset-m457c   1/1     Running   0          39m
+# source-controller-68dbfc6d94-9r4ks     1/1     Running   0          39m
+
+# you should notice that DaemonSet pods are not deployed on Spot instance because of taint
 
 # View the taints on the Spot instance node
 kubectl describe node aks-nc24adsa100g-10854801-vmss000000
@@ -169,7 +181,9 @@ Add the following toleration to `nvidia-device-plugin-daemonset` DaemonSet in or
           effect: NoSchedule
 ```
 
-Deploy the Phi-4 model from the KAITO model repository using the kubectl apply command.
+### Deploying an LLM model using KAITO
+
+Deploy the `Phi-4` model from the `KAITO` model repository using the kubectl apply command.
 
 ```sh
 kubectl apply -f kaito_workspace_phi_4_mini.yaml -n kaito-workspace
