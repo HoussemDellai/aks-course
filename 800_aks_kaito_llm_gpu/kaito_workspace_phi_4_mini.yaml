@@ -2,12 +2,14 @@ apiVersion: kaito.sh/v1beta1
 kind: Workspace
 metadata:
   name: workspace-phi-4-mini
-  # annotations:
+  annotations:
+    annotations:
+    kaito.sh/runtime: "vLLM" # "transformers"
   #   kaito.sh/bypass-resource-checks: "True" # bypass GPU memory requirement checks
   #   kaito.sh/enablelb: "True" # Exposing Service via LoadBalancer (Testing Only)
 resource:
   instanceType: Standard_NC24ads_A100_v4
-  # count: 1 # integer, the required number of GPU nodes.
+  count: 1 # integer, the required number of GPU nodes.
   labelSelector:
     matchLabels:
       # node.kubernetes.io/instance-type: Standard_NC24ads_A100_v4

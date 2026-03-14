@@ -276,7 +276,43 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POS
   }' | jq
 ```
 
+Or you can use the `Responses API` to stream the response:
+
+```sh
+curl -X POST "http://10.0.25.148:80/v1/responses"     -H "Content-Type: application/json"     -d '{
+        "model": "phi-4-mini-instruct",
+        "input": "What is Kubernetes ?",
+        "max_output_tokens": 200
+    }' | jq
+```
+
 ### Monitoring
+
+`vLLM` exposes Prometheus metrics at the `/metrics` endpoint. These metrics provide detailed insights into the system's performance, resource utilization, and request processing statistics.
+
+```sh
+curl http://10.0.25.148:80/metrics
+# # HELP python_gc_objects_collected_total Objects collected during gc
+# # TYPE python_gc_objects_collected_total counter
+# python_gc_objects_collected_total{generation="0"} 12171.0
+# python_gc_objects_collected_total{generation="1"} 1037.0
+# python_gc_objects_collected_total{generation="2"} 1607.0
+# # HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# # TYPE python_gc_objects_uncollectable_total counter
+# python_gc_objects_uncollectable_total{generation="0"} 0.0
+# python_gc_objects_uncollectable_total{generation="1"} 0.0
+# python_gc_objects_uncollectable_total{generation="2"} 0.0
+# # HELP python_gc_collections_total Number of times this generation was collected
+# # TYPE python_gc_collections_total counter
+# python_gc_collections_total{generation="0"} 1438.0
+# python_gc_collections_total{generation="1"} 130.0
+# python_gc_collections_total{generation="2"} 10.0
+# # HELP python_info Python platform information
+# # TYPE python_info gauge
+# python_info{implementation="CPython",major="3",minor="12",patchlevel="12",version="3.12.12"} 1.0
+# # HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# ...
+```
 
 ### Important notes
 
