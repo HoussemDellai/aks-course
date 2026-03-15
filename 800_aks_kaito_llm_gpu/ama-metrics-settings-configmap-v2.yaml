@@ -1,0 +1,118 @@
+kind: ConfigMap
+apiVersion: v1
+data:
+  schema-version:
+    #string.used by agent to parse config. supported versions are {v1, v2}. Configs with other schema versions will be rejected by the agent.
+    v2
+  config-version:
+    #string.used by customer to keep track of this config file's version in their source control/repository (max allowed 10 chars, other chars will be truncated)
+    ver1
+  cluster-metrics: |-
+    default-targets-scrape-enabled: |-
+      kubelet = true
+      coredns = true
+      cadvisor = true
+      kubeproxy = true
+      apiserver = false
+      kubestate = true
+      nodeexporter = true
+      windowsexporter = true
+      windowskubeproxy = true
+      kappiebasic = true
+      networkobservabilityRetina = true
+      networkobservabilityHubble = true
+      networkobservabilityCilium = true
+      acstor-capacity-provisioner = true
+      acstor-metrics-exporter = true
+      local-csi-driver = true
+      ztunnel = false
+      istio-cni = false
+      dcgmexporter = true
+      prometheuscollectorhealth = false
+    pod-annotation-based-scraping: |-
+      podannotationnamespaceregex = ""
+    default-targets-metrics-keep-list: |-
+      kubelet = ""
+      coredns = ""
+      cadvisor = ""
+      kubeproxy = ""
+      apiserver = ""
+      kubestate = ""
+      nodeexporter = ""
+      windowsexporter = ""
+      windowskubeproxy = ""
+      podannotations = ""
+      kappiebasic = ""
+      networkobservabilityRetina = ""
+      networkobservabilityHubble = ""
+      networkobservabilityCilium = ""
+      acstor-capacity-provisioner = ""
+      acstor-metrics-exporter = ""
+      local-csi-driver = ""
+      ztunnel = ""
+      istio-cni = ""
+      dcgmexporter = ""
+    minimal-ingestion-profile: |-
+      enabled = true
+    default-targets-scrape-interval-settings: |-
+      kubelet = "30s"
+      coredns = "30s"
+      cadvisor = "30s"
+      kubeproxy = "30s"
+      apiserver = "30s"
+      kubestate = "30s"
+      nodeexporter = "30s"
+      windowsexporter = "30s"
+      windowskubeproxy = "30s"
+      kappiebasic = "30s"
+      networkobservabilityRetina = "30s"
+      networkobservabilityHubble = "30s"
+      networkobservabilityCilium = "30s"
+      acstor-capacity-provisioner = "30s"
+      acstor-metrics-exporter = "30s"
+      local-csi-driver = "30s"  
+      ztunnel = "30s"
+      istio-cni = "30s"
+      dcgmexporter = "30s"
+      prometheuscollectorhealth = "30s"
+      podannotations = "30s"
+  controlplane-metrics: |-
+    default-targets-scrape-enabled: |-
+      apiserver = true
+      cluster-autoscaler = false
+      node-auto-provisioning = false
+      kube-scheduler = false
+      kube-controller-manager = false
+      etcd = true
+    default-targets-metrics-keep-list: |-
+      apiserver = ""
+      cluster-autoscaler = ""
+      node-auto-provisioning = ""
+      kube-scheduler = ""
+      kube-controller-manager = ""
+      etcd = ""
+    minimal-ingestion-profile: |-
+      enabled = true
+  prometheus-collector-settings: |-
+    cluster_alias = ""
+    debug-mode = false
+    https_config = true
+  # Note that below section (ksm-config) is a yaml configuration, the settings override the configuration provided by optional parameters during 
+  # onboarding for kube-state-metrics, only uncomment and use them if the collection needs to be customized.
+  # Default settings - https://github.com/Azure/prometheus-collector/blob/e40947f3eaee8843021c90bd8645ce7875ad1fcf/otelcollector/deploy/addon-chart/azure-monitor-metrics-addon/values-template.yaml#L2
+  # https://learn.microsoft.com/en-us/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli#optional-parameters
+  # OSS documentation for kube-state-metrics resources and the metrics - https://github.com/kubernetes/kube-state-metrics/tree/main/docs#exposed-metrics
+  # ksm-config: |-
+  #   resources: 
+  #     secrets: {}
+  #     configmaps: {}
+  #   labels_allow_list: # object name and label names
+  #     pods: 
+  #     - app8
+  #   annotations_allow_list: # object name and annotation names
+  #     namespaces:
+  #     - kube-system
+  #     - default
+metadata:
+  name: ama-metrics-settings-configmap
+  namespace: kube-system

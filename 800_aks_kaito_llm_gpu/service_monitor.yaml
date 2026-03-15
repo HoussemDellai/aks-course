@@ -1,0 +1,13 @@
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kaito-monitor
+spec:
+  selector:
+    matchLabels:
+      app: phi-4-mini
+  endpoints:
+  - port: http
+    interval: 5s # 30s
+    path: /metrics
+    scheme: http

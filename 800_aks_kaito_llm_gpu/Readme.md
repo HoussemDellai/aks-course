@@ -249,16 +249,10 @@ First, get the service endpoint.
 kubectl get svc workspace-phi-4-mini -n kaito-workspace
 ```
 
-In a Shell terminal, run the following command to set the CLUSTERIP environment variable:
-
-```sh
-export CLUSTERIP=$(kubectl get svc workspace-phi-4-mini -n kaito-workspace -o jsonpath="{.spec.clusterIPs[0]}")
-```
-
 List available models:
 
 ```sh
-kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s http://$CLUSTERIP/v1/models | jq
+kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s http://workspace-phi-4-mini.kaito-workspace/v1/models | jq
 ```
 
 ### Make an Inference Call
@@ -266,7 +260,7 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s htt
 Now make an inference call using the model:
 
 ```sh
-kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$CLUSTERIP/v1/chat/completions \
+kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://workspace-phi-4-mini.kaito-workspace/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "phi-4-mini-instruct",
@@ -279,7 +273,7 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POS
 Or you can use the `Responses API` to stream the response:
 
 ```sh
-curl -X POST "http://10.0.25.148:80/v1/responses"     -H "Content-Type: application/json"     -d '{
+curl -X POST "http://workspace-phi-4-mini.kaito-workspace:80/v1/responses" -H "Content-Type: application/json" -d '{
         "model": "phi-4-mini-instruct",
         "input": "What is Kubernetes ?",
         "max_output_tokens": 200
@@ -291,7 +285,7 @@ curl -X POST "http://10.0.25.148:80/v1/responses"     -H "Content-Type: applicat
 `vLLM` exposes Prometheus metrics at the `/metrics` endpoint. These metrics provide detailed insights into the system's performance, resource utilization, and request processing statistics.
 
 ```sh
-curl http://10.0.25.148:80/metrics
+curl http://workspace-phi-4-mini.kaito-workspace:80/metrics
 # # HELP python_gc_objects_collected_total Objects collected during gc
 # # TYPE python_gc_objects_collected_total counter
 # python_gc_objects_collected_total{generation="0"} 12171.0
@@ -313,6 +307,51 @@ curl http://10.0.25.148:80/metrics
 # # HELP process_virtual_memory_bytes Virtual memory size in bytes.
 # ...
 ```
+
+Add the following label to your KAITO inference service so that a Kubernetes ServiceMonitor deployment can detect it:
+
+```sh
+kubectl label svc workspace-phi-4-mini app=phi-4-mini -n kaito-workspace
+# service/workspace-phi-4-mini labeled
+```
+
+Create a ServiceMonitor resource to define the inference service endpoints and the required configurations to scrape the vLLM Prometheus metrics. Export these metrics to the managed service for Prometheus by deploying the following ServiceMonitor YAML manifest in the kube-system namespace:
+
+```yaml
+# service_monitor.yaml
+apiVersion: azmonitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kaito-monitor
+spec:
+  selector:
+    matchLabels:
+      app: phi-4-mini
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /metrics
+    scheme: http
+```
+
+```sh
+kubectl apply -f service_monitor.yaml -n kube-system
+# servicemonitor.azmonitoring.coreos.com/prometheus-kaito-monitor created
+```
+
+Verify that your ServiceMonitor deployment is running successfully:
+
+```sh
+kubectl get servicemonitor prometheus-kaito-monitor -n kube-system
+# NAME                       AGE
+# prometheus-kaito-monitor   46s
+```
+
+More resources for monitoring: 
+- https://learn.microsoft.com/en-us/azure/aks/ai-toolchain-operator-monitoring
+- https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana/#example-materials
+- https://kaito-project.github.io/kaito/docs/monitoring
+- https://grafana.com/grafana/dashboards/24756-vllm-monitoring-v2/
 
 ### Important notes
 
