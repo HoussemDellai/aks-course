@@ -43,7 +43,7 @@ terraform apply tfplan
 ### [Option 2] Provison the infrastructure using Azure CLI
 
 ```sh
-$RG = "rg-aks-kaito-swc1"
+$RG = "rg-aks-kaito-swc"
 $LOCATION = "swedencentral"
 $CLUSTER_NAME = "aks-cluster"
 
@@ -69,7 +69,7 @@ az aks nodepool add --name nc24adsa100g `
 az aks get-credentials -g $RG -n $CLUSTER_NAME --overwrite-existing
 
 kubectl get nodes
-NAME                                  STATUS   ROLES    AGE     VERSION
+# NAME                                  STATUS   ROLES    AGE     VERSION
 # aks-nc24adsa100-86536742-vmss000000   Ready    <none>   4m3s    v1.33.7
 # aks-systemnp-35024557-vmss000000      Ready    <none>   9m44s   v1.33.7
 # aks-systemnp-35024557-vmss000001      Ready    <none>   10m     v1.33.7

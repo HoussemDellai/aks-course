@@ -11,7 +11,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "nc24ads_a100_v4" {
   gpu_driver                  = "Install" # "Install" or "None"
   os_type                     = "Linux"
   zones                       = []
-  os_disk_size_gb             = 1024 # 960 # 512
+  os_disk_size_gb             = 64 # 1024 # 960 # 512
   os_disk_type                = "Ephemeral" # "Managed" 
   priority                    = "Spot"
   eviction_policy             = "Delete"
