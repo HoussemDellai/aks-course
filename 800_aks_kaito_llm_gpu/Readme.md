@@ -7,26 +7,28 @@
 In this lab you will learn how to run AI and LLM models like `Llama`, `Phi`, `Qwen`, `GPT-OSS` etc on `AKS` using `KAITO`.
 Why `KAITO` is useful here ?
 `KAITO` will make it easy to:
-* Provision the GPU VMs (`NC*, NV*, ND*` sku)
-* Install `Nvidia GPU` drivers
-* Install `device plugin` for GPU
-* Run the model on the GPU VMs using `vLLM`
-* Expose an endpoint for the inference through a Kubernetes Service
-* Scale the infrastructure to meet customer demand
-* Monitor GPU usage
+
+- Provision the GPU VMs (`NC*, NV*, ND*` sku)
+- Install `Nvidia GPU` drivers
+- Install `device plugin` for GPU
+- Run the model on the GPU VMs using `vLLM`
+- Expose an endpoint for the inference through a Kubernetes Service
+- Scale the infrastructure to meet customer demand
+- Monitor GPU usage
 
 ![](./images/architecture.png)
 
->KAITO can also run RAG workloads using `RAG engine` which is based on `Haystack` framework, but in this lab we will focus on the LLM inference part.
+> KAITO can also run RAG workloads using `RAG engine` which is based on `Haystack` framework, but in this lab we will focus on the LLM inference part.
 
 ## Lab Instructions
 
 ### Provision the infrastructure
 
 In this lab, you will create the following resources in Azure:
-* AKS cluster with a system nodepool
-* Managed GPU Nodepool with sku `Standard_NC24ads_A100_v4` that runs `Nvidia A100` GPU
-* Install KAITO using Helm chart
+
+- AKS cluster with a system nodepool
+- Managed GPU Nodepool with sku `Standard_NC24ads_A100_v4` that runs `Nvidia A100` GPU
+- Install KAITO using Helm chart
 
 These resources could be created either using `Terraform` or Azure CLI.
 
@@ -49,7 +51,7 @@ $CLUSTER_NAME = "aks-cluster"
 
 az group create --name $RG --location $LOCATION
 
-az aks create -g $RG -n $CLUSTER_NAME --enable-oidc-issuer 
+az aks create -g $RG -n $CLUSTER_NAME --enable-oidc-issuer
 # --enable-ai-toolchain-operator
 
 # add nodepool to the cluster with sku Standard_NC24ads_A100_v4 and type spot
@@ -60,11 +62,11 @@ az aks nodepool add --name nc24adsa100g `
     --node-vm-size Standard_NC24ads_A100_v4 `
     --tags EnableManagedGPUExperience=true `
     --node-count 1 `
+    --priority Spot `
+    --eviction-policy Delete `
     --enable‐cluster‐autoscaler `
     --min‐count 1 `
-    --max‐count 3 `
-    --priority Spot `
-    --eviction-policy Delete
+    --max‐count 3
 
 az aks get-credentials -g $RG -n $CLUSTER_NAME --overwrite-existing
 
@@ -124,13 +126,14 @@ Fri Mar 13 08:02:22 2026
 
 ### Install KAITO
 
->You will install KAITO using Helm chart as the managed AKS addon doesn't yet support all input values.
+> You will install KAITO using Helm chart as the managed AKS addon doesn't yet support all input values.
 
 The Terraform template already installs Kaito in file `infra/kaito.tf`, but if you want to use Helm command line instead, here is the config:
 
 ```sh
 helm repo add kaito https://kaito-project.github.io/kaito/charts/kaito
 helm repo update
+
 helm upgrade --install kaito-workspace kaito/workspace `
   --namespace kaito-workspace `
   --create-namespace `
@@ -145,11 +148,11 @@ helm upgrade --install kaito-workspace kaito/workspace `
   --take-ownership
 ```
 
->Node Image Family could be either `ubuntu` or `azurelinux`.
+> Node Image Family could be either `ubuntu` or `azurelinux`.
 
->`gpu-feature-discovery.nfd.enabled=true`, `gpu-feature-discovery.gfd.enabled=true` and `nvidiaDevicePlugin.enabled=true` are the default values in the chart.
+> `gpu-feature-discovery.nfd.enabled=true`, `gpu-feature-discovery.gfd.enabled=true` and `nvidiaDevicePlugin.enabled=true` are the default values in the chart.
 
->Make sure you have Quota for the GPU SKU in the region you are deploying, otherwise the GPU nodepool creation will fail. You can check the quota in Azure portal.
+> Make sure you have Quota for the GPU SKU in the region you are deploying, otherwise the GPU nodepool creation will fail. You can check the quota in Azure portal.
 
 Check that the KAITO workspace controller is running:
 
@@ -174,17 +177,17 @@ kubectl describe node aks-nc24adsa100g-10854801-vmss000000
 # Taints: kubernetes.azure.com/scalesetpriority=spot:NoSchedule
 ```
 
->Note: The GPU nodes created in this lab runs under Spot instances and have a taint `kubernetes.azure.com/scalesetpriority=spot:NoSchedule` which means that no Pod can be scheduled on those nodes unless they have a toleration for that taint. This is to prevent non-GPU workloads from being scheduled on the expensive GPU nodes.
+> Note: The GPU nodes created in this lab runs under Spot instances and have a taint `kubernetes.azure.com/scalesetpriority=spot:NoSchedule` which means that no Pod can be scheduled on those nodes unless they have a toleration for that taint. This is to prevent non-GPU workloads from being scheduled on the expensive GPU nodes.
 
->**Important note:** As per the time of writing this lab, KAITO didn't support Spot instances natively, so we are getting around this limitation by manually adding tolerations. But it should add support in future releases. For more details, refer to the KAITO github repository: https://github.com/kaito-project/kaito/
+> **Important note:** As per the time of writing this lab, KAITO didn't support Spot instances natively, so we are getting around this limitation by manually adding tolerations. But it should add support in future releases. For more details, refer to the KAITO github repository: https://github.com/kaito-project/kaito/
 
 Add the following toleration to `nvidia-device-plugin-daemonset` DaemonSet in order for it to be scheduled on Spot instances.
 
 ```yaml
-        - key: kubernetes.azure.com/scalesetpriority
-          operator: Equal
-          value: spot
-          effect: NoSchedule
+- key: kubernetes.azure.com/scalesetpriority
+  operator: Equal
+  value: spot
+  effect: NoSchedule
 ```
 
 You can add the toleration using the following kubectl command:
@@ -224,10 +227,10 @@ kubectl get pods -n kaito-workspace
 Add the following toleration for Spot VMs to: `workspace-phi-4-mini` StatefulSet in order for it to be scheduled on Spot instances.
 
 ```yaml
-        - key: kubernetes.azure.com/scalesetpriority
-          operator: Equal
-          value: spot
-          effect: NoSchedule
+- key: kubernetes.azure.com/scalesetpriority
+  operator: Equal
+  value: spot
+  effect: NoSchedule
 ```
 
 You can add the toleration using the following kubectl command:
@@ -279,17 +282,60 @@ When the WORKSPACESUCCEEDED column becomes True, the model has been deployed suc
 
 ### Test the Model
 
-Find the inference service's cluster IP and test it using a temporary curl pod.
-First, get the service endpoint.
+Find the inference service's cluster IP and test it using a sample Nginx pod with curl command and `jq` to format the JSON response.
+Prepare the test environment by running a temporary Nginx pod:
 
 ```sh
-kubectl get svc workspace-phi-4-mini -n kaito-workspace
+kubectl run nginx --image=nginx
+kubectl exec nginx -it -- apt-get update
+kubectl exec nginx -it -- apt-get install jq -y
+```
+
+Then, get the service endpoint.
+
+```sh
+kubectl get svc -n kaito-workspace
+# NAME                            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                    AGE
+# kaito-workspace-svc             ClusterIP   10.0.42.87     <none>        8080/TCP,9443/TCP          17m
+# source-controller               ClusterIP   10.0.231.205   <none>        80/TCP                     17m
+# workspace-phi-4-mini            ClusterIP   10.0.229.231   <none>        80/TCP,6379/TCP,8265/TCP   12m
+# workspace-phi-4-mini-headless   ClusterIP   None           <none>        <none>                     12m
 ```
 
 List available models:
 
 ```sh
-kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s http://workspace-phi-4-mini.kaito-workspace/v1/models | jq
+kubectl exec nginx -it -- curl -s http://workspace-phi-4-mini.kaito-workspace/v1/models | jq
+# {
+#   "object": "list",
+#   "data": [
+#     {
+#       "id": "phi-4-mini-instruct",
+#       "object": "model",
+#       "created": 1773907696,
+#       "owned_by": "vllm",
+#       "root": "/workspace/vllm/weights",
+#       "parent": null,
+#       "max_model_len": 131072,
+#       "permission": [
+#         {
+#           "id": "modelperm-ac496905328e3c69",
+#           "object": "model_permission",
+#           "created": 1773907696,
+#           "allow_create_engine": false,
+#           "allow_sampling": true,
+#           "allow_logprobs": true,
+#           "allow_search_indices": false,
+#           "allow_view": true,
+#           "allow_fine_tuning": false,
+#           "organization": "*",
+#           "group": null,
+#           "is_blocking": false
+#         }
+#       ]
+#     }
+#   ]
+# }
 ```
 
 ### Making an Inference Call
@@ -297,20 +343,55 @@ kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s htt
 Now make an inference call using the model:
 
 ```sh
-kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://workspace-phi-4-mini.kaito-workspace/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
+kubectl exec nginx -it -- curl -X POST http://workspace-phi-4-mini.kaito-workspace/v1/chat/completions -H "Content-Type: application/json" -d '{
     "model": "phi-4-mini-instruct",
     "messages": [{"role": "user", "content": "What is kubernetes?"}],
     "max_tokens": 50,
     "temperature": 0
   }' | jq
+# {
+#   "id": "chatcmpl-ad21ff6e1843c757",
+#   "object": "chat.completion",
+#   "created": 1773907966,
+#   "model": "phi-4-mini-instruct",
+#   "choices": [
+#     {
+#       "index": 0,
+#       "message": {
+#         "role": "assistant",
+#         "content": "Kubernetes is an open-source platform designed to automate deploying, scaling, and operating application containers. It was originally developed by Google and is now maintained by the Cloud Native Computing Foundation. Kubernetes groups containers into logical units for easy management and discovery. It provides",
+#         "refusal": null,
+#         "annotations": null,
+#         "audio": null,
+#         "function_call": null,
+#         "tool_calls": [],
+#         "reasoning": null,
+#         "reasoning_content": null
+#       },
+#       "logprobs": null,
+#       "finish_reason": "length",
+#       "stop_reason": null,
+#       "token_ids": null
+#     }
+#   ],
+#   "service_tier": null,
+#   "system_fingerprint": null,
+#   "usage": {
+#     "prompt_tokens": 17,
+#     "total_tokens": 67,
+#     "completion_tokens": 50,
+#     "prompt_tokens_details": null
+#   },
+#   "prompt_logprobs": null,
+#   "prompt_token_ids": null,
+#   "kv_transfer_params": null
+# }
 ```
 
 Or you can use the `Responses API` to stream the response:
 
 ```sh
-curl -X POST "http://workspace-phi-4-mini.kaito-workspace:80/v1/responses" -H "Content-Type: application/json" -d '{
+kubectl exec nginx -it -- curl -X POST "http://workspace-phi-4-mini.kaito-workspace:80/v1/responses" -H "Content-Type: application/json" -d '{
         "model": "phi-4-mini-instruct",
         "input": "What is Kubernetes ?",
         "max_output_tokens": 200
@@ -365,10 +446,10 @@ spec:
     matchLabels:
       app: phi-4-mini
   endpoints:
-  - port: http
-    interval: 30s
-    path: /metrics
-    scheme: http
+    - port: http
+      interval: 30s
+      path: /metrics
+      scheme: http
 ```
 
 ```sh
@@ -384,7 +465,8 @@ kubectl get servicemonitor prometheus-kaito-monitor -n kube-system
 # prometheus-kaito-monitor   46s
 ```
 
-More resources for monitoring: 
+More resources for monitoring:
+
 - https://learn.microsoft.com/en-us/azure/aks/ai-toolchain-operator-monitoring
 - https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana/#example-materials
 - https://kaito-project.github.io/kaito/docs/monitoring
@@ -392,9 +474,9 @@ More resources for monitoring:
 
 ### Important notes
 
->You need to create GPU nodes in order to run a Workspace with KAITO. All NC, NV, ND series VMs are supported. If you want to add another VM sku, you should use the BYO mode.
+> You need to create GPU nodes in order to run a Workspace with KAITO. All NC, NV, ND series VMs are supported. If you want to add another VM sku, you should use the BYO mode.
 
->At the end of the lab, don't forget to delete the resource group to avoid unnecessary high cost of the GPU nodes.
+> At the end of the lab, don't forget to delete the resource group to avoid unnecessary high cost of the GPU nodes.
 
 ## More resources
 
