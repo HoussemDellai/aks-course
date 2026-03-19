@@ -396,6 +396,69 @@ kubectl exec nginx -it -- curl -X POST "http://workspace-phi-4-mini.kaito-worksp
         "input": "What is Kubernetes ?",
         "max_output_tokens": 200
     }' | jq
+# {
+#   "id": "resp_b7c74773cbcd5624",
+#   "created_at": 1773908200,
+#   "incomplete_details": {
+#     "reason": "max_output_tokens"
+#   },
+#   "instructions": null,
+#   "metadata": null,
+#   "model": "phi-4-mini-instruct",
+#   "object": "response",
+#   "output": [
+#     {
+#       "id": "msg_bfe470c6bc82e9ab",
+#       "content": [
+#         {
+#           "annotations": [],
+#           "text": "Kubernetes is an open-source platform designed to automate deploying, scaling, and operating application containers. It was originally developed at Google and echoing Google’s own experience running workloads at scale, it provides a framework to run distributed systems resiliently, ensures that your application always has the resources it needs, and can recover from failures without manual intervention. Kubernetes itself doesn't do the application logic but is the foundation upon which the application is deployed and run.\n\nKubernetes is often referred to as k8s (pronounced \"kube eight\") because there are 8 letters between the \"K\" and the \"s\" in \"kubernetes\". It's maintained by the Cloud Native Computing Foundation, which is part of the Linux Foundation.\n\nSome of the key features and capabilities of Kubernetes include:\n\n1. **Orchestration:** Kubernetes manages and orchestrates containerized applications, leading to more efficient use of resources.\n2. **Automating Scaling and Restarts:** It can launch the desired number of container replicas for an",
+#           "type": "output_text",
+#           "logprobs": null
+#         }
+#       ],
+#       "role": "assistant",
+#       "status": "completed",
+#       "type": "message",
+#       "phase": null
+#     }
+#   ],
+#   "parallel_tool_calls": true,
+#   "temperature": 1.0,
+#   "tool_choice": "auto",
+#   "tools": [],
+#   "top_p": 1.0,
+#   "background": false,
+#   "max_output_tokens": 200,
+#   "max_tool_calls": null,
+#   "previous_response_id": null,
+#   "prompt": null,
+#   "reasoning": null,
+#   "service_tier": "auto",
+#   "status": "incomplete",
+#   "text": null,
+#   "top_logprobs": null,
+#   "truncation": "disabled",
+#   "usage": {
+#     "input_tokens": 15,
+#     "input_tokens_details": {
+#       "cached_tokens": 0,
+#       "input_tokens_per_turn": [],
+#       "cached_tokens_per_turn": []
+#     },
+#     "output_tokens": 200,
+#     "output_tokens_details": {
+#       "reasoning_tokens": 0,
+#       "tool_output_tokens": 0,
+#       "output_tokens_per_turn": [],
+#       "tool_output_tokens_per_turn": []
+#     },
+#     "total_tokens": 215
+#   },
+#   "user": null,
+#   "input_messages": null,
+#   "output_messages": null
+# }
 ```
 
 ### Monitoring
