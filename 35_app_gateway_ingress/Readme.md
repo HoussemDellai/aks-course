@@ -23,7 +23,7 @@ The following picture shows the workflow.
 
 ![](images\35_app_gateway_ingress__architecture-white.png)
 
-## What are the pros and cons of using AGIC when compared with Nginx Ingress Controler ?
+## What are the pros and cons of using AGIC when compared with Nginx Ingress Controller ?
 
 There are a lot of features available for App Gateway and for Nginx IC. Here I will put only the most relevant ones. (this is not a refence for comparing the 2 tools).
 
@@ -46,7 +46,7 @@ More details here: https://azure.github.io/application-gateway-kubernetes-ingres
 App Gateway works with both Azure CNI and Kubenet plugins.
 
 ```sh
-az group create -n rg-aks-cluster -l westeurope
+az group create -n rg-aks-cluster -l swedencentral
 
 az aks create -n aks-cluster -g rg-aks-cluster --network-plugin azure
 ```

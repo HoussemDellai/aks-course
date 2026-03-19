@@ -1,17 +1,20 @@
 resource "azurerm_kubernetes_cluster_node_pool" "nc24ads_a100_v4" {
-  name                  = "nc24adsa100"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
-  mode                  = "User"
-  vm_size               = "Standard_NC24ads_A100_v4"
-  node_count            = 1
-  auto_scaling_enabled  = true
-  min_count             = 1
-  max_count             = 3
-  gpu_driver            = "Install" # "Install" or "None"
-  os_type               = "Linux"
-  zones                 = []
-  priority              = "Spot"
-  eviction_policy       = "Delete"
+  name                        = "nc24adsa100"
+  temporary_name_for_rotation = "nc24adsa100t"
+  kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
+  mode                        = "User"
+  vm_size                     = "Standard_NC24ads_A100_v4"
+  node_count                  = 1
+  auto_scaling_enabled        = true
+  min_count                   = 1
+  max_count                   = 1
+  gpu_driver                  = "Install" # "Install" or "None"
+  os_type                     = "Linux"
+  zones                       = []
+  os_disk_size_gb             = 1024 # 960 # 512
+  os_disk_type                = "Ephemeral" # "Managed" 
+  priority                    = "Spot"
+  eviction_policy             = "Delete"
   #   gpu_instance = "MIG1g"
 
   node_labels = {

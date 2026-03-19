@@ -2,6 +2,8 @@
 
 ## Introduction
 
+`KAITO` is a `CNCF Sandbox` project that simplifies and optimizes your inference and tuning workloads on `Kubernetes`. By default, it integrates with `vLLM`, a high-throughput `LLM` inference engine optimized for serving large models efficiently.
+
 In this lab you will learn how to run AI and LLM models like `Llama`, `Phi`, `Qwen`, `GPT-OSS` etc on `AKS` using `KAITO`.
 Why `KAITO` is useful here ?
 `KAITO` will make it easy to:
@@ -73,6 +75,8 @@ NAME                                  STATUS   ROLES    AGE     VERSION
 # aks-systemnp-35024557-vmss000001      Ready    <none>   10m     v1.33.7
 ```
 
+### Verify GPU driver installation
+
 Verify that the GPU driver is installed correctly by running the following command where you should see `nvidia.com/gpu: "1"` in the output which means the GPU is available for scheduling.
 
 ```sh
@@ -122,7 +126,7 @@ Fri Mar 13 08:02:22 2026
 
 >You will install KAITO using Helm chart as the managed AKS addon doesn't yet support all input values.
 
-The Terraform template already installs Kaito, but if you want to use Helm instead, here is the config:
+The Terraform template already installs Kaito in file `infra/kaito.tf`, but if you want to use Helm command line instead, here is the config:
 
 ```sh
 helm repo add kaito https://kaito-project.github.io/kaito/charts/kaito
@@ -172,7 +176,6 @@ kubectl describe node aks-nc24adsa100g-10854801-vmss000000
 
 >Note: The GPU nodes created in this lab runs under Spot instances and have a taint `kubernetes.azure.com/scalesetpriority=spot:NoSchedule` which means that no Pod can be scheduled on those nodes unless they have a toleration for that taint. This is to prevent non-GPU workloads from being scheduled on the expensive GPU nodes.
 
-
 >**Important note:** As per the time of writing this lab, KAITO didn't support Spot instances natively, so we are getting around this limitation by manually adding tolerations. But it should add support in future releases. For more details, refer to the KAITO github repository: https://github.com/kaito-project/kaito/
 
 Add the following toleration to `nvidia-device-plugin-daemonset` DaemonSet in order for it to be scheduled on Spot instances.
@@ -184,6 +187,23 @@ Add the following toleration to `nvidia-device-plugin-daemonset` DaemonSet in or
           effect: NoSchedule
 ```
 
+You can add the toleration using the following kubectl command:
+
+```sh
+kubectl patch daemonset nvidia-device-plugin-daemonset -n kaito-workspace --type='json' -p='[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/tolerations/-",
+    "value": {
+      "key": "kubernetes.azure.com/scalesetpriority",
+      "operator": "Equal",
+      "value": "spot",
+      "effect": "NoSchedule"
+    }
+  }
+]'
+```
+
 ### Deploying an LLM model using KAITO
 
 Deploy the `Phi-4` model from the `KAITO` model repository using the kubectl apply command.
@@ -192,7 +212,7 @@ Deploy the `Phi-4` model from the `KAITO` model repository using the kubectl app
 kubectl apply -f kaito_workspace_phi_4_mini.yaml -n kaito-workspace
 ```
 
-This creates a StatefulSet and a Pod should be deployed into the Spot instance, but get blocked because of node's taint
+This creates a StatefulSet and a Pod should be deployed into the Spot instance, but get blocked because of spot node's taint
 
 ```sh
 kubectl get workspace -n kaito-workspace
@@ -210,6 +230,23 @@ Add the following toleration for Spot VMs to: `workspace-phi-4-mini` StatefulSet
           effect: NoSchedule
 ```
 
+You can add the toleration using the following kubectl command:
+
+```sh
+kubectl patch statefulset workspace-phi-4-mini -n kaito-workspace --type='json' -p='[
+  {
+    "op": "add",
+    "path": "/spec/template/spec/tolerations/-",
+    "value": {
+      "key": "kubernetes.azure.com/scalesetpriority",
+      "operator": "Equal",
+      "value": "spot",
+      "effect": "NoSchedule"
+    }
+  }
+]'
+```
+
 This will force the Pod recreation with new Toleration, now verify that the Pod get deployed:
 
 ```sh
@@ -221,7 +258,7 @@ kubectl get nodes -l accelerator=nvidia
 # aks-nc24adsa100g-10854801-vmss000000   Ready    <none>   14m   v1.33.7
 ```
 
-The GPU nodes will need a label in order for a KAITO Workspace to select it. We'll use the label apps=phi-4 for this example. Label the nodes you want to use.
+The GPU nodes will need a label in order for a KAITO Workspace to select it. We'll use the label `apps=phi-4` for this example. Terraform template already labeled the node. If you are using Azure CLI, you can label the nodes you want to use.
 
 ```sh
 kubectl label node aks-nc24adsa100g-10854801-vmss000000 apps=phi-4
@@ -255,7 +292,7 @@ List available models:
 kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -s http://workspace-phi-4-mini.kaito-workspace/v1/models | jq
 ```
 
-### Make an Inference Call
+### Making an Inference Call
 
 Now make an inference call using the model:
 
