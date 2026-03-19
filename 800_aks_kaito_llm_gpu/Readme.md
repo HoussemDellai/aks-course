@@ -403,7 +403,7 @@ kubectl exec nginx -it -- curl -X POST "http://workspace-phi-4-mini.kaito-worksp
 `vLLM` exposes Prometheus metrics at the `/metrics` endpoint. These metrics provide detailed insights into the system's performance, resource utilization, and request processing statistics.
 
 ```sh
-curl http://workspace-phi-4-mini.kaito-workspace:80/metrics
+kubectl exec nginx -it -- curl http://workspace-phi-4-mini.kaito-workspace:80/metrics
 # # HELP python_gc_objects_collected_total Objects collected during gc
 # # TYPE python_gc_objects_collected_total counter
 # python_gc_objects_collected_total{generation="0"} 12171.0
