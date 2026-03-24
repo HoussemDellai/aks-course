@@ -2,10 +2,14 @@ apiVersion: azmonitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: prometheus-kaito-monitor
+  namespace: kube-system
 spec:
+  namespaceSelector:
+    matchNames:
+      - kaito-workspace
   selector:
     matchLabels:
-      app: phi-4-mini
+      app: workspace-phi-4-mini
   endpoints:
   - port: http
     interval: 5s # 30s

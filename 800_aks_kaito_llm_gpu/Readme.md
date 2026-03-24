@@ -391,7 +391,7 @@ kubectl exec nginx -it -- curl -X POST http://workspace-phi-4-mini.kaito-workspa
 Or you can use the `Responses API` to stream the response:
 
 ```sh
-kubectl exec nginx -it -- curl -X POST "http://workspace-phi-4-mini.kaito-workspace:80/v1/responses" -H "Content-Type: application/json" -d '{
+kubectl exec nginx -it -- curl -X POST "http://workspace-phi-4-mini.kaito-workspace/v1/responses" -H "Content-Type: application/json" -d '{
         "model": "phi-4-mini-instruct",
         "input": "What is Kubernetes ?",
         "max_output_tokens": 200

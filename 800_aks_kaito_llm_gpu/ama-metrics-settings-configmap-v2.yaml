@@ -53,7 +53,7 @@ data:
       istio-cni = ""
       dcgmexporter = ""
     minimal-ingestion-profile: |-
-      enabled = true
+      enabled = false
     default-targets-scrape-interval-settings: |-
       kubelet = "30s"
       coredns = "30s"
