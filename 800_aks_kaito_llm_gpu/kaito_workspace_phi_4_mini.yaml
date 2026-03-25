@@ -3,7 +3,6 @@ kind: Workspace
 metadata:
   name: workspace-phi-4-mini
   annotations:
-    annotations:
     kaito.sh/runtime: "vLLM" # "transformers"
   #   kaito.sh/bypass-resource-checks: "True" # bypass GPU memory requirement checks
   #   kaito.sh/enablelb: "True" # Exposing Service via LoadBalancer (Testing Only)
