@@ -477,6 +477,14 @@ kubectl exec nginx -it -- curl -X POST http://workspace-custom-llm.kaito-workspa
   }' | jq
 ```
 
+```sh
+kubectl exec nginx -it -- curl -X POST "http://workspace-custom-llm.kaito-workspace/v1/responses" -H "Content-Type: application/json" -d '{
+        "model": "bloom-1b7",
+        "input": "What is Kubernetes ?",
+        "max_output_tokens": 200
+    }' | jq
+```
+
 ### Monitoring
 
 `vLLM` exposes Prometheus metrics at the `/metrics` endpoint. These metrics provide detailed insights into the system's performance, resource utilization, and request processing statistics.
