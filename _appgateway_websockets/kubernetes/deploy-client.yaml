@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-echo-client
+  labels:
+    app: websocket-echo-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket-echo-client
+  template:
+    metadata:
+      labels:
+        app: websocket-echo-client
+    spec:
+      containers:
+        - name: websocket-echo-client
+          image: acr4aks08.azurecr.io/websocket-echo-client:1.0.0
+          env:
+            - name: SERVER_URI
+              value: "ws://websocket-echo-server:80"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi

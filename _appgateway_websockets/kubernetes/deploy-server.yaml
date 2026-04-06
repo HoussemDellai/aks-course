@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-echo-server
+  labels:
+    app: websocket-echo-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket-echo-server
+  template:
+    metadata:
+      labels:
+        app: websocket-echo-server
+    spec:
+      containers:
+        - name: websocket-echo-server
+          image: acr4aks08.azurecr.io/websocket-echo-server:1.0.0
+          ports:
+            - containerPort: 8765
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket-echo-server
+  labels:
+    app: websocket-echo-server
+spec:
+  type: ClusterIP
+  selector:
+    app: websocket-echo-server
+  ports:
+    - port: 80
+      targetPort: 8765
+      protocol: TCP
