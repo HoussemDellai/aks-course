@@ -5,7 +5,7 @@ metadata:
   labels:
     app: websocket-echo-server
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: websocket-echo-server
@@ -14,6 +14,7 @@ spec:
       labels:
         app: websocket-echo-server
     spec:
+      terminationGracePeriodSeconds: 101
       containers:
         - name: websocket-echo-server
           image: acr4aks08.azurecr.io/websocket-echo-server:1.0.4
@@ -35,9 +36,13 @@ spec:
               port: 8765
               scheme: HTTP
             initialDelaySeconds: 15
-            periodSeconds: 20
-            timeoutSeconds: 2
+            periodSeconds: 4
+            timeoutSeconds: 5
             failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep","90"]
           resources:
             requests:
               cpu: 100m
