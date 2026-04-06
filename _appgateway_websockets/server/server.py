@@ -37,7 +37,7 @@ async def handler(websocket: websockets.WebSocketServerProtocol) -> None:
             # hold the connection for 10 seconds to demonstrate that it stays open
             await asyncio.sleep(10)
             # Echo the message back
-            await websocket.send(f"echo: {message}")
+            await websocket.send(f"echo from server {websocket.local_address} : {message}")
     except websockets.ConnectionClosed as exc:
         log.info("Connection closed (%s): %s", remote, exc)
     finally:

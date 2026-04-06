@@ -29,21 +29,21 @@ resource "azurerm_subnet" "snet_aks_apiserver" {
   }
 }
 
-# snet_appgateway
-resource "azurerm_subnet" "snet_appgw" {
-  name                 = "snet-appgw"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = ["10.1.3.0/24"]
+# # snet_appgateway
+# resource "azurerm_subnet" "snet_appgw" {
+#   name                 = "snet-appgw"
+#   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
+#   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+#   address_prefixes     = ["10.1.3.0/24"]
 
-  delegation {
-    name = "delegation"
-    service_delegation {
-      name    = "Microsoft.Network/applicationGateways"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-    }
-  }
-}
+#   delegation {
+#     name = "delegation"
+#     service_delegation {
+#       name    = "Microsoft.Network/applicationGateways"
+#       actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+#     }
+#   }
+# }
 
 resource "azurerm_subnet" "snet_appgw_managed" {
   name                 = "snet-appgw-managed"
