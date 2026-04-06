@@ -19,6 +19,7 @@ spec:
           image: acr4aks08.azurecr.io/websocket-echo-client:1.0.0
           env:
             - name: SERVER_URI
+              # value: "ws://20.240.8.221:80"
               value: "ws://websocket-echo-server:80"
           resources:
             requests:

@@ -16,10 +16,28 @@ spec:
     spec:
       containers:
         - name: websocket-echo-server
-          image: acr4aks08.azurecr.io/websocket-echo-server:1.0.0
+          image: acr4aks08.azurecr.io/websocket-echo-server:1.0.4
           ports:
             - containerPort: 8765
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8765
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8765
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 3
           resources:
             requests:
               cpu: 100m

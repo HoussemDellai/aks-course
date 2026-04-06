@@ -1,6 +1,7 @@
 """WebSocket echo server using the `websockets` library."""
 
 import asyncio
+from http import HTTPStatus
 import websockets
 import logging
 
@@ -8,6 +9,21 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(message)s")
 log = logging.getLogger(__name__)
 
 CONNECTIONS: set[websockets.WebSocketServerProtocol] = set()
+
+
+def process_request(path: str, request_headers):
+    if path == "/health":
+        log.info("Received health check request from %s", request_headers.get("User-Agent", "unknown"))
+        body = b"OK\n"
+        return (
+            HTTPStatus.OK,
+            [
+                ("Content-Type", "text/plain"),
+                ("Content-Length", str(len(body))),
+            ],
+            body,
+        )
+    return None
 
 
 async def handler(websocket: websockets.WebSocketServerProtocol) -> None:
@@ -32,7 +48,7 @@ async def handler(websocket: websockets.WebSocketServerProtocol) -> None:
 async def main() -> None:
     host = "0.0.0.0"
     port = 8765
-    async with websockets.serve(handler, host, port):
+    async with websockets.serve(handler, host, port, process_request=process_request):
         log.info("WebSocket server listening on ws://%s:%s", host, port)
         await asyncio.Future()  # run forever
 
