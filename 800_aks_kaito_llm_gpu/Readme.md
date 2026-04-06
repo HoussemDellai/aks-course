@@ -464,22 +464,44 @@ kubectl exec nginx -it -- curl -X POST "http://workspace-phi-4-mini.kaito-worksp
 ### Deploying custom preset models
 
 ```sh
+kubectl apply -f SmolLM2-1.7B-Instruct.yaml -n kaito-workspace
+```
+
+```sh
+kubectl get pods -n kaito-workspace -o wide -w
+NAME                                   READY   STATUS    RESTARTS   AGE   IP             NODE                                  NOMINATED NODE   READINESS GATES
+csi-local-manager-656544bf6b-988hz     1/1     Running   0          31m   10.244.1.203   aks-systemnp-78616908-vmss000000      <none>           <none>
+csi-local-manager-656544bf6b-9hqrt     1/1     Running   0          31m   10.244.1.254   aks-systemnp-78616908-vmss000000      <none>           <none>
+csi-local-node-924qh                   4/4     Running   0          31m   10.244.1.7     aks-systemnp-78616908-vmss000000      <none>           <none>
+csi-local-node-d4f8r                   4/4     Running   0          31m   10.244.2.30    aks-nc24adsa100-42688085-vmss000000   <none>           <none>
+csi-local-node-fwnrl                   4/4     Running   0          31m   10.244.0.73    aks-systemnp-78616908-vmss000001      <none>           <none>
+helm-controller-5ff54b6b44-j65b4       1/1     Running   0          31m   10.244.1.154   aks-systemnp-78616908-vmss000000      <none>           <none>
+kaito-workspace-7cbf6575c9-wqrds       1/1     Running   0          31m   10.244.1.63    aks-systemnp-78616908-vmss000000      <none>           <none>
+nvidia-device-plugin-daemonset-5vhfn   1/1     Running   0          18m   10.244.1.105   aks-systemnp-78616908-vmss000000      <none>           <none>
+nvidia-device-plugin-daemonset-8nrnw   1/1     Running   0          17m   10.244.0.155   aks-systemnp-78616908-vmss000001      <none>           <none>
+nvidia-device-plugin-daemonset-mfjf2   1/1     Running   0          18m   10.244.2.74    aks-nc24adsa100-42688085-vmss000000   <none>           <none>
+source-controller-69b9bd8786-zm55q     1/1     Running   0          31m   10.244.1.219   aks-systemnp-78616908-vmss000000      <none>           <none>
+workspace-custom-llm-0                 1/1     Running   0          16m   10.244.2.49    aks-nc24adsa100-42688085-vmss000000   <none>           <none>
+```
+
+```sh
 kubectl exec nginx -it -- curl -s http://workspace-custom-llm.kaito-workspace/v1/models | jq
 ```
 
 
 ```sh
 kubectl exec nginx -it -- curl -X POST http://workspace-custom-llm.kaito-workspace/v1/chat/completions -H "Content-Type: application/json" -d '{
-    "model": "bloom-1b7",
+    "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
     "messages": [{"role": "user", "content": "What is kubernetes?"}],
     "max_tokens": 50,
-    "temperature": 0
+    "temperature": 0,
+    "stream": false
   }' | jq
 ```
 
 ```sh
 kubectl exec nginx -it -- curl -X POST "http://workspace-custom-llm.kaito-workspace/v1/responses" -H "Content-Type: application/json" -d '{
-        "model": "bloom-1b7",
+        "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
         "input": "What is Kubernetes ?",
         "max_output_tokens": 200
     }' | jq

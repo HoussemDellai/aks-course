@@ -1,0 +1,66 @@
+apiVersion: kaito.sh/v1beta1
+kind: Workspace
+metadata:
+  name: workspace-custom-llm
+resource:
+  instanceType: "Standard_NC24ads_A100_v4" # Required VM SKU based on model requirements
+  labelSelector:
+    matchLabels:
+      apps: phi-4 # custom-llm
+inference:
+  template:
+    spec:
+      containers:
+        - name: custom-llm-container
+          image: mcr.microsoft.com/aks/kaito/kaito-base:0.2.0 # KAITO base image which includes hf runtime
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 600
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              nvidia.com/gpu: 1  # Request 1 GPU; adjust as needed
+            limits:
+              nvidia.com/gpu: 1  # Optional: Limit to 1 GPU
+          command:
+            - "accelerate"
+          args:
+            - "launch"
+            - "--num_processes"
+            - "1"
+            - "--num_machines"
+            - "1"
+            - "--gpu_ids"
+            - "all"
+            - "tfs/inference_api.py"
+            - "--pipeline"
+            - "text-generation"
+            - "--trust_remote_code"
+            - "--allow_remote_files"
+            - "--pretrained_model_name_or_path"
+            - "HuggingFaceTB/SmolLM2-1.7B-Instruct" # The model's HuggingFace identifier
+            - "--torch_dtype"
+            - "bfloat16"
+          volumeMounts:
+            - name: dshm
+              mountPath: /dev/shm
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
