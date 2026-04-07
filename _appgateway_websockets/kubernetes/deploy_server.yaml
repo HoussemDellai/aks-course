@@ -14,7 +14,7 @@ spec:
       labels:
         app: websocket-echo-server
     spec:
-      terminationGracePeriodSeconds: 101
+      terminationGracePeriodSeconds: 2 # 101 # Defaults to 30 seconds.
       containers:
         - name: websocket-echo-server
           image: acr4aks08.azurecr.io/websocket-echo-server:1.0.5
@@ -49,7 +49,9 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["sleep","90"]
+                command: ["sleep", "90"]
+# If the preStop hook needs longer to complete than the default grace period allows, you must modify terminationGracePeriodSeconds to suit this.
+# If the preStop hook is still running after the grace period expires, the kubelet requests a small, one-off grace period extension of 2 seconds.
 ---
 apiVersion: v1
 kind: Service

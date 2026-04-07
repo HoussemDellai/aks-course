@@ -21,3 +21,13 @@ az acr build --registry acr4aks08 --image websocket-echo-client:1.0.0 ./client
 ```
 
 3. Deploy the WebSocket echo server application to the AKS cluster.
+
+## Important notes:
+
+- If one of the Pod's containers has defined a preStop hook and the terminationGracePeriodSeconds in the Pod spec is not set to 0, the kubelet runs that hook inside of the container. The default terminationGracePeriodSeconds setting is 30 seconds.
+
+- If the preStop hook is still running after the grace period expires, the kubelet requests a small, one-off grace period extension of 2 seconds.
+
+- If the preStop hook needs longer to complete than the default grace period allows, you must modify terminationGracePeriodSeconds to suit this.
+
+Src: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination-flow
