@@ -13,20 +13,10 @@ spec:
   rules:
   - http:
       paths:
-      - path: /
-        pathType: Prefix
+      - path: /websocket-echo-server
+        pathType: Exact
         backend:
           service:
             name: websocket-echo-server
             port:
               number: 80
-  # rules:
-  #   - http:
-  #       paths:
-  #         - path: /
-  #           pathType: Prefix
-  #           backend:
-  #             service:
-  #               name: websocket-echo-server
-  #               port:
-  #                 number: 80
