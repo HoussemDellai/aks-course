@@ -31,3 +31,29 @@ az acr build --registry acr4aks08 --image websocket-echo-client:1.0.0 ./client
 - If the preStop hook needs longer to complete than the default grace period allows, you must modify terminationGracePeriodSeconds to suit this.
 
 Src: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination-flow
+
+- AGIC annonations: https://azure.github.io/application-gateway-kubernetes-ingress/annotations/
+
+- WebSocket connection is bound to the specific server instance that accepted it, unless you explicitly design around that.
+
+Why WebSocket connections are “bound” to a server
+A WebSocket connection is:
+
+A long‑lived, stateful TCP connection
+Upgraded from HTTP via a handshake
+Maintained between one client socket and one server socket
+
+Once the handshake is complete:
+
+The TCP connection stays open
+All messages flow over that same socket
+Only the server process that owns that socket can read/write to it
+
+✅ If the server:
+
+Restarts
+Crashes
+Is scaled down
+Loses network connectivity
+
+→ The WebSocket connection drops
