@@ -17,10 +17,17 @@ spec:
       terminationGracePeriodSeconds: 101
       containers:
         - name: websocket-echo-server
-          image: acr4aks08.azurecr.io/websocket-echo-server:1.0.5,j
+          image: acr4aks08.azurecr.io/websocket-echo-server:1.0.5
           ports:
             - containerPort: 8765
               protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
           readinessProbe:
             httpGet:
               path: /health
@@ -43,13 +50,6 @@ spec:
             preStop:
               exec:
                 command: ["sleep","90"]
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 250m
-              memory: 256Mi
 ---
 apiVersion: v1
 kind: Service

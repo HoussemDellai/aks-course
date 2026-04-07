@@ -15,7 +15,6 @@ async def main() -> None:
     async with websockets.connect(SERVER_URI) as ws:
         log.info("Connected to %s", SERVER_URI)
 
-        # for i in range(1, 6):
         i = 1
         while True:
             message = f"Hello #{i}"

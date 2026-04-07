@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inspectorgadget
+  labels:
+    app: inspectorgadget
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: inspectorgadget
+  template:
+    metadata:
+      labels:
+        app: inspectorgadget
+    spec:
+      containers:
+      - name: inspectorgadget
+        image: ghcr.io/jelledruyts/inspectorgadget:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inspectorgadget
+spec:
+  selector:
+    app: inspectorgadget
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: inspectorgadget
+  annotations:
+    appgw.ingress.kubernetes.io/backend-protocol: "http"
+    appgw.ingress.kubernetes.io/connection-draining: "true"
+    appgw.ingress.kubernetes.io/health-probe-path: "/"
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - http:
+      paths:
+      - path: /inspectorgadget
+        pathType: Prefix
+        backend:
+          service:
+            name: inspectorgadget
+            port:
+              number: 80
