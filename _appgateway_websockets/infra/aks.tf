@@ -1,10 +1,11 @@
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                      = "aks-cluster"
-  kubernetes_version        = null # var.kubernetes_version
-  location                  = var.location
+  name                      = "aks-cluster-dev"
+  kubernetes_version        = null # var.kubernetes_version 
+  location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
   dns_prefix                = "aks"
+  private_cluster_enabled   = false
   oidc_issuer_enabled       = true
   workload_identity_enabled = true
 
