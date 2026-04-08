@@ -1,10 +1,10 @@
-# Testing websockets with Azure Application Gateway and AKS
+# Testing websockets with Azure Application Gateway (AGIC), Application Gateway for Containers (AGC) and AKS
 
-This repository contains a sample application and configuration for testing WebSocket support with Azure Application Gateway and Azure Kubernetes Service (AKS). The sample application is a simple WebSocket echo server that can be deployed to AKS, and the Application Gateway is configured to route WebSocket traffic to the AKS cluster.
+This repository contains a sample application and configuration for testing WebSocket support with Azure Application Gateway, Application Gateway for Containers, and Azure Kubernetes Service (AKS). The sample application is a simple WebSocket echo server that can be deployed to AKS. The Application Gateway is configured to route WebSocket traffic to the AKS cluster through AGIC.
 
 ## Instructions
 
-1. Deploy the AKS cluster and Application Gateway (AGIC) using the provided Terraform configuration in the `infra` directory.
+1. Deploy the AKS cluster, Application Gateway with AGIC and Application Gateway for Containers (AGC) using the provided Terraform configuration in the `infra` directory.
 
 ```sh
 terraform init
@@ -12,7 +12,7 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-This will create an AKS cluster and enable AGIC addon on the cluster, which will automatically configure the Application Gateway to route traffic to the AKS cluster based on Kubernetes Ingress resources.
+This will create an AKS cluster and enable AGIC addon on the cluster, which will automatically configure the Application Gateway to route traffic to the AKS cluster based on Kubernetes Ingress resources. It will also create an Application Gateway for Containers (AGC) and configure it to route traffic to the AKS cluster based on Ingress API resources through the ALB controller.
 
 ![](./images/resources1.png)
 ![](./images/resources2.png)
@@ -63,6 +63,10 @@ You can also check the logs from the server pod to see the incoming WebSocket co
 ```sh
 kubectl logs -f deployment/websocket-echo-server
 ```
+
+For now we are exposing the WebSocket echo server through Application Gateway public IP address and also through Application Gateway for Containers public FQDN.
+
+![](./images/agc+agic.png)
 
 ## Testing Application Gateway behaviour during backend Pod termination
 
