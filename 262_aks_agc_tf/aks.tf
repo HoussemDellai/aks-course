@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
   dns_prefix                = "aks"
-  kubernetes_version        = "1.32.0"
+  kubernetes_version        = "1.34.3"
   private_cluster_enabled   = false
   oidc_issuer_enabled       = true
   workload_identity_enabled = true
@@ -19,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count     = 2
     vm_size        = "Standard_B2als_v2"
     os_sku         = "AzureLinux"
-    vnet_subnet_id = azurerm_subnet.snet-aks.id
+    vnet_subnet_id = azurerm_subnet.snet_aks.id
   }
 
   identity {
@@ -30,15 +30,5 @@ resource "azurerm_kubernetes_cluster" "aks" {
     ignore_changes = [
       default_node_pool.0.upgrade_settings
     ]
-  }
-}
-
-resource "terraform_data" "aks-get-credentials" {
-  triggers_replace = [
-    azurerm_kubernetes_cluster.aks.id
-  ]
-
-  provisioner "local-exec" {
-    command = "az aks get-credentials -n ${azurerm_kubernetes_cluster.aks.name} -g ${azurerm_kubernetes_cluster.aks.resource_group_name} --overwrite-existing"
   }
 }

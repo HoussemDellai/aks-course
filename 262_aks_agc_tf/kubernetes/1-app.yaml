@@ -1,15 +1,11 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: webapp
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: inspectorgadget  
-  namespace: webapp
+  name: inspectorgadget
+  labels:
+    app: inspectorgadget
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: inspectorgadget
@@ -23,15 +19,23 @@ spec:
         image: ghcr.io/jelledruyts/inspectorgadget:latest
         ports:
         - containerPort: 80
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: inspectorgadget
-  namespace: webapp
 spec:
-  type: ClusterIP
-  ports:
-  - port: 80
   selector:
     app: inspectorgadget
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

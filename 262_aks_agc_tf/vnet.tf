@@ -5,14 +5,14 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = ["10.10.0.0/16"]
 }
 
-resource "azurerm_subnet" "snet-aks" {
+resource "azurerm_subnet" "snet_aks" {
   name                 = "snet-aks"
   resource_group_name  = azurerm_virtual_network.vnet.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.10.0.0/24"]
 }
 
-resource "azurerm_subnet" "snet-agc" {
+resource "azurerm_subnet" "snet_agc" {
   name                 = "snet-agc"
   resource_group_name  = azurerm_virtual_network.vnet.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet.name

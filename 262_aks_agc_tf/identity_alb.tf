@@ -5,7 +5,7 @@ resource "azurerm_user_assigned_identity" "identity-alb" {
 }
 
 resource "azurerm_role_assignment" "aks-node-rg-reader" {
-  scope                = azurerm_kubernetes_cluster.aks.node_resource_group_id
+  scope                = azurerm_application_load_balancer.agc.id
   role_definition_name = "Reader"
   principal_id         = azurerm_user_assigned_identity.identity-alb.principal_id
 }
@@ -17,15 +17,14 @@ resource "azurerm_role_assignment" "agc-config-manager" {
 }
 
 resource "azurerm_role_assignment" "agc-network-contributor" {
-  scope                = azurerm_subnet.snet-agc.id
+  scope                = azurerm_subnet.snet_agc.id
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_user_assigned_identity.identity-alb.principal_id
 }
 
 resource "azurerm_federated_identity_credential" "identity-alb" {
   name                = "azure-alb-identity" # ALB Controller requires a federated credential with the name of azure-alb-identity. Any other federated credential name is unsupported.
-  parent_id           = azurerm_user_assigned_identity.identity-alb.id
-  resource_group_name = azurerm_resource_group.rg.name
+  user_assigned_identity_id = azurerm_user_assigned_identity.identity-alb.id
   issuer              = azurerm_kubernetes_cluster.aks.oidc_issuer_url
   subject             = "system:serviceaccount:azure-alb-system:alb-controller-sa"
   audience            = ["api://AzureADTokenExchange"]

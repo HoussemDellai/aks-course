@@ -7,7 +7,7 @@ resource "azurerm_application_load_balancer" "agc" {
 resource "azurerm_application_load_balancer_subnet_association" "agc-snet-association" {
   name                         = "agc-snet-association"
   application_load_balancer_id = azurerm_application_load_balancer.agc.id
-  subnet_id                    = azurerm_subnet.snet-agc.id
+  subnet_id                    = azurerm_subnet.snet_agc.id
 }
 
 resource "azurerm_application_load_balancer_frontend" "agc" {
