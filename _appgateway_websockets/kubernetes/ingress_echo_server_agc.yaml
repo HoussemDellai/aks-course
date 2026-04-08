@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-inspector-gadget
+  name: ingress-echo-server-agc
   annotations:
     alb.networking.azure.io/alb-id: "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-aks-cluster-08/providers/Microsoft.ServiceNetworking/trafficControllers/agc-aks"
     alb.networking.azure.io/alb-frontend: "agc-frontend"
@@ -11,10 +11,10 @@ spec:
   - host: d2c0atfrduabfgaf.fz33.alb.azure.com
     http:
       paths:
-      - path: /
+      - path: /websocket-echo-server
         pathType: Prefix
         backend:
           service:
-            name: inspectorgadget
+            name: websocket-echo-server
             port:
               number: 80

@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-inspector-gadget-agc
+  annotations:
+    alb.networking.azure.io/alb-id: "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-aks-cluster-08/providers/Microsoft.ServiceNetworking/trafficControllers/agc-aks"
+    alb.networking.azure.io/alb-frontend: "agc-frontend"
+spec:
+  ingressClassName: azure-alb-external
+  rules:
+  - host: d2c0atfrduabfgaf.fz33.alb.azure.com
+    http:
+      paths:
+      - path: / # /inspectorgadget/
+        pathType: Prefix
+        backend:
+          service:
+            name: inspectorgadget
+            port:
+              number: 80
+      # - path: /inspectorgadget/* # Need to include "*" for wildcard match in AppGateway
+      #   pathType: Prefix # Exact
+      #   backend:
+      #     service:
+      #       name: inspectorgadget
+      #       port:
+      #         number: 80

@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-inspectorgadget-agic
+  annotations:
+    appgw.ingress.kubernetes.io/backend-protocol: "http"
+    appgw.ingress.kubernetes.io/connection-draining: "true"
+    appgw.ingress.kubernetes.io/health-probe-path: "/"
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/" # Optional because we're using PathBase in the app settings
+spec:
+  ingressClassName: azure-application-gateway
+  rules:
+  - http:
+      paths:
+      - path: / # /inspectorgadget/
+        pathType: Prefix # Exact
+        backend:
+          service:
+            name: inspectorgadget
+            port:
+              number: 80
+      # - path: /inspectorgadget/* # Need to include "*" for wildcard match in AppGateway
+      #   pathType: Prefix # Exact
+      #   backend:
+      #     service:
+      #       name: inspectorgadget
+      #       port:
+      #         number: 80
