@@ -10,52 +10,28 @@ The architecture includes:
 - A custom DNS zone for routing traffic to the application.
 - A virtual network (VNet) for networking resources.
 
-## Prerequisites
-
-- Azure CLI installed and authenticated.
-- Terraform CLI installed.
-- An active Azure subscription.
-
-## Terraform Configuration
-
-The Terraform configuration is organized into multiple files for modularity:
-
-### Resource Group
-- **File:** `rg.tf`
-- Creates a resource group to contain all resources.
-
-### Virtual Network
-- **File:** `vnet.tf`
-- Provisions a virtual network and subnets for AKS and AGC.
-
-### AKS Cluster
-- **File:** `aks.tf`
-- Deploys an AKS cluster with the necessary configurations.
-
-### Application Gateway for Containers
-- **File:** `install-alb.tf`
-- Deploys the AGC and configures it to integrate with the AKS cluster.
-
-### Managed Identity
-- **File:** `identity-alb.tf`
-- Creates a managed identity for AGC to interact with AKS.
-
-### DNS Zone
-- **File:** `dns_zone.tf`
-- Configures a custom DNS zone for routing traffic to the application.
-
-### Application Deployment
-- **Folder:** `kubernetes/`
-- Contains Kubernetes manifests:
-  - `1-app.yaml`: Deploys the sample application (`inspectorgadget`) in the `webapp` namespace.
-  - `2-ingress.yaml`: Configures an ingress resource to route traffic through AGC.
-
-### Outputs
-- **File:** `output.tf`
-- Provides outputs such as the AGC frontend URL and AKS cluster details.
+![Architecture Diagram](images/architecture.png)
 
 ## Steps to Deploy
 
-1. **Initialize Terraform**
-   ```sh
-   terraform init
+```sh
+terraform init
+terraform plan -out=tfplan
+terraform apply tfplan
+```
+
+## Application Deployment
+
+After the infrastructure is provisioned, you need to deploy the sample application to the AKS cluster. The AGC will be configured to route traffic to the application based on the defined rules.
+
+```sh
+kubectl apply -f kubernetes/
+```
+
+## Accessing the Application
+
+Once the application is deployed, you can access it through the custom DNS name configured in the App Service Domain name.
+
+```sh
+curl http://<your-custom-dns-name>
+```
