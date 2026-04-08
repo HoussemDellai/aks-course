@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-echo-client-agic
+  labels:
+    app: websocket-echo-client-agic
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: websocket-echo-client-agic
+  template:
+    metadata:
+      labels:
+        app: websocket-echo-client-agic
+    spec:
+      containers:
+        - name: websocket-echo-client
+          image: acr4aks08.azurecr.io/websocket-echo-client:1.0.0
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          env:
+            - name: SERVER_URI
+              value: "ws://135.225.22.80:80/websocket-echo-server"
+              # value: "ws://websocket-echo-server:80/websocket-echo-server"
+

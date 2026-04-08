@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: websocket-echo-client
+  name: websocket-echo-client-agc
   labels:
-    app: websocket-echo-client
+    app: websocket-echo-client-agc
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: websocket-echo-client
+      app: websocket-echo-client-agc
   template:
     metadata:
       labels:
-        app: websocket-echo-client
+        app: websocket-echo-client-agc
     spec:
       containers:
         - name: websocket-echo-client
@@ -26,6 +26,6 @@ spec:
               memory: 256Mi
           env:
             - name: SERVER_URI
-              # value: "ws://20.240.8.221:80/websocket-echo-server"
-              value: "ws://websocket-echo-server:80/websocket-echo-server"
+              value: "ws://d2c0atfrduabfgaf.fz33.alb.azure.com/websocket-echo-server"
+              # value: "ws://websocket-echo-server:80/websocket-echo-server"
 

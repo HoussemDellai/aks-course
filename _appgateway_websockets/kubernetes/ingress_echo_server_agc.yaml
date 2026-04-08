@@ -18,3 +18,22 @@ spec:
             name: websocket-echo-server
             port:
               number: 80
+---
+apiVersion: alb.networking.azure.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: websockets-health-check-policy
+  namespace: default
+spec:
+  targetRef:
+    group: ""
+    kind: Service
+    name: websocket-echo-server
+    namespace: default
+  default:
+    interval: 5s
+    timeout: 3s
+    healthyThreshold: 1
+    unhealthyThreshold: 1
+    http:
+      path: /health 
