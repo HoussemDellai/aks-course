@@ -15,7 +15,7 @@ spec:
   - http:
       paths:
       - path: /websocket-echo-server
-        pathType: Exact
+        pathType: Prefix
         backend:
           service:
             name: websocket-echo-server

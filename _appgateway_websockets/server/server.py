@@ -1,12 +1,15 @@
 """WebSocket echo server using the `websockets` library."""
 
 import asyncio
+import os
 from http import HTTPStatus
 import websockets
 import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(message)s")
 log = logging.getLogger(__name__)
+
+WEBSOCKET_PROCESSING_DURATION = int(os.environ.get("WEBSOCKET_PROCESSING_DURATION", "10"))
 
 CONNECTIONS: set[websockets.WebSocketServerProtocol] = set()
 
@@ -34,8 +37,8 @@ async def handler(websocket: websockets.WebSocketServerProtocol) -> None:
     try:
         async for message in websocket:
             log.info("Received from %s: %s", remote, message)
-            # hold the connection for 10 seconds to demonstrate that it stays open
-            await asyncio.sleep(10)
+            # hold the connection for the specified duration to demonstrate that it stays open
+            await asyncio.sleep(WEBSOCKET_PROCESSING_DURATION)
             # Echo the message back
             await websocket.send(f"echo from server {websocket.local_address} : {message}")
     except websockets.ConnectionClosed as exc:
