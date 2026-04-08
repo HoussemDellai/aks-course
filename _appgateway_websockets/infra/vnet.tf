@@ -60,9 +60,18 @@ resource "azurerm_subnet" "snet_appgw_managed" {
   }
 }
 
-# resource "azurerm_subnet" "snet_aks_nodepool_apps" {
-#   name                 = "snet-aks-apps"
-#   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
-#   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-#   address_prefixes     = ["10.1.2.0/24"]
-# }
+resource "azurerm_subnet" "snet_agc" {
+  name                 = "snet-agc"
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
+  address_prefixes     = ["10.1.5.0/24"]
+
+  delegation {
+    name = "delegation-agc"
+
+    service_delegation {
+      name    = "Microsoft.ServiceNetworking/trafficControllers"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
