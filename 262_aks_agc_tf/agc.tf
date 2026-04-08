@@ -4,13 +4,17 @@ resource "azurerm_application_load_balancer" "agc" {
   location            = azurerm_resource_group.rg.location
 }
  
-resource "azurerm_application_load_balancer_subnet_association" "agc-snet-association" {
+resource "azurerm_application_load_balancer_subnet_association" "agc_snet_association" {
   name                         = "agc-snet-association"
   application_load_balancer_id = azurerm_application_load_balancer.agc.id
   subnet_id                    = azurerm_subnet.snet_agc.id
 }
 
-resource "azurerm_application_load_balancer_frontend" "agc" {
+resource "azurerm_application_load_balancer_frontend" "agc_frontend" {
   name                         = "agc-frontend"
   application_load_balancer_id = azurerm_application_load_balancer.agc.id
+}
+
+output "agc_frontend_fqdn" {
+  value = azurerm_application_load_balancer_frontend.agc_frontend.fully_qualified_domain_name
 }

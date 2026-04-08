@@ -19,5 +19,5 @@ resource "azurerm_dns_cname_record" "dns_cname_record" {
   zone_name           = azurerm_dns_zone.dns_zone.name
   resource_group_name = azurerm_resource_group.rg.name
   ttl                 = 300
-  record              = azurerm_application_load_balancer_frontend.agc.fully_qualified_domain_name
+  record              = azurerm_application_load_balancer_frontend.agc_frontend.fully_qualified_domain_name
 }
