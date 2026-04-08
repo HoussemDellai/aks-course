@@ -64,33 +64,132 @@ You can also check the logs from the server pod to see the incoming WebSocket co
 kubectl logs -f deployment/websocket-echo-server
 ```
 
-## Testing Application Gateway behaviour during Pod termination
+## Testing Application Gateway behaviour during backend Pod termination
 
-To test the behavior of the Application Gateway during Pod termination, you can follow these steps:
+To test the behavior of the Application Gateway during backend Pod termination, you can follow these steps:
 
 1. Identify one of the Pod names of the WebSocket echo server.
 
 ```sh
 kubectl get pods
-# NAME                                     READY   STATUS    RESTARTS   AGE
-# websocket-echo-client-7b5494c85f-rkp57   1/1     Running   0          4m52s
-# websocket-echo-server-f4b679d55-cpms5    1/1     Running   0          4m51s
-# websocket-echo-server-f4b679d55-zztpn    1/1     Running   0          4m51s
-# ...
+# NAME                                          READY   STATUS    RESTARTS   AGE
+# inspectorgadget-865775496-dbql9               1/1     Running   0          70m
+# inspectorgadget-865775496-f5v4m               1/1     Running   0          70m
+# websocket-echo-client-agc-75699fb9cf-7jcwc    1/1     Running   0          3m31s
+# websocket-echo-client-agc-75699fb9cf-bmkkg    1/1     Running   0          3m31s
+# websocket-echo-client-agc-75699fb9cf-fq68f    1/1     Running   0          3m31s
+# websocket-echo-client-agic-69ff55db45-fpkkx   1/1     Running   0          27m
+# websocket-echo-client-agic-69ff55db45-ll2gm   1/1     Running   0          27m
+# websocket-echo-client-agic-69ff55db45-r6zcq   1/1     Running   0          27m
+# websocket-echo-server-54899f754c-6qqwp        1/1     Running   0          70m
+# websocket-echo-server-54899f754c-sdz8g        1/1     Running   0          70m
+# websocket-echo-server-54899f754c-v78ct        1/1     Running   0          70m
 ```
+
+We checked that here each client pod for AGIC is connected to a different server pod. The same is true for AGC.
 
 2. Delete the identified Pod to simulate a termination scenario.
 
 ```sh
-kubectl delete pod websocket-echo-server-f4b679d55-b7gkt
-# pod "websocket-echo-server-f4b679d55-b7gkt" deleted
+kubectl delete pod websocket-echo-server-54899f754c-v78ct
+# pod "websocket-echo-server-54899f754c-v78ct" deleted from default namespace
 ```
 
-3. Monitor the logs of the WebSocket echo client to observe how it handles the termination of the server Pod and whether it can reconnect to another healthy Pod.
+At this point of time, the Application Gateway should detect that the Pod is terminating and stop routing new traffic to it. However, any existing WebSocket connections to that Pod will remain active until they are closed by the client or server, or until the Pod is forcefully terminated after the grace period expires.
+
+AGIC will detect that the Pod is terminating and update the Application Gateway configuration accordingly.
+
+ALB will also detect this change and update AGC configuration accordingly.
+
+The important thing here is that the update of the App Gateway config will be done by re-applying all the configurations for the App Gateway.
+This means that any connection that is currently active and being routed through the App Gateway will be dropped when the config is re-applied, even if the connection is still healthy and the backend Pod is still running. This is applicable to the web socket connections as well.
+
+Let's prove this behaviour. Run the following command immediately after the previous one.
 
 ```sh
-kubectl logs -f deployment/websocket-echo-client
+kubectl get pods -w
+# NAME                                          READY   STATUS    RESTARTS        AGE
+# inspectorgadget-865775496-dbql9               1/1     Running   0               75m
+# inspectorgadget-865775496-f5v4m               1/1     Running   0               75m
+# websocket-echo-client-agc-75699fb9cf-7jcwc    1/1     Running   1 (2m48s ago)   8m7s
+# websocket-echo-client-agc-75699fb9cf-bmkkg    1/1     Running   0               8m7s
+# websocket-echo-client-agc-75699fb9cf-fq68f    1/1     Running   0               8m7s
+# websocket-echo-client-agic-69ff55db45-fpkkx   1/1     Running   1 (3m36s ago)   32m
+# websocket-echo-client-agic-69ff55db45-ll2gm   1/1     Running   1 (3m36s ago)   32m
+# websocket-echo-client-agic-69ff55db45-r6zcq   1/1     Running   1 (3m36s ago)   32m
+# websocket-echo-server-54899f754c-6qqwp        1/1     Running   0               75m
+# websocket-echo-server-54899f754c-8jmsf        1/1     Running   0               4m31s
+# websocket-echo-server-54899f754c-sdz8g        1/1     Running   0               75m
 ```
+
+Note that here we can see that ALL the client pods that were running and connected to the server pods, even the ones not being terminated, are now in Error state because their WebSocket connections to the server pods have been dropped due to the Application Gateway configuration update. After a few seconds, the client pods will be restarted and will establish new WebSocket connections to the new server pods that have been created to replace the terminated ones.
+
+>An update to the App Gateway config will cause all the existing connections to be dropped, even if they are healthy and the backend pods are still running. This is an important consideration when using App Gateway with WebSocket applications, as it can lead to connection disruptions during scaling or updates.
+
+Note how the AGC behaves differently in this scenario. Only the client pod connected to the terminated server pod is restarted, while the other client pods remain unaffected and their WebSocket connections remain active.
+
+>An update to the App Gateway for Containers (AGC) config will not cause all the existing connections to be dropped, and the healthy connections will remain active. This is because AGC uses a different mechanism for updating its configuration that allows it to maintain existing connections while applying changes.
+
+## Testing an update to another app
+
+Let's make a change to another app served by both AGIC and AGC, for example the Inspector Gadget app, and see how the App Gateway and AGC behaves in this case.
+
+```sh
+kubectl scale deploy inspectorgadget --replicas=3
+# deployment.apps/inspectorgadget scaled
+```
+
+```sh
+kubectl get pods -w
+# NAME                                          READY   STATUS    RESTARTS       AGE
+# inspectorgadget-865775496-dbql9               1/1     Running   0              83m
+# inspectorgadget-865775496-f5v4m               1/1     Running   0              83m
+# inspectorgadget-865775496-lwm57               1/1     Running   0              2m42s
+# websocket-echo-client-agc-75699fb9cf-7jcwc    1/1     Running   1 (11m ago)    16m
+# websocket-echo-client-agc-75699fb9cf-bmkkg    1/1     Running   0              16m
+# websocket-echo-client-agc-75699fb9cf-fq68f    1/1     Running   0              16m
+# websocket-echo-client-agic-69ff55db45-fpkkx   1/1     Running   2 (117s ago)   40m
+# websocket-echo-client-agic-69ff55db45-ll2gm   1/1     Running   2 (117s ago)   40m
+# websocket-echo-client-agic-69ff55db45-r6zcq   1/1     Running   2 (117s ago)   40m
+# websocket-echo-server-54899f754c-6qqwp        1/1     Running   0              83m
+# websocket-echo-server-54899f754c-8jmsf        1/1     Running   0              12m
+# websocket-echo-server-54899f754c-sdz8g        1/1     Running   0              83m
+```
+
+Note that here we can see that the client pods for AGIC are restarted because the App Gateway configuration is updated, so drops all connections, to reflect the new replicas of the Inspector Gadget app, while the client pods for AGC remain unaffected and their WebSocket connections remain active because AGC can update its configuration without dropping existing connections.
+
+>Any update to the App Gateway configuration, even if it is not related to the served application, will cause all the existing connections to be dropped, while an update to the AGC configuration will not cause all the existing connections to be dropped, and the healthy connections will remain active. This is an important consideration when using App Gateway with WebSocket applications, as it can lead to connection disruptions during scaling or updates of any app served by the App Gateway.
+
+## Testing adding another replicas
+
+```sh
+kubectl scale deploy websocket-echo-server --replicas=4
+# deployment.apps/websocket-echo-server scaled
+```
+
+The result is the following.
+
+```sh
+kubectl get pods -w
+# NAME                                          READY   STATUS    RESTARTS        AGE
+# inspectorgadget-865775496-dbql9               1/1     Running   0               89m
+# inspectorgadget-865775496-f5v4m               1/1     Running   0               89m
+# inspectorgadget-865775496-lwm57               1/1     Running   0               9m5s
+# websocket-echo-client-agc-75699fb9cf-7jcwc    1/1     Running   1 (17m ago)     22m
+# websocket-echo-client-agc-75699fb9cf-bmkkg    1/1     Running   0               22m
+# websocket-echo-client-agc-75699fb9cf-fq68f    1/1     Running   0               22m
+# websocket-echo-client-agic-69ff55db45-fpkkx   1/1     Running   3 (4m41s ago)   46m
+# websocket-echo-client-agic-69ff55db45-ll2gm   1/1     Running   3 (4m41s ago)   46m
+# websocket-echo-client-agic-69ff55db45-r6zcq   1/1     Running   3 (4m41s ago)   46m
+# websocket-echo-server-54899f754c-6qqwp        1/1     Running   0               89m
+# websocket-echo-server-54899f754c-8jmsf        1/1     Running   0               19m
+# websocket-echo-server-54899f754c-s5z2l        1/1     Running   0               5m19s
+# websocket-echo-server-54899f754c-sdz8g        1/1     Running   0               89m
+```
+
+Note that here we can see that the client pods for AGIC are restarted because the App Gateway configuration is updated, so drops all connections, to reflect the new replica of the WebSocket echo server app, while the client pods for AGC remain unaffected and their WebSocket connections remain active because AGC can update its configuration without dropping existing connections.
+
+>Even adding a new replica to the backend application will cause an update to the App Gateway configuration, which will cause all the existing connections to be dropped, while an update to the AGC configuration will not cause all the existing connections to be dropped, and the healthy connections will remain active.
 
 ## Important notes:
 
