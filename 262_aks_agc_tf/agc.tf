@@ -14,7 +14,3 @@ resource "azurerm_application_load_balancer_frontend" "agc_frontend" {
   name                         = "agc-frontend"
   application_load_balancer_id = azurerm_application_load_balancer.agc.id
 }
-
-output "agc_frontend_fqdn" {
-  value = azurerm_application_load_balancer_frontend.agc_frontend.fully_qualified_domain_name
-}
