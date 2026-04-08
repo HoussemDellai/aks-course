@@ -19,6 +19,7 @@ spec:
             port:
               number: 80
 ---
+# https://learn.microsoft.com/en-us/azure/application-gateway/for-containers/websockets#health-probes
 apiVersion: alb.networking.azure.io/v1
 kind: HealthCheckPolicy
 metadata:
