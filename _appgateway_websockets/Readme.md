@@ -21,14 +21,14 @@ This will create an AKS cluster and enable AGIC addon on the cluster, which will
 
 ```sh
 # Build the Docker image
-az acr build --registry acr4aks08 --image websocket-echo-server:1.0.0 ./server
+az acr build --registry acr4aks08 --image websocket-echo-server:1.0.0 ./src/server
 ```
 
 3. Build and push the WebSocket echo client Docker image to ACR
 
 ```sh
 # Build the Docker image
-az acr build --registry acr4aks08 --image websocket-echo-client:1.0.0 ./client
+az acr build --registry acr4aks08 --image websocket-echo-client:1.0.0 ./src/client
 ```
 
 4. Deploy the WebSocket echo server and client application to the AKS cluster.
