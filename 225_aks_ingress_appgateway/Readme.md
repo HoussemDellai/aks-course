@@ -36,7 +36,7 @@ And the following resources will be created in the nodes resource group.
 After that, you will need to deploy an application to the AKS cluster. To do this, run the following commands :
 
 ```sh
-kubectl apply -f app-k8s.yaml
+kubectl apply -f k8s_app.yaml
 ```
 
 This will deploy a sample application exposed through the App Routing's internal Nginx Ingress Controller.
@@ -47,7 +47,7 @@ kubectl get ingress
 # webapp   nginx-internal   *       10.10.1.10   80      23m
 ```
 
->Note that the ingress controller is using the internal Load Balancer IP `10.10.1.10`. This IP was statically assigned in the `app-k8s.yaml` file and it is from the `snet-aks-lb` subnet. It will also be used by the Application Gateway to route traffic to the Nginx Ingress Controller.
+>Note that the ingress controller is using the internal Load Balancer IP `10.10.1.10`. This IP was statically assigned in the `k8s_app.yaml` file and it is from the `snet-aks-lb` subnet. It will also be used by the Application Gateway to route traffic to the Nginx Ingress Controller.
 
 ## Access the application
 
