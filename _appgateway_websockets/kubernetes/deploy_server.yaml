@@ -5,7 +5,7 @@ metadata:
   labels:
     app: websocket-echo-server
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: websocket-echo-server
@@ -23,7 +23,7 @@ spec:
               protocol: TCP
           env:
             - name: WEBSOCKET_PROCESSING_DURATION
-              value: "10"
+              value: "30"
           resources:
             requests:
               cpu: 100m

@@ -1,4 +1,4 @@
-resource "terraform_data" "aks-get-credentials" {
+resource "terraform_data" "aks_get_credentials" {
   triggers_replace = [
     azurerm_kubernetes_cluster.aks.id
   ]
