@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: azure-alb-external
   rules:
-  - host: d2c0atfrduabfgaf.fz33.alb.azure.com
+  - host: fnbjgdfzgaa9agey.fz25.alb.azure.com
     http:
       paths:
       - path: /websocket-echo-server

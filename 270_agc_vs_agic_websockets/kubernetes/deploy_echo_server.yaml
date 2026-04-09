@@ -17,7 +17,7 @@ spec:
       terminationGracePeriodSeconds: 102 # 101 # Defaults to 30 seconds.
       containers:
         - name: websocket-echo-server
-          image: acr4aks08.azurecr.io/websocket-echo-server:1.0.0
+          image: acr4aks270.azurecr.io/websocket-echo-server:1.0.0
           ports:
             - containerPort: 8765
               protocol: TCP

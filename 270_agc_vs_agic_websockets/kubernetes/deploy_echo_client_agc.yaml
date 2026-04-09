@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: websocket-echo-client
-          image: acr4aks08.azurecr.io/websocket-echo-client:1.0.0
+          image: acr4aks270.azurecr.io/websocket-echo-client:1.0.0
           resources:
             requests:
               cpu: 100m
@@ -26,6 +26,6 @@ spec:
               memory: 256Mi
           env:
             - name: SERVER_URI
-              value: "ws://d2c0atfrduabfgaf.fz33.alb.azure.com/websocket-echo-server"
+              value: "ws://fnbjgdfzgaa9agey.fz25.alb.azure.com/websocket-echo-server"
               # value: "ws://websocket-echo-server:80/websocket-echo-server"
 

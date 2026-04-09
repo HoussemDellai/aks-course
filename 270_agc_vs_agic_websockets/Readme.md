@@ -21,27 +21,31 @@ This will create an AKS cluster and enable AGIC addon on the cluster, which will
 
 ```sh
 # Build the Docker image
-az acr build --registry acr4aks08 --image websocket-echo-server:1.0.0 ./src/server
+az acr build --registry acr4aks270 --image websocket-echo-server:1.0.0 ./src/server
 ```
 
 3. Build and push the WebSocket echo client Docker image to ACR
 
 ```sh
 # Build the Docker image
-az acr build --registry acr4aks08 --image websocket-echo-client:1.0.0 ./src/client
+az acr build --registry acr4aks270 --image websocket-echo-client:1.0.0 ./src/client
 ```
 
 4. Deploy the WebSocket echo server and client application to the AKS cluster.
 
 ```sh
 kubectl apply -f ./kubernetes/
-# deployment.apps/websocket-echo-client created
+# deployment.apps/websocket-echo-client-agc created
+# deployment.apps/websocket-echo-client-agic created
 # deployment.apps/websocket-echo-server created
 # service/websocket-echo-server created
-# ingress.networking.k8s.io/websocket-echo-server created
 # deployment.apps/inspectorgadget created
 # service/inspectorgadget created
-# ingress.networking.k8s.io/inspectorgadget created
+# ingress.networking.k8s.io/ingress-echo-server-agc created
+# healthcheckpolicy.alb.networking.azure.io/websockets-health-check-policy created
+# ingress.networking.k8s.io/ingress-echo-server-agic created
+# ingress.networking.k8s.io/ingress-inspector-gadget-agc created
+# ingress.networking.k8s.io/ingress-inspectorgadget-agic created
 ```
 
 5. Test the WebSocket connection
@@ -49,12 +53,13 @@ kubectl apply -f ./kubernetes/
 When all pods are running, this means the WebSocket echo server is up and running and also the client is running and connecting to the server. You can check the logs of the client pod to see the WebSocket connection status and messages.
 
 ```sh
-kubectl logs -f deployment/websocket-echo-client
-# 2026-04-07 17:07:18,144  Connected to ws://websocket-echo-server:80/websocket-echo-server
-# 2026-04-07 17:07:18,144  Sent: Hello #1
-# 2026-04-07 17:07:28,147  Received: echo from server ('10.244.0.86', 8765) : Hello #1
-# 2026-04-07 17:07:29,149  Sent: Hello #2
-# 2026-04-07 17:07:39,153  Received: echo from server ('10.244.0.86', 8765) : Hello #2
+kubectl logs -f deployment/websocket-echo-client-agic
+# Found 3 pods, using pod/websocket-echo-client-agic-59bf5645fc-wqvfk
+# 2026-04-09 06:33:10,180  Connected to ws://4.223.174.224:80/websocket-echo-server
+# 2026-04-09 06:33:10,180  Sent: Hello #1
+# 2026-04-09 06:33:40,183  Received: echo from server ('10.244.0.238', 8765) : Hello #1
+# 2026-04-09 06:33:41,185  Sent: Hello #2
+# 2026-04-09 06:34:11,188  Received: echo from server ('10.244.0.238', 8765) : Hello #2
 # ...
 ```
 
@@ -62,6 +67,12 @@ You can also check the logs from the server pod to see the incoming WebSocket co
 
 ```sh
 kubectl logs -f deployment/websocket-echo-server
+# Found 3 pods, using pod/websocket-echo-server-58648789b6-8srnn
+# 2026-04-09 06:32:55,229  server listening on 0.0.0.0:8765
+# 2026-04-09 06:32:55,229  WebSocket server listening on ws://0.0.0.0:8765
+# 2026-04-09 06:33:10,180  Client connected: ('10.1.2.4', 39032)
+# 2026-04-09 06:33:10,181  Received from ('10.1.2.4', 39032): Hello #1
+
 ```
 
 For now we are exposing the WebSocket echo server through Application Gateway public IP address and also through Application Gateway for Containers public FQDN.

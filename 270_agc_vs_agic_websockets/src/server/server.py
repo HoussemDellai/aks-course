@@ -34,6 +34,7 @@ async def handler(websocket: websockets.WebSocketServerProtocol) -> None:
     remote = websocket.remote_address
     log.info("Client connected: %s", remote)
     CONNECTIONS.add(websocket)
+    
     try:
         async for message in websocket:
             log.info("Received from %s: %s", remote, message)
