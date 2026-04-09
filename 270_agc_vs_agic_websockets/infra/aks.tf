@@ -13,7 +13,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name            = "systempool"
     vm_size         = "standard_d2ads_v6"
     node_count      = 3
-    zones           = [1, 2, 3] # []
+    zones           = [] # [1, 2, 3] # 
     os_sku          = "Ubuntu2404"
     os_disk_type    = "Ephemeral" #"Managed" #
     os_disk_size_gb = 32
@@ -42,6 +42,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # subnet_id    = azurerm_subnet.snet_appgw.id
     # gateway_name = "appgw-aks-agic-swc"
     # subnet_cidr  = "10.1.3.0/24"
+  }
+
+  web_app_routing {
+    dns_zone_ids             = [] # [azurerm_dns_zone.dns_zone.id] # If not using Bring-Your-Own DNS zones this property should be set to an empty list.
+    default_nginx_controller = "External" # None, Internal, External and AnnotationControlled. It defaults to AnnotationControlled
   }
 
   lifecycle {
