@@ -4,13 +4,13 @@ resource "azurerm_user_assigned_identity" "identity_alb" {
   location            = azurerm_resource_group.rg.location
 }
 
-resource "azurerm_role_assignment" "agc-config-manager" {
+resource "azurerm_role_assignment" "agc_config_manager" {
   scope                = azurerm_application_load_balancer.agc.id
   role_definition_name = "AppGw for Containers Configuration Manager"
   principal_id         = azurerm_user_assigned_identity.identity_alb.principal_id
 }
 
-resource "azurerm_role_assignment" "agc-network-contributor" {
+resource "azurerm_role_assignment" "agc_network_contributor" {
   scope                = azurerm_subnet.snet_agc.id
   role_definition_name = "Network Contributor"
   principal_id         = azurerm_user_assigned_identity.identity_alb.principal_id

@@ -1,7 +1,7 @@
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                      = "aks-cluster-dev"
-  kubernetes_version        = null # var.kubernetes_version 
+  kubernetes_version        = null # chooses latest available version in the region
   location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
   dns_prefix                = "aks"
@@ -38,17 +38,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   ingress_application_gateway {
+    gateway_id = azurerm_application_gateway.appgw.id
+    # subnet_id    = azurerm_subnet.snet_appgw.id
     # gateway_name = "appgw-aks-agic-swc"
     # subnet_cidr  = "10.1.3.0/24"
-    gateway_id = azurerm_application_gateway.appgw.id
-    # subnet_id = azurerm_subnet.snet_appgw_managed.id
   }
-  # ingress_application_gateway {
-  #   # gateway_name = "appgw-aks-agic-swc"
-  #   # subnet_cidr  = "10.1.3.0/24"
-  #   # gateway_id = azurerm_application_gateway.appgw.id
-  #   subnet_id = azurerm_subnet.snet_appgw_managed.id
-  # }
 
   lifecycle {
     ignore_changes = [

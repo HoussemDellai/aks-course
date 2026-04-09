@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-aks-cluster-${var.prefix}"
+  name     = "rg-aks-agc-agic-${var.prefix}"
   location = var.location
 
   tags = {
