@@ -40,9 +40,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ingress_application_gateway {
     # gateway_name = "appgw-aks-agic-swc"
     # subnet_cidr  = "10.1.3.0/24"
-    # gateway_id = azurerm_application_gateway.appgw.id
-    subnet_id = azurerm_subnet.snet_appgw_managed.id
+    gateway_id = azurerm_application_gateway.appgw.id
+    # subnet_id = azurerm_subnet.snet_appgw_managed.id
   }
+  # ingress_application_gateway {
+  #   # gateway_name = "appgw-aks-agic-swc"
+  #   # subnet_cidr  = "10.1.3.0/24"
+  #   # gateway_id = azurerm_application_gateway.appgw.id
+  #   subnet_id = azurerm_subnet.snet_appgw_managed.id
+  # }
 
   lifecycle {
     ignore_changes = [
