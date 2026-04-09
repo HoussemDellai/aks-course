@@ -11,7 +11,7 @@ locals {
 # Public Ip 
 resource "azurerm_public_ip" "appgw_pip" {
   name                = "public-ip-appgw"
-  location            = var.location
+  location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
@@ -20,7 +20,7 @@ resource "azurerm_public_ip" "appgw_pip" {
 resource "azurerm_application_gateway" "appgw" {
   name                = "appgw-aks"
   resource_group_name = azurerm_resource_group.rg.name
-  location            = var.location
+  location            = azurerm_resource_group.rg.location
 
   sku {
     name     = "Standard_v2"
