@@ -19,7 +19,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostics_agc" {
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.log_analytics.id
   log_analytics_destination_type = "Dedicated"
 
-
   dynamic "enabled_log" {
     for_each = data.azurerm_monitor_diagnostic_categories.categories_agc.log_category_types
 
@@ -46,7 +45,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostics_appgateway" {
   target_resource_id             = azurerm_kubernetes_cluster.aks.ingress_application_gateway.0.effective_gateway_id 
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.log_analytics.id
   log_analytics_destination_type = "Dedicated"
-
 
   dynamic "enabled_log" {
     for_each = data.azurerm_monitor_diagnostic_categories.categories_appgateway.log_category_types
