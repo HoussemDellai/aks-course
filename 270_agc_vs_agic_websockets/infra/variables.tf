@@ -2,7 +2,7 @@
 variable "prefix" {
   type        = string
   description = "Prefix for resource names"
-  default     = "08"
+  default     = "270"
 }
 
 variable "location" {
