@@ -16,7 +16,11 @@ CONNECTIONS: set[websockets.WebSocketServerProtocol] = set()
 
 def process_request(path: str, request_headers):
     if path == "/health":
-        log.info("Received health check request from %s", request_headers.get("User-Agent", "unknown"))
+        log.info(
+            "Received health check request from %s (X-Forwarded-For: %s)",
+            request_headers.get("User-Agent", "unknown"),
+            request_headers.get("X-Forwarded-For", "unknown"),
+        )
         body = b"OK\n"
         return (
             HTTPStatus.OK,
@@ -32,21 +36,22 @@ def process_request(path: str, request_headers):
 async def handler(websocket: websockets.WebSocketServerProtocol) -> None:
     """Handle a single WebSocket connection."""
     remote = websocket.remote_address
-    log.info("Client connected: %s", remote)
+    forwarded_for = websocket.request_headers.get("X-Forwarded-For", "unknown")
+    log.info("Client connected: %s (X-Forwarded-For: %s)", remote, forwarded_for)
     CONNECTIONS.add(websocket)
     
     try:
         async for message in websocket:
-            log.info("Received from %s: %s", remote, message)
+            log.info("Received from: %s (X-Forwarded-For: %s) %s", remote, forwarded_for, message)
             # hold the connection for the specified duration to demonstrate that it stays open
             await asyncio.sleep(WEBSOCKET_PROCESSING_DURATION)
             # Echo the message back
             await websocket.send(f"echo from server {websocket.local_address} : {message}")
     except websockets.ConnectionClosed as exc:
-        log.info("Connection closed (%s): %s", remote, exc)
+        log.info("Connection closed (%s): (X-Forwarded-For: %s) %s", remote, forwarded_for, exc)
     finally:
         CONNECTIONS.discard(websocket)
-        log.info("Client disconnected: %s", remote)
+        log.info("Client disconnected: %s (X-Forwarded-For: %s)", remote, forwarded_for)
 
 
 async def main() -> None:
