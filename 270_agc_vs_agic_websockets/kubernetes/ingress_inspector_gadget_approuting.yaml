@@ -1,16 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-echo-server-approuting
+  name: ingress-inspector-gadget-approuting
 spec:
   ingressClassName: webapprouting.kubernetes.azure.com
   rules:
   - http:
       paths:
-      - path: /websocket-echo-server
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: websocket-echo-server
+            name: inspector-gadget
             port:
               number: 80

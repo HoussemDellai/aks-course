@@ -1,7 +1,7 @@
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                      = "aks-cluster-dev"
-  kubernetes_version        = null # chooses latest available version in the region
+  kubernetes_version        = null # chooses latest stable version in the region
   location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
   dns_prefix                = "aks"
