@@ -11,6 +11,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: inspector-gadget
+            name: inspectorgadget
             port:
               number: 80

@@ -26,7 +26,7 @@ spec:
               memory: 256Mi
           env:
             - name: SERVER_URI
-              value: "ws://4.166.114.155:80/websocket-echo-server"
+              value: "ws://4.165.170.249:80/websocket-echo-server"
               # value: "ws://4.223.174.224:80/websocket-echo-server"
               # value: "ws://websocket-echo-server:80/websocket-echo-server"
 

@@ -240,3 +240,7 @@ If the server Restarts, Crashes, Is scaled down or Loses network connectivity th
 - The backend server must respond to the application gateway probes, which are described in the health probe overview section. Application gateway health probes are HTTP/HTTPS only. Each backend server must respond to HTTP probes for application gateway to route WebSocket traffic to the server.
 
 - WebSockets are only supported when using Gateway API for Application Gateway for Containers, "but they work also for Gateway API": https://learn.microsoft.com/en-us/azure/application-gateway/for-containers/websockets#health-probes
+
+- When replicas pod is deleted or evicted, Kubernetes starts immediately creating a new one to maintain the desired number of replicas, but the new pod will not be ready until it passes the health probes. Once the new pod is ready and healthy, Kubernetes will start routing traffic to it.
+
+During this time, the pod being deleted or evicted will continue to serve traffic until it is terminated respecting the termination grace period.

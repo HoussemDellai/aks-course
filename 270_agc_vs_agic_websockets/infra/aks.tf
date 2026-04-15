@@ -1,7 +1,7 @@
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                      = "aks-cluster-dev"
-  kubernetes_version        = null # chooses latest stable version in the region
+  kubernetes_version        = "1.35.0" # null # chooses latest stable version in the region
   location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
   dns_prefix                = "aks"
@@ -10,14 +10,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
   workload_identity_enabled = true
 
   default_node_pool {
-    name            = "systempool"
-    vm_size         = "standard_d2ads_v6"
-    node_count      = 3
-    zones           = [] # [1, 2, 3] # 
-    os_sku          = "Ubuntu2404"
-    os_disk_type    = "Ephemeral" #"Managed" #
-    os_disk_size_gb = 32
-    vnet_subnet_id  = azurerm_subnet.snet_aks.id
+    name                 = "systempool"
+    orchestrator_version = "1.35.0" # null # chooses latest stable version in the region
+    vm_size              = "standard_d2ads_v6"
+    node_count           = 3
+    zones                = [] # [1, 2, 3] # 
+    os_sku               = "Ubuntu2404"
+    os_disk_type         = "Ephemeral" #"Managed" #
+    os_disk_size_gb      = 32
+    vnet_subnet_id       = azurerm_subnet.snet_aks.id
   }
 
   identity {
@@ -45,7 +46,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   web_app_routing {
-    dns_zone_ids             = [] # [azurerm_dns_zone.dns_zone.id] # If not using Bring-Your-Own DNS zones this property should be set to an empty list.
+    dns_zone_ids             = []         # [azurerm_dns_zone.dns_zone.id] # If not using Bring-Your-Own DNS zones this property should be set to an empty list.
     default_nginx_controller = "External" # None, Internal, External and AnnotationControlled. It defaults to AnnotationControlled
   }
 
