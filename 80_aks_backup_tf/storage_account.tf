@@ -1,7 +1,7 @@
 resource "azurerm_storage_account" "storage" {
   name                             = "storage19753"
-  resource_group_name              = azurerm_resource_group.rg-backup.name
-  location                         = azurerm_resource_group.rg-backup.location
+  resource_group_name              = azurerm_resource_group.rg_backup.name
+  location                         = azurerm_resource_group.rg_backup.location
   account_tier                     = "Standard"
   account_replication_type         = "LRS"
   cross_tenant_replication_enabled = true

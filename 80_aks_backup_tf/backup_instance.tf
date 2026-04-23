@@ -1,9 +1,9 @@
 resource "azurerm_data_protection_backup_instance_kubernetes_cluster" "backup_instance_aks" {
   name                         = "backup-instance-aks"
-  location                     = azurerm_resource_group.rg-backup.location
-  vault_id                     = azurerm_data_protection_backup_vault.backup-vault.id
-  kubernetes_cluster_id        = azurerm_kubernetes_cluster.aks-1.id
-  snapshot_resource_group_name = azurerm_resource_group.rg-backup.name
+  location                     = azurerm_resource_group.rg_backup.location
+  vault_id                     = azurerm_data_protection_backup_vault.backup_vault.id
+  kubernetes_cluster_id        = azurerm_kubernetes_cluster.aks_1.id
+  snapshot_resource_group_name = azurerm_resource_group.rg_backup.name
   backup_policy_id             = azurerm_data_protection_backup_policy_kubernetes_cluster.backup_policy_aks.id
 
   backup_datasource_parameters {

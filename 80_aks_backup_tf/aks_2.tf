@@ -1,9 +1,9 @@
-resource "azurerm_kubernetes_cluster" "aks-2" {
+resource "azurerm_kubernetes_cluster" "aks_2" {
   name                = "aks-cluster"
-  location            = azurerm_resource_group.rg-2.location
-  resource_group_name = azurerm_resource_group.rg-2.name
+  location            = azurerm_resource_group.rg_2.location
+  resource_group_name = azurerm_resource_group.rg_2.name
   dns_prefix          = "aks"
-  kubernetes_version  = "1.34.2"
+  kubernetes_version  = "1.34"
 
   network_profile {
     network_plugin      = "azure"
@@ -30,14 +30,14 @@ resource "azurerm_kubernetes_cluster" "aks-2" {
 }
 
 resource "azurerm_role_assignment" "cluster_2_msi_contributor_on_snap_rg" {
-  scope                = azurerm_resource_group.rg-backup.id
+  scope                = azurerm_resource_group.rg_backup.id
   role_definition_name = "Contributor"
-  principal_id         = azurerm_kubernetes_cluster.aks-2.identity[0].principal_id
+  principal_id         = azurerm_kubernetes_cluster.aks_2.identity[0].principal_id
 }
 
-resource "azurerm_kubernetes_cluster_extension" "extension-2" {
+resource "azurerm_kubernetes_cluster_extension" "extension_2" {
   name              = "backup-extension"
-  cluster_id        = azurerm_kubernetes_cluster.aks-2.id
+  cluster_id        = azurerm_kubernetes_cluster.aks_2.id
   extension_type    = "Microsoft.DataProtection.Kubernetes"
   release_train     = "stable"
   release_namespace = "dataprotection-microsoft"
@@ -53,18 +53,18 @@ resource "azurerm_kubernetes_cluster_extension" "extension-2" {
 resource "azurerm_role_assignment" "extension_2_storage_account_contributor" {
   scope                = azurerm_storage_account.storage.id
   role_definition_name = "Storage Account Contributor"
-  principal_id         = azurerm_kubernetes_cluster_extension.extension-2.aks_assigned_identity[0].principal_id
+  principal_id         = azurerm_kubernetes_cluster_extension.extension_2.aks_assigned_identity[0].principal_id
 }
 
 resource "azurerm_kubernetes_cluster_trusted_access_role_binding" "aks_2_trusted_access" {
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks-2.id
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks_2.id
   name                  = "trusted-access"
   roles                 = ["Microsoft.DataProtection/backupVaults/backup-operator"]
-  source_resource_id    = azurerm_data_protection_backup_vault.backup-vault.id
+  source_resource_id    = azurerm_data_protection_backup_vault.backup_vault.id
 }
 
 resource "azurerm_role_assignment" "vault_msi_read_on_cluster_2" {
-  scope                = azurerm_kubernetes_cluster.aks-2.id
+  scope                = azurerm_kubernetes_cluster.aks_2.id
   role_definition_name = "Reader"
-  principal_id         = azurerm_data_protection_backup_vault.backup-vault.identity[0].principal_id
+  principal_id         = azurerm_data_protection_backup_vault.backup_vault.identity[0].principal_id
 }

@@ -1,7 +1,7 @@
 resource "azurerm_data_protection_backup_policy_kubernetes_cluster" "backup_policy_aks" {
   name                = "backup-policy-aks"
-  resource_group_name = azurerm_data_protection_backup_vault.backup-vault.resource_group_name
-  vault_name          = azurerm_data_protection_backup_vault.backup-vault.name
+  resource_group_name = azurerm_data_protection_backup_vault.backup_vault.resource_group_name
+  vault_name          = azurerm_data_protection_backup_vault.backup_vault.name
 
   backup_repeating_time_intervals = ["R/2023-05-23T02:30:00+00:00/P1W"]
 
