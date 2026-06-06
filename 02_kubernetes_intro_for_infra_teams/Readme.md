@@ -27,10 +27,10 @@ Let's check that the connection was successful by listing the nodes inside the c
 
 ```sh
 kubectl get nodes
-# NAME                                STATUS   ROLES    AGE     VERSION
-# aks-nodepool1-23059632-vmss000000   Ready    <none>   3d16h   v1.32.4
-# aks-nodepool1-23059632-vmss000001   Ready    <none>   3d16h   v1.32.4
-# aks-nodepool1-23059632-vmss000002   Ready    <none>   3d16h   v1.32.4
+# NAME                                STATUS   ROLES    AGE   VERSION
+# aks-nodepool1-34775547-vmss000000   Ready    <none>   22m   v1.35.1
+# aks-nodepool1-34775547-vmss000001   Ready    <none>   22m   v1.35.1
+# aks-nodepool1-34775547-vmss000002   Ready    <none>   21m   v1.35.1
 ```
 
 Lets now try the following command which lists all the namespaces in the cluster:
@@ -429,7 +429,7 @@ az aks show -n aks-cluster -g rg-aks-cluster --query networkProfile.serviceCidr
 
 How the traffic is routed from the public IP address to the Pods?
 
-Here you will need to take a look at the Load Balancer configuration on the Azure portal. The Load Balancer is created in the node resource group and it has a public IP address assigned to it. The Load Balancer listens on port 80 and forwards the traffic to the nodes of the cluster. Then kubernetes uses `kube-proxy` and `iptables` to route the traffic to the appropriate Pod.
+Here you will need to take a look at the Load Balancer configuration on the Azure portal. The Load Balancer is created in the node resource group and it has a public IP address assigned to it. The Load Balancer listens on port 80 and forwards the traffic to the nodes of the cluster. Then kubernetes uses `kube-proxy` and `iptables` (or `nftables`) to route the traffic to the appropriate Pod.
 
 
 ```sh
@@ -651,10 +651,10 @@ We have seen the ingress traffic, what about egress traffic?
 
 Egress traffic refers to the outbound traffic from the Pods in your cluster to external services or the internet. By default, Kubernetes allows egress traffic from Pods to any destination.
 
-Lets run a command inside one of the Pods to check the external IP address of the cluster. You can use the `ifconf.me` service to get the external IP address of the cluster.
+Lets run a command inside one of the Pods to check the external IP address of the cluster. You can use the `ifconfig.me` service to get the external IP address of the cluster.
 
 ```sh
-kubectl exec -it nginx -- curl ifconf.me
+kubectl exec -it nginx -- curl ifconfig.me/ip
 # 9.223.252.156
 ```
 

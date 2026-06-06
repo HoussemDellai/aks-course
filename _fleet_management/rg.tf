@@ -1,4 +1,4 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-aks-dns"
+  name     = "rg-aks-fleet-manager-${var.prefix}"
   location = "swedencentral"
 }

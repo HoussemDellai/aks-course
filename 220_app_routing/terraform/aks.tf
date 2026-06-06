@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                = azurerm_resource_group.rg.location
   resource_group_name     = azurerm_resource_group.rg.name
   dns_prefix              = "aks"
-  kubernetes_version      = "1.31.3"
+  kubernetes_version      = null # chooses latest stable version in the region
   private_cluster_enabled = false
 
   network_profile {

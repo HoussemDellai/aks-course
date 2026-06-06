@@ -1,7 +1,20 @@
 # check new versions here: https://github.com/kaito-project/kaito/releases
 locals {
-  kaito_workspace_version = "0.9.1"
-  kaito_ragengine_version = "0.9.1"
+  kaito_workspace_version = "0.10.0" # "0.9.1"
+  kaito_ragengine_version = "0.10.0" # "0.9.1"
+}
+
+resource "terraform_data" "helm_repo_update" {
+  triggers_replace = [
+    azurerm_kubernetes_cluster.aks.id
+  ]
+
+  provisioner "local-exec" {
+    # interpreter = ["PowerShell", "-Command"]
+    command = <<-EOT
+      helm repo update
+    EOT
+  }
 }
 
 # Install the kaito-workspace chart
@@ -10,6 +23,7 @@ resource "helm_release" "kaito_workspace" {
   chart            = "https://raw.githubusercontent.com/kaito-project/kaito/refs/heads/gh-pages/charts/kaito/workspace-${local.kaito_workspace_version}.tgz"
   namespace        = "kaito-workspace"
   create_namespace = true
+  # upgrade_install  = true
 
   set = [
     {
@@ -33,7 +47,7 @@ resource "helm_release" "kaito_workspace" {
       value = "true"
     },
     {
-      name = "gpu-feature-discovery.gfd.enabled"
+      name  = "gpu-feature-discovery.gfd.enabled"
       value = "true"
     },
     {
@@ -42,7 +56,10 @@ resource "helm_release" "kaito_workspace" {
     }
   ]
 
-  depends_on = [azurerm_kubernetes_cluster_node_pool.nc24ads_a100_v4]
+  depends_on = [
+    azurerm_kubernetes_cluster_node_pool.nc24ads_a100_v4,
+    terraform_data.helm_repo_update
+  ]
 }
 
 # Install the kaito-ragengine chart
@@ -51,6 +68,12 @@ resource "helm_release" "kaito_ragengine" {
   chart            = "https://raw.githubusercontent.com/kaito-project/kaito/refs/heads/gh-pages/charts/kaito/ragengine-${local.kaito_ragengine_version}.tgz"
   namespace        = "kaito-ragengine"
   create_namespace = true
+  # upgrade_install  = true
+
+  depends_on = [
+    azurerm_kubernetes_cluster_node_pool.nc24ads_a100_v4,
+    terraform_data.helm_repo_update
+  ]
 }
 
 # # Install the gpu-provisioner chart

@@ -12,43 +12,6 @@ resource "azurerm_kubernetes_fleet_member" "member" {
   name                  = "${each.key}-member"
 }
 
-resource "azurerm_kubernetes_cluster" "aks" {
-  for_each = { for cluster in var.aks : cluster.cluster_name => cluster }
-
-  name                = each.key
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "aks"
-  kubernetes_version  = each.value.version # "1.29.0"
-
-  network_profile {
-    network_plugin      = "azure"
-    network_plugin_mode = "overlay"
-    ebpf_data_plane     = "cilium"
-    outbound_type       = "loadBalancer"
-  }
-
-  default_node_pool {
-    name       = "systemnp"
-    node_count = 2
-    vm_size    = "Standard_B2als_v2"
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-}
-
-resource "azurerm_kubernetes_cluster_node_pool" "nodepool" {
-  for_each = { for cluster in var.aks : cluster.cluster_name => cluster }
-
-  name                  = "usernp"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks[each.key].id
-  vm_size               = "Standard_B2als_v2"
-  node_count            = each.value.node_count
-  priority              = "Spot"
-}
-
 # resource "azurerm_kubernetes_fleet_update_run" "update_run" {
 #   name                        = "update-run"
 #   kubernetes_fleet_manager_id = azurerm_kubernetes_fleet_manager.fleet.id

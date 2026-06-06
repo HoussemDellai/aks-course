@@ -1,36 +1,38 @@
 {
   "format": 1,
   "restore": {
-    "D:\\MonitoringDemo\\WebApp\\WebApp.csproj": {}
+    "C:\\Users\\azureuser\\Desktop\\aks-course\\05_monitoring_prometheus\\WebApp\\WebApp.csproj": {}
   },
   "projects": {
-    "D:\\MonitoringDemo\\WebApp\\WebApp.csproj": {
+    "C:\\Users\\azureuser\\Desktop\\aks-course\\05_monitoring_prometheus\\WebApp\\WebApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\MonitoringDemo\\WebApp\\WebApp.csproj",
+        "projectUniqueName": "C:\\Users\\azureuser\\Desktop\\aks-course\\05_monitoring_prometheus\\WebApp\\WebApp.csproj",
         "projectName": "WebApp",
-        "projectPath": "D:\\MonitoringDemo\\WebApp\\WebApp.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "D:\\MonitoringDemo\\WebApp\\obj\\",
+        "projectPath": "C:\\Users\\azureuser\\Desktop\\aks-course\\05_monitoring_prometheus\\WebApp\\WebApp.csproj",
+        "packagesPath": "C:\\Users\\azureuser\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\azureuser\\Desktop\\aks-course\\05_monitoring_prometheus\\WebApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\azureuser\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.0": {
+            "framework": "netcoreapp3.0",
+            "targetAlias": "netcoreapp3.0",
             "projectReferences": {}
           }
         },
@@ -38,10 +40,18 @@
           "warnAsError": [
             "NU1605"
           ]
-        }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "framework": "netcoreapp3.0",
+          "targetAlias": "netcoreapp3.0",
           "dependencies": {
             "prometheus-net.AspNetCore": {
               "target": "Package",
@@ -54,10 +64,29 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.0.1, 3.0.1]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[3.0.3, 3.0.3]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[3.0.0, 3.0.0]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[3.0.0, 3.0.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -66,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }
