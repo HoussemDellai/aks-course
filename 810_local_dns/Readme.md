@@ -102,13 +102,13 @@ kubectl exec -it nginx -- nslookup kubernetes.default
 
 ```sh
 kubectl exec nginx -it -- nslookup microsoft.com
-Server:         169.254.10.11
-Address:        169.254.10.11#53
+# Server:         169.254.10.11
+# Address:        169.254.10.11#53
 
-Name:   microsoft.com
-Address: 13.107.213.53
-Name:   microsoft.com
-Address: 13.107.246.53
+# Name:   microsoft.com
+# Address: 13.107.213.53
+# Name:   microsoft.com
+# Address: 13.107.246.53
 ...
 ```
 
