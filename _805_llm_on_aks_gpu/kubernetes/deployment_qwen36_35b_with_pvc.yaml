@@ -1,0 +1,192 @@
+# # Kubernetes equivalent of the Azure Container App "qwen-3-6-35b-a100"
+# # ACA mappings:
+# #   - azurerm_container_app                -> Deployment + Service
+# #   - ingress (external, target_port 8000) -> Service type LoadBalancer on port 8000
+# #   - startup/liveness/readiness_probe     -> container probes
+# #   - workload_profile GPU-NC24-A100       -> nodeSelector "apps=gpu" + nvidia.com/gpu limit + spot toleration
+# #   - min_replicas 0 / max_replicas 1      -> KEDA ScaledObject (scale-to-zero)
+# #   - http_scale_rule concurrent_requests  -> KEDA http-add-on ScaledObject (requestRate/2)
+# #   - polling_interval 30 / cooldown 1800  -> ScaledObject pollingInterval / cooldownPeriod
+# #   - volume storage-llm (NfsAzureFile)    -> PersistentVolumeClaim (azurefile-csi-nfs) + volumeMount
+# ---
+# # ACA volume { storage_type = "NfsAzureFile", storage_name = storage_aca_llm_nfs }
+# # Backed by the Azure Files NFS CSI storage class. Caches HF/vLLM downloads across restarts.
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: storage-llm
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: azurefile-csi-nfs
+#   resources:
+#     requests:
+#       storage: 200Gi
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: qwen-3-6-35b-a100
+#   labels:
+#     app: qwen-3-6-35b-a100
+# spec:
+#   # min_replicas = 0 / max_replicas = 1 are driven by the KEDA ScaledObject below.
+#   # Start at 1 so the model is reachable; KEDA takes over ownership afterwards.
+#   replicas: 1
+#   strategy:
+#     type: Recreate
+#   selector:
+#     matchLabels:
+#       app: qwen-3-6-35b-a100
+#   template:
+#     metadata:
+#       labels:
+#         app: qwen-3-6-35b-a100
+#     spec:
+#       terminationGracePeriodSeconds: 30
+#       # Schedule onto the A100 GPU node pool (node_labels "apps=gpu")
+#       nodeSelector:
+#         apps: gpu
+#       # Tolerate the GPU spot node pool taint
+#       tolerations:
+#         - key: nvidia.com/gpu
+#           operator: Exists
+#           effect: NoSchedule
+#         - key: kubernetes.azure.com/scalesetpriority
+#           operator: Equal
+#           value: spot
+#           effect: NoSchedule
+#       containers:
+#         - name: qwen36-35b-a3b
+#           image: vllm/vllm-openai
+#           # src: https://docs.vllm.ai/projects/recipes/en/latest/Qwen/Qwen3.5.html#docker
+#           args:
+#             - "--model"
+#             - "Qwen/Qwen3.6-35B-A3B"
+#             - "--tensor-parallel-size"
+#             - "1"
+#             - "--max-model-len"
+#             - "32768"
+#             - "--gpu-memory-utilization"
+#             - "0.92"
+#             - "--enable-auto-tool-choice"
+#             - "--tool-call-parser"
+#             - "qwen3_coder"
+#             - "--reasoning-parser"
+#             - "qwen3"
+#             - "--max-num-seqs"
+#             - "200"
+#             - "--host"
+#             - "0.0.0.0"
+#             - "--port"
+#             - "8000"
+#             # - "--enable-prefix-caching"
+#           ports:
+#             - name: http
+#               containerPort: 8000
+#               protocol: TCP
+#           resources:
+#             requests:
+#               cpu: "2"
+#               memory: 16Gi
+#               nvidia.com/gpu: 1
+#             limits:
+#               cpu: "2"
+#               memory: 16Gi
+#               nvidia.com/gpu: 1 # GPU-NC24-A100 workload profile
+#           # startup_probe
+#           startupProbe:
+#             httpGet:
+#               path: /health
+#               port: 8000
+#             initialDelaySeconds: 60
+#             periodSeconds: 240
+#             timeoutSeconds: 240
+#             failureThreshold: 4
+#           # liveness_probe
+#           livenessProbe:
+#             httpGet:
+#               path: /health
+#               port: 8000
+#             initialDelaySeconds: 60
+#             periodSeconds: 240
+#             timeoutSeconds: 240
+#             failureThreshold: 4
+#           # readiness_probe
+#           readinessProbe:
+#             httpGet:
+#               path: /health
+#               port: 8000
+#             initialDelaySeconds: 60
+#             periodSeconds: 240
+#             timeoutSeconds: 240
+#             failureThreshold: 4
+#           env:
+#             # Optional: HF token if needed for gated models
+#             # - name: HF_TOKEN
+#             #   valueFrom:
+#             #     secretKeyRef:
+#             #       name: hf-token
+#             #       key: token
+#             - name: VLLM_CACHE_ROOT
+#               value: /root/.cache/vllm
+#             - name: HF_HOME
+#               value: /root/.cache/huggingface # Defaults to "~/.cache/huggingface" unless XDG_CACHE_HOME is set.
+#             - name: HF_HUB_CACHE
+#               value: /root/.cache/huggingface/hub # Defaults to "$HF_HOME/hub".
+#             - name: HF_ASSETS_CACHE
+#               value: /root/.cache/huggingface/assets # Defaults to "$HF_HOME/assets".
+#             - name: HF_HUB_VERBOSITY
+#               value: warning # {debug, info, warning, error, critical}. Defaults to "warning".
+#           volumeMounts:
+#             - name: storage-llm
+#               mountPath: /root/.cache/
+#       volumes:
+#         - name: storage-llm
+#           persistentVolumeClaim:
+#             claimName: storage-llm
+# ---
+# # ingress { external_enabled = true, target_port = 8000, allow_insecure_connections = true }
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: qwen-3-6-35b-a100
+#   labels:
+#     app: qwen-3-6-35b-a100
+# spec:
+#   type: LoadBalancer
+#   selector:
+#     app: qwen-3-6-35b-a100
+#   ports:
+#     - name: http
+#       port: 80
+#       targetPort: 8000
+#       protocol: TCP
+# ---
+# # template { min_replicas = 0, max_replicas = 1, polling_interval = 30, cooldown = 1800 }
+# # http_scale_rule { concurrent_requests = 2 }
+# # Requires the KEDA HTTP Add-on (https://github.com/kedacore/http-add-on) for scale-to-zero on HTTP traffic.
+# # For CPU/GPU-utilization based scaling instead, replace the trigger with a "cpu" or Prometheus trigger.
+# # apiVersion: keda.sh/v1alpha1
+# # kind: ScaledObject
+# # metadata:
+# #   name: qwen-3-6-35b-a100
+# #   namespace: qwen36
+# # spec:
+# #   scaleTargetRef:
+# #     apiVersion: apps/v1
+# #     kind: Deployment
+# #     name: qwen-3-6-35b-a100
+# #   minReplicaCount: 0 # min_replicas
+# #   maxReplicaCount: 1 # max_replicas
+# #   pollingInterval: 30 # polling_interval_in_seconds
+# #   cooldownPeriod: 1800 # cooldown_period_in_seconds
+# #   advanced:
+# #     restoreToOriginalReplicaCount: true
+# #   triggers:
+# #     # HTTP concurrency-based trigger (KEDA HTTP Add-on)
+# #     - type: external-push
+# #       metadata:
+# #         scalerAddress: keda-add-ons-http-external-scaler.keda:9090
+# #         host: qwen-3-6-35b-a100.qwen36
+# #         targetPendingRequests: "2" # concurrent_requests = 2

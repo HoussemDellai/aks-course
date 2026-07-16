@@ -4,10 +4,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "nc24ads_a100_v4" {
   kubernetes_cluster_id       = azurerm_kubernetes_cluster.aks.id
   mode                        = "User"
   vm_size                     = "Standard_NC24ads_A100_v4"
-  node_count                  = 1
+  node_count                  = 2
   auto_scaling_enabled        = true
-  min_count                   = 1
-  max_count                   = 1
+  min_count                   = 2
+  max_count                   = 2
   os_type                     = "Linux"
   zones                       = []
   os_disk_size_gb             = 128          # 1024 # 960 # 512
