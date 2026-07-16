@@ -1,0 +1,12 @@
+apiVersion: alb.networking.azure.io/v1
+kind: WebApplicationFirewallPolicy
+metadata:
+  name: waf
+  namespace: demo
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: gateway
+  webApplicationFirewall:
+    id: /subscriptions/xxx/.../waf-agc

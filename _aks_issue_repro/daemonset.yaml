@@ -1,0 +1,33 @@
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: debug-network
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: debug-network
+  namespace: debug-network
+spec:
+  selector:
+    matchLabels:
+      app: debug-network
+  template:
+    metadata:
+      labels:
+        app: debug-network
+    spec:
+      tolerations:
+        - operator: "Exists"
+      containers:
+        - name: curl
+          image: buildpack-deps:bookworm-curl
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+                curl -s --max-time 2 https://kubernetes.default/api || echo ERROR
+                sleep 5
+              done
