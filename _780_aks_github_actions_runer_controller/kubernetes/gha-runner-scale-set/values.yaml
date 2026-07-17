@@ -1,0 +1,532 @@
+## githubConfigUrl is the GitHub url for where you want to configure runners
+## ex: https://github.com/myorg/myrepo or https://github.com/myorg or https://github.com/enterprises/myenterprise
+githubConfigUrl: ""
+
+scaleSetLabels: []
+
+## githubConfigSecret is the k8s secret information to use when authenticating via the GitHub API.
+## You can choose to supply:
+##   A) a PAT token,
+##   B) a GitHub App, or
+##   C) a pre-defined secret.
+## The syntax for each of these variations is documented below.
+## (Variation A) When using a PAT token, the syntax is as follows:
+githubConfigSecret:
+  # Example:
+  # github_token: "ghp_sampleSampleSampleSampleSampleSample"
+  github_token: ""
+#
+## (Variation B) When using a GitHub App, the syntax is as follows:
+# githubConfigSecret:
+#   # NOTE: IDs MUST be strings, use quotes
+#   # The github_app_id can be an app_id or the client_id
+#   github_app_id: ""
+#   github_app_installation_id: ""
+#   github_app_private_key: |
+#      private key line 1
+#      private key line 2
+#      .
+#      .
+#      .
+#      private key line N
+#
+## (Variation C) When using a pre-defined secret.
+## The secret can be pulled either directly from Kubernetes, or from the vault, depending on configuration.
+## Kubernetes secret in the same namespace that the gha-runner-scale-set is going to deploy.
+## On the other hand, if the vault is configured, secret name will be used to fetch the app configuration.
+## The syntax is as follows:
+# githubConfigSecret: pre-defined-secret
+## Notes on using pre-defined Kubernetes secrets:
+##   You need to make sure your predefined secret has all the required secret data set properly.
+##   For a pre-defined secret using GitHub PAT, the secret needs to be created like this:
+##   > kubectl create secret generic pre-defined-secret --namespace=my_namespace --from-literal=github_token='ghp_your_pat'
+##   For a pre-defined secret using GitHub App, the secret needs to be created like this:
+##   > kubectl create secret generic pre-defined-secret --namespace=my_namespace --from-literal=github_app_id=123456 --from-literal=github_app_installation_id=654321 --from-literal=github_app_private_key='-----BEGIN CERTIFICATE-----*******'
+
+## proxy can be used to define proxy settings that will be used by the
+## controller, the listener and the runner of this scale set.
+#
+# proxy:
+#   http:
+#     url: http://proxy.com:1234
+#     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+#   https:
+#     url: http://proxy.com:1234
+#     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+#   noProxy:
+#     - example.com
+#     - example.org
+
+## maxRunners is the max number of runners the autoscaling runner set will scale up to.
+# maxRunners: 5
+
+## minRunners is the min number of idle runners. The target number of runners created will be
+## calculated as a sum of minRunners and the number of jobs assigned to the scale set.
+# minRunners: 0
+
+# runnerGroup: "default"
+
+## name of the runner scale set to create.  Defaults to the helm release name
+# runnerScaleSetName: ""
+
+## A self-signed CA certificate for communication with the GitHub server can be
+## provided using a config map key selector. If `runnerMountPath` is set, for
+## each runner pod ARC will:
+## - create a `github-server-tls-cert` volume containing the certificate
+##   specified in `certificateFrom`
+## - mount that volume on path `runnerMountPath`/{certificate name}
+## - set NODE_EXTRA_CA_CERTS environment variable to that same path
+## - set RUNNER_UPDATE_CA_CERTS environment variable to "1" (as of version
+##   2.303.0 this will instruct the runner to reload certificates on the host)
+##
+## If any of the above had already been set by the user in the runner pod
+## template, ARC will observe those and not overwrite them.
+## Example configuration:
+#
+# githubServerTLS:
+#   certificateFrom:
+#     configMapKeyRef:
+#       name: config-map-name
+#       key: ca.crt
+#   runnerMountPath: /usr/local/share/ca-certificates/
+
+# keyVault:
+  # Available values: "azure_key_vault"
+  # type: ""
+  # Configuration related to azure key vault
+  # azure_key_vault:
+  #   url: ""
+  #   client_id: ""
+  #   tenant_id: ""
+  #   certificate_path: ""
+    # proxy:
+    #   http:
+    #     url: http://proxy.com:1234
+    #     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+    #   https:
+    #     url: http://proxy.com:1234
+    #     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+    #   noProxy:
+    #     - example.com
+    #     - example.org
+
+## Container mode is an object that provides out-of-box configuration
+## for dind and kubernetes mode. Template will be modified as documented under the
+## template object.
+##
+## If any customization is required for dind or kubernetes mode, containerMode should remain
+## empty, and configuration should be applied to the template.
+# containerMode:
+#   type: "dind"  ## type can be set to "dind", "kubernetes", or "kubernetes-novolume"
+#   ## the following is required when containerMode.type=kubernetes
+#   kubernetesModeWorkVolumeClaim:
+#     accessModes: ["ReadWriteOnce"]
+#     # For local testing, use https://github.com/openebs/dynamic-localpv-provisioner/blob/develop/docs/quickstart.md to provide dynamic provision volume with storageClassName: openebs-hostpath
+#     storageClassName: "dynamic-blob-storage"
+#     resources:
+#       requests:
+#         storage: 1Gi
+#   kubernetesModeAdditionalRoleRules: []
+#
+
+## listenerTemplate is the PodSpec for each listener Pod
+## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
+# listenerTemplate:
+#   spec:
+#     containers:
+#     # Use this section to append additional configuration to the listener container.
+#     # If you change the name of the container, the configuration will not be applied to the listener,
+#     # and it will be treated as a side-car container.
+#     - name: listener
+#       securityContext:
+#         runAsUser: 1000
+#     # Use this section to add the configuration of a side-car container.
+#     # Comment it out or remove it if you don't need it.
+#     # Spec for this container will be applied as is without any modifications.
+#     - name: side-car
+#       image: example-sidecar
+
+## listenerMetrics are configurable metrics applied to the listener.
+## In order to avoid helm merging these fields, we left the metrics commented out.
+## When configuring metrics, please uncomment the listenerMetrics object below.
+## You can modify the configuration to remove the label or specify custom buckets for histogram.
+##
+## If the buckets field is not specified, the default buckets will be applied. Default buckets are
+## provided here for documentation purposes
+# listenerMetrics:
+#   counters:
+#     gha_started_jobs_total:
+#       labels:
+#         ["repository", "organization", "enterprise", "job_name", "event_name", "job_workflow_ref", "job_workflow_name", "job_workflow_target"]
+#     gha_completed_jobs_total:
+#       labels:
+#         [
+#           "repository",
+#           "organization",
+#           "enterprise",
+#           "job_name",
+#           "event_name",
+#           "job_result",
+#           "job_workflow_ref",
+#           "job_workflow_name",
+#           "job_workflow_target",
+#         ]
+#   gauges:
+#     gha_assigned_jobs:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#     gha_running_jobs:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#     gha_registered_runners:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#     gha_busy_runners:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#     gha_min_runners:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#     gha_max_runners:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#     gha_desired_runners:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#     gha_idle_runners:
+#       labels: ["name", "namespace", "repository", "organization", "enterprise"]
+#   histograms:
+#     gha_job_startup_duration_seconds:
+#       labels:
+#         ["repository", "organization", "enterprise", "job_name", "event_name","job_workflow_ref", "job_workflow_name", "job_workflow_target"]
+#       buckets:
+#         [
+#           0.01,
+#           0.05,
+#           0.1,
+#           0.5,
+#           1.0,
+#           2.0,
+#           3.0,
+#           4.0,
+#           5.0,
+#           6.0,
+#           7.0,
+#           8.0,
+#           9.0,
+#           10.0,
+#           12.0,
+#           15.0,
+#           18.0,
+#           20.0,
+#           25.0,
+#           30.0,
+#           40.0,
+#           50.0,
+#           60.0,
+#           70.0,
+#           80.0,
+#           90.0,
+#           100.0,
+#           110.0,
+#           120.0,
+#           150.0,
+#           180.0,
+#           210.0,
+#           240.0,
+#           300.0,
+#           360.0,
+#           420.0,
+#           480.0,
+#           540.0,
+#           600.0,
+#           900.0,
+#           1200.0,
+#           1800.0,
+#           2400.0,
+#           3000.0,
+#           3600.0,
+#         ]
+#     gha_job_execution_duration_seconds:
+#       labels:
+#         [
+#           "repository",
+#           "organization",
+#           "enterprise",
+#           "job_name",
+#           "event_name",
+#           "job_result",
+#           "job_workflow_ref",
+#           "job_workflow_name",
+#           "job_workflow_target"
+#         ]
+#       buckets:
+#         [
+#           0.01,
+#           0.05,
+#           0.1,
+#           0.5,
+#           1.0,
+#           2.0,
+#           3.0,
+#           4.0,
+#           5.0,
+#           6.0,
+#           7.0,
+#           8.0,
+#           9.0,
+#           10.0,
+#           12.0,
+#           15.0,
+#           18.0,
+#           20.0,
+#           25.0,
+#           30.0,
+#           40.0,
+#           50.0,
+#           60.0,
+#           70.0,
+#           80.0,
+#           90.0,
+#           100.0,
+#           110.0,
+#           120.0,
+#           150.0,
+#           180.0,
+#           210.0,
+#           240.0,
+#           300.0,
+#           360.0,
+#           420.0,
+#           480.0,
+#           540.0,
+#           600.0,
+#           900.0,
+#           1200.0,
+#           1800.0,
+#           2400.0,
+#           3000.0,
+#           3600.0,
+#         ]
+
+## template is the PodSpec for each runner Pod
+## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
+template:
+  ## template.spec will be modified if you change the container mode
+  ## with containerMode.type=dind, we will populate the template.spec with following pod spec
+  ## template:
+  ##   spec:
+  ##     initContainers:
+  ##     - name: init-dind-externals
+  ##       image: ghcr.io/actions/actions-runner:latest
+  ##       command: ["cp", "-r", "/home/runner/externals/.", "/home/runner/tmpDir/"]
+  ##       volumeMounts:
+  ##         - name: dind-externals
+  ##           mountPath: /home/runner/tmpDir
+  ##     - name: dind
+  ##       image: docker:dind
+  ##       args:
+  ##         - dockerd
+  ##         - --host=unix:///var/run/docker.sock
+  ##         - --group=$(DOCKER_GROUP_GID)
+  ##       env:
+  ##         - name: DOCKER_GROUP_GID
+  ##           value: "123"
+  ##       securityContext:
+  ##         privileged: true
+  ##       restartPolicy: Always
+  ##       startupProbe:
+  ##         exec:
+  ##           command:
+  ##             - docker
+  ##             - info
+  ##         initialDelaySeconds: 0
+  ##         failureThreshold: 24
+  ##         periodSeconds: 5
+  ##       volumeMounts:
+  ##         - name: work
+  ##           mountPath: /home/runner/_work
+  ##         - name: dind-sock
+  ##           mountPath: /var/run
+  ##         - name: dind-externals
+  ##           mountPath: /home/runner/externals
+  ##     containers:
+  ##     - name: runner
+  ##       image: ghcr.io/actions/actions-runner:latest
+  ##       command: ["/home/runner/run.sh"]
+  ##       env:
+  ##         - name: DOCKER_HOST
+  ##           value: unix:///var/run/docker.sock
+  ##         - name: RUNNER_WAIT_FOR_DOCKER_IN_SECONDS
+  ##           value: "120"
+  ##       volumeMounts:
+  ##         - name: work
+  ##           mountPath: /home/runner/_work
+  ##         - name: dind-sock
+  ##           mountPath: /var/run
+  ##     volumes:
+  ##     - name: work
+  ##       emptyDir: {}
+  ##     - name: dind-sock
+  ##       emptyDir: {}
+  ##     - name: dind-externals
+  ##       emptyDir: {}
+  ######################################################################################################
+  ## with containerMode.type=kubernetes, we will populate the template.spec with following pod spec
+  ## template:
+  ##   spec:
+  ##     containers:
+  ##     - name: runner
+  ##       image: ghcr.io/actions/actions-runner:latest
+  ##       command: ["/home/runner/run.sh"]
+  ##       env:
+  ##         - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+  ##           value: /home/runner/k8s/index.js
+  ##         - name: ACTIONS_RUNNER_POD_NAME
+  ##           valueFrom:
+  ##             fieldRef:
+  ##               fieldPath: metadata.name
+  ##         - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+  ##           value: "true"
+  ##       volumeMounts:
+  ##         - name: work
+  ##           mountPath: /home/runner/_work
+  ##     volumes:
+  ##       - name: work
+  ##         ephemeral:
+  ##           volumeClaimTemplate:
+  ##             spec:
+  ##               accessModes: [ "ReadWriteOnce" ]
+  ##               storageClassName: "local-path"
+  ##               resources:
+  ##                 requests:
+  ##                   storage: 1Gi
+  ######################################################################################################
+  ## with containerMode.type=kubernetes-novolume, we will populate the template.spec with following pod spec
+  ## template:
+  ##   spec:
+  ##     containers:
+  ##     - name: runner
+  ##       image: ghcr.io/actions/actions-runner:latest
+  ##       command: ["/home/runner/run.sh"]
+  ##       env:
+  ##         - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+  ##           value: /home/runner/k8s-novolume/index.js
+  ##         - name: ACTIONS_RUNNER_POD_NAME
+  ##           valueFrom:
+  ##             fieldRef:
+  ##               fieldPath: metadata.name
+  ##         - name: ACTIONS_RUNNER_IMAGE
+  ##           value: ghcr.io/actions/actions-runner:latest # should match the runnerimage
+  ##         - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+  ##           value: "true"
+  spec:
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:latest
+        command: ["/home/runner/run.sh"]
+## Optional controller service account that needs to have required Role and RoleBinding
+## to operate this gha-runner-scale-set installation.
+## The helm chart will try to find the controller deployment and its service account at installation time.
+## In case the helm chart can't find the right service account, you can explicitly pass in the following value
+## to help it finish RoleBinding with the right service account.
+## Note: if your controller is installed to only watch a single namespace, you have to pass these values explicitly.
+# controllerServiceAccount:
+#   namespace: arc-system
+#   name: test-arc-gha-runner-scale-set-controller
+
+# Overrides the default `.Release.Namespace` for all resources in this chart.
+namespaceOverride: ""
+
+## Optional annotations and labels applied to all resources created by helm installation
+##
+## Annotations applied to all resources created by this helm chart. Annotations will not override the default ones, so make sure
+## the custom annotation is not reserved.
+# annotations:
+#   key: value
+##
+## Labels applied to all resources created by this helm chart. Labels will not override the default ones, so make sure
+## the custom label is not reserved.
+# labels:
+#   key: value
+
+## If you want more fine-grained control over annotations applied to particular resource created by this chart,
+## you can use `resourceMeta`.
+## Order of applying labels and annotations is:
+## 1. Apply labels/annotations globally, using `annotations` and `labels` field
+## 2. Apply `resourceMeta` labels/annotations
+## 3. Apply reserved labels/annotations
+# resourceMeta:
+#   autoscalingRunnerSet:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   githubConfigSecret:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   kubernetesModeRole:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   kubernetesModeRoleBinding:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   kubernetesModeServiceAccount:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   managerRole:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   managerRoleBinding:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   noPermissionServiceAccount:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   autoscalingListener:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   listenerServiceAccount:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   listenerRole:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   listenerRoleBinding:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   listenerConfigSecret:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   ephemeralRunnerSet:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   ephemeralRunner:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value
+#   ephemeralRunnerConfigSecret:
+#     labels:
+#       key: value
+#     annotations:
+#       key: value

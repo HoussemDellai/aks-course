@@ -24,13 +24,12 @@ kubectl create secret generic pre-defined-secret `
 ```
 
 ```sh
-helm install arc-runner-set `
+helm upgrade arc-runner-set `
+    --install `
     --namespace arc-runners `
     --create-namespace `
+    --values ./kubernetes/gha-runner-scale-set/values.yaml `
     --set githubConfigUrl="https://github.com/HoussemDellai/aks-course" `
     --set githubConfigSecret="pre-defined-secret" `
     oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 ```
-
-    <!-- --set githubConfigUrl="https://github.com/HoussemDellai/aks-coursehttps://github.com/<your_enterprise/org/repo>" \ -->
-
