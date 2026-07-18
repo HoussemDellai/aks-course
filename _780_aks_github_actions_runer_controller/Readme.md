@@ -20,7 +20,7 @@ kubectl create secret generic pre-defined-secret `
    --namespace=arc-runners `
    --from-literal=github_app_id=4322550 `
    --from-literal=github_app_installation_id=147167032 `
-   --from-literal=github_app_private_key='-----BEGIN RSA PRIVATE KEY-----d061a2876ba7d488939485e677de6f7e9d66fa82'
+   --from-literal=github_app_private_key=private-key.pem
 ```
 
 ```sh

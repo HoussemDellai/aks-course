@@ -62,7 +62,7 @@ githubConfigSecret:
 
 ## minRunners is the min number of idle runners. The target number of runners created will be
 ## calculated as a sum of minRunners and the number of jobs assigned to the scale set.
-# minRunners: 0
+minRunners: 1 # 0
 
 # runnerGroup: "default"
 
@@ -116,18 +116,18 @@ githubConfigSecret:
 ##
 ## If any customization is required for dind or kubernetes mode, containerMode should remain
 ## empty, and configuration should be applied to the template.
-# containerMode:
-#   type: "dind"  ## type can be set to "dind", "kubernetes", or "kubernetes-novolume"
-#   ## the following is required when containerMode.type=kubernetes
-#   kubernetesModeWorkVolumeClaim:
-#     accessModes: ["ReadWriteOnce"]
-#     # For local testing, use https://github.com/openebs/dynamic-localpv-provisioner/blob/develop/docs/quickstart.md to provide dynamic provision volume with storageClassName: openebs-hostpath
-#     storageClassName: "dynamic-blob-storage"
-#     resources:
-#       requests:
-#         storage: 1Gi
-#   kubernetesModeAdditionalRoleRules: []
-#
+containerMode:
+  type: "kubernetes-novolume" # "kubernetes"  ## type can be set to "dind", "kubernetes", or "kubernetes-novolume"
+  ## the following is required when containerMode.type=kubernetes
+  # kubernetesModeWorkVolumeClaim:
+  #   accessModes: ["ReadWriteMany"]
+  #   # For local testing, use https://github.com/openebs/dynamic-localpv-provisioner/blob/develop/docs/quickstart.md to provide dynamic provision volume with storageClassName: openebs-hostpath
+  #   storageClassName: "azurefile-csi"
+  #   resources:
+  #     requests:
+  #       storage: 1Gi
+  # kubernetesModeAdditionalRoleRules: []
+
 
 ## listenerTemplate is the PodSpec for each listener Pod
 ## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
@@ -304,7 +304,7 @@ githubConfigSecret:
 
 ## template is the PodSpec for each runner Pod
 ## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
-template:
+# template:
   ## template.spec will be modified if you change the container mode
   ## with containerMode.type=dind, we will populate the template.spec with following pod spec
   ## template:
@@ -366,58 +366,58 @@ template:
   ##       emptyDir: {}
   ######################################################################################################
   ## with containerMode.type=kubernetes, we will populate the template.spec with following pod spec
-  ## template:
-  ##   spec:
-  ##     containers:
-  ##     - name: runner
-  ##       image: ghcr.io/actions/actions-runner:latest
-  ##       command: ["/home/runner/run.sh"]
-  ##       env:
-  ##         - name: ACTIONS_RUNNER_CONTAINER_HOOKS
-  ##           value: /home/runner/k8s/index.js
-  ##         - name: ACTIONS_RUNNER_POD_NAME
-  ##           valueFrom:
-  ##             fieldRef:
-  ##               fieldPath: metadata.name
-  ##         - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
-  ##           value: "true"
-  ##       volumeMounts:
-  ##         - name: work
-  ##           mountPath: /home/runner/_work
-  ##     volumes:
-  ##       - name: work
-  ##         ephemeral:
-  ##           volumeClaimTemplate:
-  ##             spec:
-  ##               accessModes: [ "ReadWriteOnce" ]
-  ##               storageClassName: "local-path"
-  ##               resources:
-  ##                 requests:
-  ##                   storage: 1Gi
+# template:
+#   spec:
+#     containers:
+#     - name: runner
+#       image: ghcr.io/actions/actions-runner:latest
+#       command: ["/home/runner/run.sh"]
+#       env:
+#         - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+#           value: /home/runner/k8s/index.js
+#         - name: ACTIONS_RUNNER_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.name
+#         - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+#           value: "true"
+#       volumeMounts:
+#         - name: work
+#           mountPath: /home/runner/_work
+#     volumes:
+#       - name: work
+#         ephemeral:
+#           volumeClaimTemplate:
+#             spec:
+#               accessModes: [ "ReadWriteMany" ]
+#               storageClassName: "azurefile-csi"
+#               resources:
+#                 requests:
+#                   storage: 1Gi
   ######################################################################################################
   ## with containerMode.type=kubernetes-novolume, we will populate the template.spec with following pod spec
-  ## template:
-  ##   spec:
-  ##     containers:
-  ##     - name: runner
-  ##       image: ghcr.io/actions/actions-runner:latest
-  ##       command: ["/home/runner/run.sh"]
-  ##       env:
-  ##         - name: ACTIONS_RUNNER_CONTAINER_HOOKS
-  ##           value: /home/runner/k8s-novolume/index.js
-  ##         - name: ACTIONS_RUNNER_POD_NAME
-  ##           valueFrom:
-  ##             fieldRef:
-  ##               fieldPath: metadata.name
-  ##         - name: ACTIONS_RUNNER_IMAGE
-  ##           value: ghcr.io/actions/actions-runner:latest # should match the runnerimage
-  ##         - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
-  ##           value: "true"
+template:
   spec:
     containers:
-      - name: runner
-        image: ghcr.io/actions/actions-runner:latest
-        command: ["/home/runner/run.sh"]
+    - name: runner
+      image: ghcr.io/actions/actions-runner:latest
+      command: ["/home/runner/run.sh"]
+      env:
+        - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+          value: /home/runner/k8s-novolume/index.js
+        - name: ACTIONS_RUNNER_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: ACTIONS_RUNNER_IMAGE
+          value: ghcr.io/actions/actions-runner:latest # should match the runnerimage
+        - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+          value: "true"
+  # spec:
+  #   containers:
+  #     - name: runner
+  #       image: ghcr.io/actions/actions-runner:latest
+  #       command: ["/home/runner/run.sh"]
 ## Optional controller service account that needs to have required Role and RoleBinding
 ## to operate this gha-runner-scale-set installation.
 ## The helm chart will try to find the controller deployment and its service account at installation time.
