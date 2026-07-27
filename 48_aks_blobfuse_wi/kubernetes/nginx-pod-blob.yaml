@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-app
+  name: nginx-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - image: mcr.microsoft.com/oss/nginx/nginx:1.19.5
+        name: webapp
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - name: pvc-blob
+            mountPath: /usr/share/nginx/html
+      volumes: 
+        - name: pvc-blob
+          persistentVolumeClaim: 
+            claimName:  pvc-blob
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app
+  labels:
+    run: nginx-app
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx-app
+  type: LoadBalancer
+# kind: Pod
+# apiVersion: v1
+# metadata:
+#   name: nginx-blob
+# spec:
+#   nodeSelector:
+#     "kubernetes.io/os": linux
+#   containers:
+#     - image: mcr.microsoft.com/oss/nginx/nginx:1.17.3-alpine
+#       name: nginx-blob
+#       volumeMounts:
+#         - name: blob01
+#           mountPath: "/mnt/blob"
+#   volumes:
+#     - name: blob01
+#       persistentVolumeClaim:
+#         claimName: pvc-blob

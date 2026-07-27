@@ -43,16 +43,16 @@ $IDENTITY_NAME="identity-storage-account"
 az group create --name $AKS_RG --location westeurope
 
 az aks create --name $AKS_NAME --resource-group $AKS_RG `
-       --network-plugin azure --node-count 3 --zones 1 2 3 --kubernetes-version "1.25.4" ` # optional params
+       --network-plugin azure --node-count 3 --zones 1 2 3 --kubernetes-version "1.36.4" ` # optional params
        --enable-blob-driver
 
 az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 
 kubectl get nodes
 # NAME                                STATUS   ROLES   AGE   VERSION
-# aks-nodepool1-35380384-vmss000000   Ready    agent   66s   v1.25.4
-# aks-nodepool1-35380384-vmss000001   Ready    agent   62s   v1.25.4
-# aks-nodepool1-35380384-vmss000002   Ready    agent   64s   v1.25.4
+# aks-nodepool1-35380384-vmss000000   Ready    agent   66s   v1.36.4
+# aks-nodepool1-35380384-vmss000001   Ready    agent   62s   v1.36.4
+# aks-nodepool1-35380384-vmss000002   Ready    agent   64s   v1.36.4
 ```
 
 Verify the blob driver (DaemonSet) was installed
@@ -71,11 +71,10 @@ kubectl get pods -n kube-system | grep csi
 # csi-blob-node-wvqcp                   3/3     Running   0          6m36s
 ```
 
-
 ## 1. Create Storage Account with type BlockBlobStorage
 
 ```powershell
-az storage account create -n $STORAGE_ACCOUNT_NAME -g $AKS_RG -l westeurope --sku Premium_ZRS --kind BlockBlobStorage
+az storage account create -n $STORAGE_ACCOUNT_NAME -g $AKS_RG -l swedencentral --sku Premium_ZRS --kind BlockBlobStorage
 ```
 
 Create a SA container

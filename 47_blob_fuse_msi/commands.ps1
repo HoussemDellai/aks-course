@@ -5,16 +5,16 @@
 ## 0. Setup demo environment
 
 # Variables
-$AKS_RG="rg-aks-cluster"
+$AKS_RG="rg-aks-cluster-swc"
 $AKS_NAME="aks-cluster"
-$STORAGE_ACCOUNT_NAME="storage4aks013"
+$STORAGE_ACCOUNT_NAME="storage4aks013swc"
 $CONTAINER_NAME="container01"
 $IDENTITY_NAME="identity-storage-account"
 
 # Create and connect to AKS cluster
-az group create --name $AKS_RG --location westeurope
+az group create --name $AKS_RG --location swedencentral
 
-az aks create --name $AKS_NAME --resource-group $AKS_RG --node-count 3 --zones 1 2 3 --kubernetes-version "1.25.4" --network-plugin azure  --enable-blob-driver
+az aks create --name $AKS_NAME --resource-group $AKS_RG --node-count 3 --zones 1 2 3 --kubernetes-version "1.36.2" --network-plugin azure  --network-plugin-mode overlay --node-vm-size standard_d2ads_v6 --node-osdisk-type Ephemeral --node-osdisk-size 64 --enable-blob-driver
 
 az aks get-credentials -n $AKS_NAME -g $AKS_RG --overwrite-existing
 
@@ -27,7 +27,7 @@ kubectl get pods -n kube-system | grep csi
 
 # Create Storage Account 
 
-az storage account create -n $STORAGE_ACCOUNT_NAME -g $AKS_RG -l westeurope --sku Premium_ZRS --kind BlockBlobStorage
+az storage account create -n $STORAGE_ACCOUNT_NAME -g $AKS_RG -l swedencentral --sku Premium_ZRS --kind BlockBlobStorage
 
 # Create a SA container
 
@@ -48,7 +48,7 @@ az storage blob upload `
 # Assign admin role to my self
 
 $CURRENT_USER_ID=$(az ad signed-in-user show --query id -o tsv)
-$STORAGE_ACCOUNT_ID=$(az storage account show -n $STORAGE_ACCOUNT_NAME --query id)
+$STORAGE_ACCOUNT_ID=$(az storage account show -n $STORAGE_ACCOUNT_NAME --query id -o tsv)
 
 az role assignment create --assignee $CURRENT_USER_ID `
         --role "Storage Account Contributor" `

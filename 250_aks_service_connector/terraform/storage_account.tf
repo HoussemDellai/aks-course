@@ -14,8 +14,7 @@ resource "azurerm_storage_container" "container" {
 
 resource "azurerm_storage_blob" "blob" {
   name                   = "storage_account.tf"
-  storage_account_name   = azurerm_storage_account.sa.name
-  storage_container_name = azurerm_storage_container.container.name
+  storage_container_id = azurerm_storage_container.container.id
   type                   = "Block"
   source                 = "storage_account.tf"
 }

@@ -53,15 +53,17 @@ spec:
             - "1"
             - "--max-model-len"
             - "32768"
+            # 65.5 GiB of weights on an 80 GiB A100 leaves little headroom.
+            # 0.85 -> negative KV cache. Push utilization up so KV cache blocks fit.
             - "--gpu-memory-utilization"
-            - "0.85"
+            - "0.9"
             - "--enable-auto-tool-choice"
             - "--tool-call-parser"
             - "qwen3_coder"
             - "--reasoning-parser"
             - "qwen3"
             - "--max-num-seqs"
-            - "200"
+            - "32"
             - "--host"
             - "0.0.0.0"
             - "--port"
@@ -78,7 +80,7 @@ spec:
               nvidia.com/gpu: 1
             limits:
               cpu: "4"
-              memory: 16Gi
+              memory: 32Gi
               nvidia.com/gpu: 1 # GPU-NC24-A100 workload profile
           # startup_probe
           startupProbe:
