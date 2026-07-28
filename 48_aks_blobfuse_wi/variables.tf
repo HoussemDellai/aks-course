@@ -13,3 +13,9 @@ variable "service_account_name" {
   type        = string
   default     = "service-account-01"
 }
+
+variable "container_name" {
+  description = "Name of the Container in Storage Account."
+  type        = string
+  default     = "container-01"
+}

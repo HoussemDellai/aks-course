@@ -3,6 +3,10 @@
 ```powershell
 $SERVICE_ACCOUNT_NAME="service-account-01"
 $SERVICE_ACCOUNT_NAMESPACE="default"
+$STORAGE_ACCOUNT_NAME="stor4adls4aks48"
+$CONTAINER_NAME="container-01"
+$AKS_RG="rg-aks-blob-adls-wi-48"
+$IDENTITY_CLIENT_ID="a4b7b9fd-ca18-4261-ba79-d9da4b751d74"
 ```
 
 ```powershell
@@ -15,13 +19,8 @@ metadata:
 "@ > service_account_01.yaml
 ```
 
-kubectl apply -f service_account_01.yaml
-
 ```powershell
-$STORAGE_ACCOUNT_NAME="stor4aks48"
-$CONTAINER_NAME="content"
-$AKS_RG="rg-aks-blob-adls-wi-48"
-$IDENTITY_CLIENT_ID="a4b7b9fd-ca18-4261-ba79-d9da4b751d74"
+kubectl apply -f service_account_01.yaml
 ```
 
 ```powershell
@@ -53,11 +52,9 @@ spec:
       storageAccount: $STORAGE_ACCOUNT_NAME
       containerName: $CONTAINER_NAME
       # refer to https://github.com/Azure/azure-storage-fuse#environment-variables
-      AzureStorageAuthType: msi  # key, sas, msi, spn
-      # refer to https://github.com/Azure/azure-storage-fuse#environment-variables
-    #   AzureStorageAuthType: msi  # key, sas, msi, spn
+      # AzureStorageAuthType: msi  # key, sas, msi, spn
       clientID: $IDENTITY_CLIENT_ID
-    #   AzureStorageIdentityResourceID: $IDENTITY_ID
+      # AzureStorageIdentityResourceID: $IDENTITY_ID
       mountWithWorkloadIdentityToken: "true"   # uncomment for token-only mode (supported from v1.27.0); requires Storage Blob Data Contributor role
 "@ > pv_blobfuse.yaml
 ```
