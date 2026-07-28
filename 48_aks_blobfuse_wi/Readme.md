@@ -4,6 +4,12 @@
 
 This example demonstrates how to use Azure Blobfuse with Workload Identity in AKS. The example uses Terraform to deploy the infrastructure and Kubernetes manifests to deploy the resources.
 
+## Architecture
+
+![AKS BlobFuse with Workload Identity architecture](./images/architecture.svg)
+
+The Blob CSI driver requests a token for the pod's ServiceAccount. Microsoft Entra ID exchanges the OIDC token through the federated credential, and the user-assigned managed identity authorizes BlobFuse to read and write data in the private blob container.
+
 ## Deploying the infrastructure
 
 Run the following Terraform commands from the root folder.
