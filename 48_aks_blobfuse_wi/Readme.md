@@ -14,7 +14,13 @@ terraform plan -out tfplan
 terraform apply tfplan
 ```
 
+The following resources will be created:
+
+![Azure resources](./images/resources.png)
+
 ## Deploying Kubernetes resources
+
+Get the output values from Terraform and set them as environment variables.
 
 ```powershell
 $SERVICE_ACCOUNT_NAME=$(terraform output -raw service_account_name)
@@ -27,16 +33,9 @@ $CONTAINER_NAME=$(terraform output -raw container_name)
 $IDENTITY_CLIENT_ID=$(terraform output -raw identity_wi_client_id)
 ```
 
-<!-- ```powershell
-$SERVICE_ACCOUNT_NAME="service-account-01"
-$SERVICE_ACCOUNT_NAMESPACE="default"
+Create the Kubernetes resources using the following commands.
 
-$STORAGE_ACCOUNT_RG="rg-aks-blob-adls-wi-48"
-$STORAGE_ACCOUNT_NAME="stor4adls4aks48"
-$CONTAINER_NAME="container-01"
-
-$IDENTITY_CLIENT_ID="a4b7b9fd-ca18-4261-ba79-d9da4b751d74"
-``` -->
+Create the ServiceAccount.
 
 ```powershell
 @"
@@ -47,6 +46,8 @@ metadata:
   namespace: $SERVICE_ACCOUNT_NAMESPACE
 "@ > ./kubernetes/service_account_01.yaml
 ```
+
+Create the PersistentVolume (PV).
 
 ```powershell
 @"
@@ -84,6 +85,8 @@ spec:
 "@ > ./kubernetes/pv_blobfuse.yaml
 ```
 
+Create the PersistentVolumeClaim (PVC).
+
 ```powershell
 @"
 kind: PersistentVolumeClaim
@@ -101,6 +104,8 @@ spec:
   storageClassName: azureblob-fuse-premium
 "@ > ./kubernetes/pvc_blobfuse.yaml
 ```
+
+Create the Deployment.
 
 ```powershell
 @"
@@ -146,9 +151,43 @@ spec:
 "@ > ./kubernetes/deployment_blob.yaml
 ```
 
+Deploy the resources to AKS.
+
 ```powershell
 kubectl apply -f ./kubernetes/
 ```
+
+Check the created resources.
+
+```powershell
+kubectl get pods,svc,pvc,pv -n $SERVICE_ACCOUNT_NAMESPACE
+# NAME                                   READY   STATUS    RESTARTS   AGE
+# pod/deployment-blob-6568867bd6-pll26   1/1     Running   0          39m
+
+# NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+# service/kubernetes   ClusterIP   10.0.0.1     <none>        443/TCP   29h
+
+# NAME                             STATUS   VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS             VOLUMEATTRIBUTESCLASS   AGE
+# persistentvolumeclaim/pvc-blob   Bound    pv-blob   100Gi      RWX            azureblob-fuse-premium   <unset>                 39m
+
+# NAME                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM              STORAGECLASS             VOLUMEATTRIBUTESCLASS   REASON   AGE
+# persistentvolume/pv-blob   100Gi      RWX            Retain           Bound    default/pvc-blob   azureblob-fuse-premium   <unset>                          39m
+```
+
+Check the outfile in the pod.
+
+```powershell
+kubectl exec deployment/deployment-blob -- cat /mnt/blob/outfile
+# Tue Jul 28 21:02:53 UTC 2026
+# Tue Jul 28 21:03:26 UTC 2026
+# Tue Jul 28 21:03:56 UTC 2026
+# Tue Jul 28 21:04:26 UTC 2026
+# Tue Jul 28 21:04:56 UTC 2026
+```
+
+Verify in the Azure portal that the file is created in the blob container.
+
+![blobfuse](./images/blob.png)
 
 ## Important Notes
 
