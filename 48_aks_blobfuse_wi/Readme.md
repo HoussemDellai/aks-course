@@ -17,6 +17,17 @@ terraform apply tfplan
 ## Deploying Kubernetes resources
 
 ```powershell
+$SERVICE_ACCOUNT_NAME=$(terraform output -raw service_account_name)
+$SERVICE_ACCOUNT_NAMESPACE=$(terraform output -raw service_account_namespace)
+
+$STORAGE_ACCOUNT_RG=$(terraform output -raw storage_account_rg)
+$STORAGE_ACCOUNT_NAME=$(terraform output -raw storage_account_name)
+$CONTAINER_NAME=$(terraform output -raw container_name)
+
+$IDENTITY_CLIENT_ID=$(terraform output -raw identity_wi_client_id)
+```
+
+<!-- ```powershell
 $SERVICE_ACCOUNT_NAME="service-account-01"
 $SERVICE_ACCOUNT_NAMESPACE="default"
 
@@ -25,7 +36,7 @@ $STORAGE_ACCOUNT_NAME="stor4adls4aks48"
 $CONTAINER_NAME="container-01"
 
 $IDENTITY_CLIENT_ID="a4b7b9fd-ca18-4261-ba79-d9da4b751d74"
-```
+``` -->
 
 ```powershell
 @"
@@ -34,11 +45,7 @@ kind: ServiceAccount
 metadata:
   name: $SERVICE_ACCOUNT_NAME
   namespace: $SERVICE_ACCOUNT_NAMESPACE
-"@ > service_account_01.yaml
-```
-
-```powershell
-kubectl apply -f service_account_01.yaml
+"@ > ./kubernetes/service_account_01.yaml
 ```
 
 ```powershell
@@ -74,10 +81,8 @@ spec:
       clientID: $IDENTITY_CLIENT_ID
       # AzureStorageIdentityResourceID: $IDENTITY_ID
       mountWithWorkloadIdentityToken: "true"   # uncomment for token-only mode (supported from v1.27.0); requires Storage Blob Data Contributor role
-"@ > pv_blobfuse.yaml
+"@ > ./kubernetes/pv_blobfuse.yaml
 ```
-
-kubectl apply -f pv_blobfuse.yaml
 
 ```powershell
 @"
@@ -94,10 +99,8 @@ spec:
       storage: 10Gi
   volumeName: pv-blob
   storageClassName: azureblob-fuse-premium
-"@ > pvc_blobfuse.yaml
+"@ > ./kubernetes/pvc_blobfuse.yaml
 ```
-
-kubectl apply -f pvc_blobfuse.yaml
 
 ```powershell
 @"
@@ -140,10 +143,12 @@ spec:
       maxSurge: 0
       maxUnavailable: 1
     type: RollingUpdate
-"@ > deployment_blob.yaml
+"@ > ./kubernetes/deployment_blob.yaml
 ```
 
-kubectl apply -f deployment_blob.yaml
+```powershell
+kubectl apply -f ./kubernetes/
+```
 
 ## Important Notes
 

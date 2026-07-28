@@ -14,7 +14,7 @@ variable "service_account_name" {
   default     = "service-account-01"
 }
 
-variable "storage_account_rg" {
+variable "rg_name" {
   description = "Resource group of the Storage Account."
   type        = string
   default     = "rg-aks-blob-adls-wi-48"

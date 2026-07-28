@@ -1,6 +1,6 @@
 
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-aks-blob-adls-wi-${var.prefix}"
+  name     = var.rg_name
   location = "italynorth" # "swedencentral"
 
   tags = {

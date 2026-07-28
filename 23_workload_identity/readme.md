@@ -1,4 +1,4 @@
-# Worksload Identity with AKS
+# Workload Identity with AKS
 
 ```sh
 # environment variables for the Azure Key Vault resource

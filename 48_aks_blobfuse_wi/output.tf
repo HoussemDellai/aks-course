@@ -11,7 +11,11 @@ output "storage_account_name" {
 }
 
 output "storage_account_rg" {
-  value = var.storage_account_rg
+  value = var.rg_name
+}
+
+output "container_name" {
+  value = var.container_name
 }
 
 output "identity_wi_client_id" {

@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "sa" {
-  name                          = "stor4adls4aks${var.prefix}"
+  name                          = var.storage_account_name
   resource_group_name           = azurerm_resource_group.rg.name
   location                      = azurerm_resource_group.rg.location
   account_tier                  = "Premium" # "Standard"
