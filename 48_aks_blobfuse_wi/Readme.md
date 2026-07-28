@@ -12,7 +12,7 @@ The Blob CSI driver requests a token for the pod's ServiceAccount. Microsoft Ent
 
 ## Deploying the infrastructure
 
-Run the following Terraform commands from the root folder.
+Run the following Terraform commands from this demo folder (`48_aks_blobfuse_wi`).
 
 ```powershell
 terraform init
@@ -141,7 +141,8 @@ spec:
           command:
             - "/bin/sh"
             - "-c"
-            - while true; do echo $(date) >> /mnt/blob/outfile; sleep 30; done
+            # the backtick escapes `$(date) so it is evaluated inside the container, not by PowerShell
+            - while true; do echo `$(date) >> /mnt/blob/outfile; sleep 30; done
           volumeMounts:
             - name: blob
               mountPath: /mnt/blob
