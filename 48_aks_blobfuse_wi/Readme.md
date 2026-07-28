@@ -211,6 +211,16 @@ Verify in the Azure portal that the file is created in the blob container.
 
 * The ServiceAccount does not need the `azure.workload.identity/client-id` annotation or `azure.workload.identity/use` label. The Blob CSI driver gets the identity from `volumeAttributes.clientID` and requests the ServiceAccount token directly; the label is only needed on pods that use the workload identity webhook.
 
+## Workload Identity vs Managed Identity
+
+| | Managed Identity | Workload Identity |
+|---|---|---|
+| Granularity | Per Azure resource (whole VM/node shares it) | Per pod / per Kubernetes service account |
+| Secret handling | Fully platform-managed, zero developer touch | Fully platform-managed, zero developer touch |
+| Underlying mechanism | IMDS call from the resource | OIDC token exchange (SA token → Entra token) |
+| Portability | Azure-only, tied to the resource lifecycle | Any OIDC-issuing platform (AKS, GitHub Actions, other Kubernetes) |
+| AKS blast radius | All pods on a node can potentially use the node's kubelet identity unless isolated | Scoped exactly to the SA/namespace bound via the federated credential — much tighter |
+| Status in AKS | Still valid for node-level needs (e.g. CSI driver, cluster autoscaler) | Recommended standard for pod-to-Azure-resource auth, successor to the deprecated Pod Identity (aad-pod-identity) |
 
 ## Resources
 
