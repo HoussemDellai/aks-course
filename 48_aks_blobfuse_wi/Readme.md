@@ -29,6 +29,8 @@ $IDENTITY_CLIENT_ID="a4b7b9fd-ca18-4261-ba79-d9da4b751d74"
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
   name: pv-blob
 spec:
   capacity:
@@ -52,6 +54,8 @@ spec:
       containerName: $CONTAINER_NAME
       # refer to https://github.com/Azure/azure-storage-fuse#environment-variables
       AzureStorageAuthType: msi  # key, sas, msi, spn
+      # refer to https://github.com/Azure/azure-storage-fuse#environment-variables
+    #   AzureStorageAuthType: msi  # key, sas, msi, spn
       clientID: $IDENTITY_CLIENT_ID
     #   AzureStorageIdentityResourceID: $IDENTITY_ID
       mountWithWorkloadIdentityToken: "true"   # uncomment for token-only mode (supported from v1.27.0); requires Storage Blob Data Contributor role
@@ -108,7 +112,7 @@ spec:
           command:
             - "/bin/sh"
             - "-c"
-            - while true; do echo $(date) >> /mnt/blob/outfile; sleep 1; done
+            - while true; do echo $(date) >> /mnt/blob/outfile; sleep 30; done
           volumeMounts:
             - name: blob
               mountPath: /mnt/blob

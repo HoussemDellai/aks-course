@@ -2,10 +2,10 @@ resource "azurerm_storage_account" "sa" {
   name                          = "stor4aks${var.prefix}"
   resource_group_name           = azurerm_resource_group.rg.name
   location                      = azurerm_resource_group.rg.location
-  account_tier                  = "Standard"
+  account_tier                  = "Premium" # "Standard"
   account_replication_type      = "LRS"
   account_kind                  = "StorageV2"
-  is_hns_enabled                = true
+  # is_hns_enabled                = true
   public_network_access_enabled = true
   shared_access_key_enabled     = true
 
@@ -20,12 +20,12 @@ resource "azurerm_storage_container" "container" {
   container_access_type = "private"
 }
 
-resource "azurerm_storage_blob" "blob" {
-  name                 = "storage_account.tf"
-  storage_container_id = azurerm_storage_container.container.id
-  type                 = "Block"
-  source               = "storage_account.tf"
-}
+# resource "azurerm_storage_blob" "blob" {
+#   name                 = "storage_account.tf"
+#   storage_container_id = azurerm_storage_container.container.id
+#   type                 = "Append" # "Block"
+#   source               = "storage_account.tf"
+# }
 
 # resource "azurerm_storage_data_lake_gen2_filesystem" "example" {
 #   name               = "example"
