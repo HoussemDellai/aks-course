@@ -42,8 +42,3 @@ resource "azurerm_kubernetes_cluster" "aks" {
     snapshot_controller_enabled = false
   }
 }
-
-output "aks_oidc_issuer_url" {
-  value = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-}
-

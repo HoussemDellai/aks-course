@@ -11,7 +11,6 @@ resource "azurerm_role_assignment" "role_identity_wi_storage_blob_data_owner" {
   skip_service_principal_aad_check = true
 }
 
-
 resource "azurerm_role_assignment" "storage_account_contributor_wi" {
   principal_id         = azurerm_user_assigned_identity.identity_wi.principal_id
   role_definition_name = "Storage Account Contributor"
@@ -30,16 +29,4 @@ resource "azurerm_federated_identity_credential" "identity_wi" {
   audience                  = ["api://AzureADTokenExchange"]
   issuer                    = azurerm_kubernetes_cluster.aks.oidc_issuer_url
   subject                   = "system:serviceaccount:${var.service_account_namespace}:${var.service_account_name}"
-}
-
-# resource "azurerm_federated_identity_credential" "federated_identity_credential_wi" {
-#   name                      = "federated-identity-credential-wi"
-#   audience                  = ["api://AzureADTokenExchange"]
-#   issuer                    = azurerm_kubernetes_cluster.aks.oidc_issuer_url
-#   user_assigned_identity_id = azurerm_user_assigned_identity.identity_wi.id
-#   subject                   = "system:serviceaccount:default:sc-account-01"
-# }
-
-output "identity_wi_client_id" {
-  value = azurerm_user_assigned_identity.identity_wi.client_id
 }

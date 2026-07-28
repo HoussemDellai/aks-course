@@ -1,11 +1,29 @@
-## Deploying
+# AKS Blobfuse ADLS with Workload Identity
+
+## Introduction
+
+This example demonstrates how to use Azure Blobfuse with Workload Identity in AKS. The example uses Terraform to deploy the infrastructure and Kubernetes manifests to deploy the resources.
+
+## Deploying the infrastructure
+
+Run the following Terraform commands from the root folder.
+
+```powershell
+terraform init
+terraform plan -out tfplan
+terraform apply tfplan
+```
+
+## Deploying Kubernetes resources
 
 ```powershell
 $SERVICE_ACCOUNT_NAME="service-account-01"
 $SERVICE_ACCOUNT_NAMESPACE="default"
+
+$STORAGE_ACCOUNT_RG="rg-aks-blob-adls-wi-48"
 $STORAGE_ACCOUNT_NAME="stor4adls4aks48"
 $CONTAINER_NAME="container-01"
-$AKS_RG="rg-aks-blob-adls-wi-48"
+
 $IDENTITY_CLIENT_ID="a4b7b9fd-ca18-4261-ba79-d9da4b751d74"
 ```
 
@@ -48,7 +66,7 @@ spec:
     volumeHandle: $STORAGE_ACCOUNT_NAME-$CONTAINER_NAME
     volumeAttributes:
       protocol: fuse
-      resourceGroup: $AKS_RG
+      resourceGroup: $STORAGE_ACCOUNT_RG
       storageAccount: $STORAGE_ACCOUNT_NAME
       containerName: $CONTAINER_NAME
       # refer to https://github.com/Azure/azure-storage-fuse#environment-variables
