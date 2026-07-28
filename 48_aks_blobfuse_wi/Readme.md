@@ -153,12 +153,18 @@ kubectl apply -f ./kubernetes/
 ## Important Notes
 
 * NFS mount is not supported — NFS does not require credentials during mount, so workload identity is not applicable.
+
 * By default, this feature retrieves the storage account key using federated identity credentials.
+
 * Mount with workload identity token only: Supported from v1.27.0. To enable:
   * Set mountWithWorkloadIdentityToken: "true" in parameters of the StorageClass or volumeAttributes of the PersistentVolume
   * Grant Storage Blob Data Contributor role (instead of Storage Account Contributor) to the managed identity
+
 * Supports both Static and Dynamic provisioning of Persistent Volumes.
+
 * The following types of storage accounts support Data Lake Storage capabilities: `Standard general-purpose v2` and `Premium block blob`.
+
+* The ServiceAccount does not need the `azure.workload.identity/client-id` annotation or `azure.workload.identity/use` label. The Blob CSI driver gets the identity from `volumeAttributes.clientID` and requests the ServiceAccount token directly; the label is only needed on pods that use the workload identity webhook.
 
 
 ## Resources
