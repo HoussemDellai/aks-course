@@ -138,6 +138,7 @@ kubectl apply -f deployment_blob.yaml
   * Set mountWithWorkloadIdentityToken: "true" in parameters of the StorageClass or volumeAttributes of the PersistentVolume
   * Grant Storage Blob Data Contributor role (instead of Storage Account Contributor) to the managed identity
 * Supports both Static and Dynamic provisioning of Persistent Volumes.
+* The following types of storage accounts support Data Lake Storage capabilities: `Standard general-purpose v2` and `Premium block blob`.
 
 
 ## Resources
