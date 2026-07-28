@@ -7,7 +7,7 @@ resource "azurerm_storage_account" "sa" {
   account_kind                  = "BlockBlobStorage" # BlobStorage, BlockBlobStorage, FileStorage, Storage and StorageV2. Defaults to StorageV2, BlobFuse stores files as block blobs.
   public_network_access_enabled = true
   shared_access_key_enabled     = true
-  # is_hns_enabled                = true
+  is_hns_enabled                = true
 
   tags = {
     SecurityControl = "Ignore"
