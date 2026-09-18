@@ -1,0 +1,4 @@
+prefix         = "aks-arc"
+location       = "swedencentral"
+node_vm_size   = "Standard_D2as_v5"
+node_count     = 1
